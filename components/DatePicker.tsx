@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,18 +8,12 @@ interface DatePickerProps {
   onSelectDate: (date: Date) => void;
 }
 
-const CustomDatePicker: React.FC<DatePickerProps> = ({
-  selectedDate,
-  onSelectDate,
-}) => {
-  const [startDate, setStartDate] = useState(selectedDate);
-
-  const handleDateChange = (date: Date | null) => {
-    if (date) {
-      setStartDate(date);
-      onSelectDate(date);
-    }
-  };
+const CustomDatePicker: React.FC<DatePickerProps> = (
+  {
+    selectedDate,
+    onSelectDate,
+  }
+) => {
 
   return (
     <DatePicker

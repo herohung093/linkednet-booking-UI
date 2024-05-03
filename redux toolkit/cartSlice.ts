@@ -1,16 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
-interface CartState {
-  items: CartItem[];
-  total: number;
-  totalEstimatedTime: number;
-}
-
 const initialState: CartState = {
   items: [],
   total: 0,
   totalEstimatedTime: 0,
+  selectedDate: null,
+  selectedStaff: null,
 };
 
 const cartSlice = createSlice({
@@ -59,10 +54,24 @@ const cartSlice = createSlice({
       state.items = [];
       state.total = 0;
       state.totalEstimatedTime = 0;
+      state.selectedDate = null;
+      state.selectedStaff = null;
+    },
+    setSelectedDate(state, action: PayloadAction<string | null>) {
+      state.selectedDate = action.payload;
+    },
+    setSelectedStaff(state, action: PayloadAction<Staff | null>) {
+      state.selectedStaff = action.payload;
     },
   },
 });
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  clearCart,
+  setSelectedDate,
+  setSelectedStaff,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
