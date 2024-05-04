@@ -1,42 +1,24 @@
 "use client";
 import React from "react";
-import * as Menubar from "@radix-ui/react-menubar";
 import CartDialog from "./CartDialog";
 
-const Navbar = () => {
+const Navbar: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
   return (
-    <Menubar.Root className="flex items-center justify-center bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 my-10">
-      <Menubar.Menu>
-        <Menubar.Trigger className="py-2 px-3 outline-none select-none font-medium leading-none rounded text-violet11 text-[13px] flex items-center justify-between gap-[2px] data-[highlighted]:bg-violet4 data-[state=open]:bg-violet4">
-          Booking
-        </Menubar.Trigger>
-      </Menubar.Menu>
-
-      <Menubar.Menu>
-        <Menubar.Trigger className="py-2 px-3 outline-none select-none font-medium leading-none rounded text-violet11 text-[13px] flex items-center justify-between gap-[2px] data-[highlighted]:bg-violet4 data-[state=open]:bg-violet4">
-          Services
-        </Menubar.Trigger>
-      </Menubar.Menu>
-
-      <Menubar.Menu>
-        <Menubar.Trigger className="py-2 px-3 outline-none select-none font-medium leading-none rounded text-violet11 text-[13px] flex items-center justify-between gap-[2px] data-[highlighted]:bg-violet4 data-[state=open]:bg-violet4">
-          View
-        </Menubar.Trigger>
-      </Menubar.Menu>
-
-      <Menubar.Menu>
-        <Menubar.Trigger className="py-2 px-3 outline-none select-none font-medium leading-none rounded text-violet11 text-[13px] flex items-center justify-between gap-[2px] data-[highlighted]:bg-violet4 data-[state=open]:bg-violet4">
-          Profiles
-        </Menubar.Trigger>
-      </Menubar.Menu>
-
-      <Menubar.Menu>
-        <div className="py-2 px-3 outline-none select-none font-medium leading-none rounded text-violet11 text-[13px] flex items-center justify-between gap-[2px] data-[highlighted]:bg-violet4 data-[state=open]:bg-violet4">
-          <CartDialog />
+    <div className="fixed bottom-0 left-0 w-full flex items-center justify-between bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out">
+      <div className="mx-4">
+        <div className="text-xl">from A ${bookingInfo.total}</div>
+        <div className="text-lg text-slate-600">
+          {bookingInfo.items.length} services - {bookingInfo.totalEstimatedTime}{" "}
+          minutes
         </div>
-      </Menubar.Menu>
-    </Menubar.Root>
+      </div>
+      <div className="mx-4">
+        <CartDialog />
+      </div>
+    </div>
   );
 };
 
 export default Navbar;
+
+

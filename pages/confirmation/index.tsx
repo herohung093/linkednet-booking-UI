@@ -12,7 +12,7 @@ const ConfirmationPage: React.FC = () => {
         <h1 className="text-2xl font-semibold mb-5">Booking confirmation</h1>
         <Cart />
         <h2 className="text-xl font-semibold mb-3 mt-3">
-          Date: {bookingInfo.selectedDate}
+          Date: {bookingInfo.selectedDate} at
         </h2>
         <h2 className="text-xl font-semibold mb-3">
           Staff:{" "}

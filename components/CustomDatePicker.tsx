@@ -8,19 +8,18 @@ interface DatePickerProps {
   onSelectDate: (date: Date) => void;
 }
 
-const CustomDatePicker: React.FC<DatePickerProps> = (
-  {
-    selectedDate,
-    onSelectDate,
-  }
-) => {
-
+const CustomDatePicker: React.FC<DatePickerProps> = ({
+  selectedDate,
+  onSelectDate,
+}) => {
   return (
     <DatePicker
       selected={selectedDate}
       onChange={(date) => onSelectDate(date as Date)}
-      dateFormat="dd/MM/yyyy"
-      placeholderText="Select a date"
+      dateFormat="dd/MM/yyyy HH:mm"
+      placeholderText="Select a date and time"
+      showTimeSelect
+      timeFormat="HH:mm"
       className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
     />
   );

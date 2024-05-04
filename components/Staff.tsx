@@ -9,7 +9,7 @@ export const Staff: React.FC<{ staff: Staff }> = ({ staff }) => {
           <AccountCircleIcon />
           {staff.firstName} {staff.lastName}
         </div>
-        <p className="text-gray-600 mb-4">Nickname: {staff.nickname}</p>
+        <p className="text-gray-600 mb-4">Nickname: {staff.nickName}</p>
         <p className="text-gray-600 mb-4">Skill Level: {staff.skillLevel}</p>
       </div>
       <div className="flex justify-between items-center">

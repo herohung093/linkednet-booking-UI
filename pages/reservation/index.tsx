@@ -1,6 +1,6 @@
 "use client";
 import Cart from "@/components/Cart";
-import CustomDatePicker from "@/components/DatePicker";
+import CustomDatePicker from "@/components/CustomDatePicker";
 import { setSelectedDate } from "@/redux toolkit/cartSlice";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -16,7 +16,7 @@ const CartPage: React.FC = () => {
   };
   const handleSelectedDateRedux = () => {
     if (selectDate) dispatch(setSelectedDate(selectDate.toLocaleDateString()));
-    router.push("/staffs");
+    router.push("/confirmation");
   };
 
   return (

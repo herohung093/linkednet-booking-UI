@@ -12,7 +12,7 @@ const StaffDialog: React.FC<{ staff: Staff }> = ({ staff }) => {
   const dispatch = useDispatch();
   const handleAddStaff = () => {
     dispatch(setSelectedStaff(staff));
-    router.push("/confirmation");
+    router.push("/reservation");
   };
 
   return (
@@ -31,14 +31,14 @@ const StaffDialog: React.FC<{ staff: Staff }> = ({ staff }) => {
           <Staff staff={staff} />
           <div className="mt-[25px] flex justify-between mx-5">
             <Dialog.Close asChild>
-              <div className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px]   shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] ">
+              <div className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] cursor-pointer ">
                 Back
               </div>
             </Dialog.Close>
             <Dialog.Close asChild>
               <div
                 onClick={handleAddStaff}
-                className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px]   shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] "
+                className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px]  cursor-pointer"
               >
                 Confirm
               </div>

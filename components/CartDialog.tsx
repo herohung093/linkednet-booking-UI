@@ -5,9 +5,15 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { CartIcon } from "@/icons/CartIcon";
 import Cart from "./Cart";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { clearCart } from "@/redux toolkit/cartSlice";
 
 const CartDialog = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const handleClear = () => {
+    dispatch(clearCart());
+  };
 
   return (
     <Dialog.Root>
@@ -21,13 +27,21 @@ const CartDialog = () => {
             Cart
           </Dialog.Title>
           <Cart />
-          <div className="mt-[25px] flex justify-end">
+          <div className="mt-[25px] flex justify-between">
+            <Dialog.Close asChild>
+              <button
+                onClick={handleClear}
+                className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px]   shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] "
+              >
+                Clear
+              </button>
+            </Dialog.Close>
             <Dialog.Close asChild>
               <button
                 onClick={() => {
-                  router.push("/reservation");
+                  router.push("/staffs");
                 }}
-                className="bg-green4 text-green11 hover:bg-green5 focus:shadow-green7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none focus:shadow-[0_0_0_2px] focus:outline-none"
+                className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px]   shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] "
               >
                 Book
               </button>
