@@ -41,7 +41,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
         />
         <div
           className={`bg-white rounded-full shadow-md w-[70px] h-[70px] border flex flex-row justify-center items-center cursor-pointer ${
-            selected ? "border border-blue-500 bg-blue-600" : ""
+            selected ? "border bg-blue-700 border-blue-500 " : ""
           }`}
         >
           <div className="text-lg font-semibold flex justify-center items-center">

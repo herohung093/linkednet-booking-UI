@@ -4,6 +4,15 @@ import { AddIcon } from "@/icons/AddIcon";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "@/redux toolkit/cartSlice";
 import { CheckIcon } from "@/icons/CheckIcon";
+import "@radix-ui/themes/styles.css";
+import useSWR from "swr";
+import Loading from "./Loading";
+import { Spinner } from "@radix-ui/themes";
+
+type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
+
+const fetcher: FetcherFunction = (...args) =>
+  fetch(...args).then((res) => res.json());
 
 const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   const {
@@ -14,6 +23,10 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
     servicePrice,
     serviceDescription,
   } = service;
+  const { data } = useSWR(
+    "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
+    fetcher
+  );
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
 
@@ -44,24 +57,35 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
       })
     );
   };
+
   return (
     <div className="bg-transparent rounded-lg shadow-md p-4  mx-auto flex items-center justify-between my-2">
-      <div>
-        <h2 className="text-lg font-semibold">{serviceName}</h2>
-        <p className="text-gray-600 ">{serviceDescription}</p>
-        <div className="flex items-center justify-start gap-3">
-          <p className="text-gray-600 ">Estimated time: {estimatedTime} min</p>
-          <p>-</p>
-          <p className="text-green-600 font-bold text-xl">${servicePrice}</p>
-        </div>
-      </div>
-      <div className="mr-7">
-        {!isServiceInCart ? (
-          <AddIcon onClick={handleClickAdd} />
-        ) : (
-          <CheckIcon onClick={handleClickRemove} />
-        )}
-      </div>
+      {!data ? (
+        <Spinner />
+      ) : (
+        <>
+          <div>
+            <h2 className="text-lg font-semibold">{serviceName}</h2>
+            <p className="text-gray-600 ">{serviceDescription}</p>
+            <div className="flex items-center justify-start gap-3">
+              <p className="text-gray-600 ">
+                Estimated time: {estimatedTime} min
+              </p>
+              <p>-</p>
+              <p className="text-green-600 font-bold text-xl">
+                ${servicePrice}
+              </p>
+            </div>
+          </div>
+          <div className="mr-7">
+            {!isServiceInCart ? (
+              <AddIcon onClick={handleClickAdd} />
+            ) : (
+              <CheckIcon onClick={handleClickRemove} />
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -18,7 +18,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
   selected,
   onSelect,
 }) => {
-  return (  
+  return (
     <label>
       <input
         type="radio"
