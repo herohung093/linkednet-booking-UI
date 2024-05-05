@@ -5,7 +5,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { CartIcon } from "@/icons/CartIcon";
 import Cart from "./Cart";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "@/redux toolkit/cartSlice";
 
 const CartDialog = () => {
@@ -14,11 +14,18 @@ const CartDialog = () => {
   const handleClear = () => {
     dispatch(clearCart());
   };
+  const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
 
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <CartIcon />
+        <div className="mx-4">
+          <div className="text-xl">from A ${bookingInfo.total}</div>
+          <div className="text-lg text-slate-600">
+            {bookingInfo.items.length} services -{" "}
+            {bookingInfo.totalEstimatedTime} minutes
+          </div>
+        </div>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className=" bg-slate-700 bg-opacity-70 data-[state=open]:animate-overlayShow fixed inset-0" />

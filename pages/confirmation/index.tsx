@@ -39,8 +39,6 @@ const ConfirmationPage: React.FC = () => {
     e.preventDefault();
     console.log(formData);
     console.log(bookingInfo);
-
-    // router.push("/");
     dispatch(clearCart());
   };
 

@@ -1,12 +1,9 @@
 "use client";
 import { Logo } from "@/components/Logo";
 import { NailServices } from "@/components/NailServices";
-import BookingCart from "@/components/BookingCart";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+
 import useSWR from "swr";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Horizon } from "@/icons/Horizon";
+
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -16,10 +13,6 @@ const fetcher: FetcherFunction = (...args) =>
 export default function Home() {
   const { data: serviceData } = useSWR(
     "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
-    fetcher
-  );
-  const { data: staffData } = useSWR(
-    "https://big-umbrella-c5c3450b8837.herokuapp.com/staff/?isOnlyActive=true",
     fetcher
   );
 
@@ -40,39 +33,14 @@ export default function Home() {
     return acc;
   }, []);
 
-  const [cartHasItem, setCartHasItem] = useState<boolean>(true);
-
-  const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
-  const cartItems = bookingInfo.items.length;
-  useEffect(() => {
-    setCartHasItem(cartItems !== 0);
-  }, [cartItems]);
-
   return (
     <main>
-      <div className="sm:w-[80%] m-auto ">
+      <div className="sm:w-[80%] m-auto mb-20">
         <Logo />
         {groupedData &&
           groupedData.map((item: any, index: number) => (
             <NailServices key={index} data={item} index={index} />
           ))}
-        <div className="p-3 font-bold text-2xl mx-5 mt-5 ">Staff</div>
-        <Horizon />
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mb-20 mt-5">
-          {staffData?.map((staff: Staff, index: number) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg shadow-md p-8 mx-5 flex flex-col justify-center items-center mb-3 "
-            >
-              <div className="text-lg font-semibold flex justify-center gap-2 mb-2 items-center">
-                <AccountCircleIcon />
-                {staff.firstName} {staff.lastName}
-              </div>
-              <p className="text-gray-600 mb-4">Nickname: {staff.nickName}</p>
-            </div>
-          ))}
-        </div>
-        {cartHasItem ? <BookingCart bookingInfo={bookingInfo} /> : ""}
       </div>
     </main>
   );

@@ -5,7 +5,8 @@ const initialState: CartState = {
   total: 0,
   totalEstimatedTime: 0,
   selectedDate: null,
-  selectedStaff: "",
+  selectedHour: null,
+  selectedStaff: null,
 };
 
 const cartSlice = createSlice({
@@ -48,12 +49,18 @@ const cartSlice = createSlice({
       state.total = 0;
       state.totalEstimatedTime = 0;
       state.selectedDate = null;
+      state.selectedHour = null;
       state.selectedStaff = "";
     },
     setSelectedDate(state, action: PayloadAction<string | null>) {
       state.selectedDate = action.payload;
+      console.log(state.selectedDate);
     },
-    setSelectedStaff(state, action: PayloadAction<Staff | "" | null>) {
+    setSelectedHour(state, action: PayloadAction<string | null>) {
+      state.selectedHour = action.payload;
+      console.log(state.selectedHour);
+    },
+    setSelectedStaff(state, action: PayloadAction<number | "" | null>) {
       state.selectedStaff = action.payload;
     },
   },
@@ -65,6 +72,7 @@ export const {
   clearCart,
   setSelectedDate,
   setSelectedStaff,
+  setSelectedHour,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

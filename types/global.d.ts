@@ -14,7 +14,7 @@ declare interface NailSalonService {
 }
 declare interface CartItem {
   id: number;
-  serviceName:string;
+  serviceName: string;
   serviceDescription: string;
   servicePrice: number;
   estimatedTime: number;
@@ -46,5 +46,6 @@ declare interface CartState {
   total: number;
   totalEstimatedTime: number;
   selectedDate: string | null;
-  selectedStaff: Staff | "" |null;
+  selectedHour: string | null;
+  selectedStaff: number | "" | null;
 }

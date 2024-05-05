@@ -13,7 +13,7 @@ export const NailServices: React.FC<{
   return (
     <div className="">
       <div className="flex items-center justify-between mx-5">
-        <h1 className="p-3 font-bold text-2xl">Category {index + 1}</h1>
+        <h1 className="p-3 font-bold text-2xl">{data[0].serviceType.type}</h1>
         <button
           onClick={() => setShowMap((prevShowMap) => !prevShowMap)}
           className="text-blue-500 hover:text-blue-700 focus:outline-none"
@@ -28,7 +28,7 @@ export const NailServices: React.FC<{
           ))}
         </div>
       )}
-      {!showMap ? <Horizon/> : ""}
+      {!showMap ? <Horizon /> : ""}
     </div>
   );
 };
