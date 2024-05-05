@@ -23,8 +23,7 @@ const ConfirmationPage: React.FC = () => {
   );
   const bookingInfo = useSelector((state: any) => state.cart);
   const staffId = bookingInfo.selectedStaff;
-  const staff = StaffList.filter((staff: Staff) => staff.id == staffId);
-  console.log(bookingInfo);
+  const staff = StaffList?.filter((staff: Staff) => staff.id == staffId);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -69,7 +68,10 @@ const ConfirmationPage: React.FC = () => {
           Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
         </h2>
         <h2 className="text-xl font-semibold mb-3">
-          Staff: {staff ? staff[0].firstName + " " + staff[0].lastName : "N/A"}
+          Staff:{" "}
+          {staff 
+            ? staff[0]?.firstName + " " + staff[0]?.lastName
+            : "N/A"}
         </h2>
         <div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
