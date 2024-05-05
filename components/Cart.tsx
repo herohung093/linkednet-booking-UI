@@ -8,6 +8,7 @@ const Cart: React.FC = () => {
   const cartRedux = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
 
+
   const [cartItems, setCartItems] = useState<CartItem[]>(cartRedux.items);
   const [totalPrice, setTotalPrice] = useState<number>(cartRedux.total);
   const [totalEstimatedTime, setTotalEstimatedTime] = useState<number>(
@@ -21,13 +22,13 @@ const Cart: React.FC = () => {
   }, [cartRedux.items, cartRedux.total, cartRedux.totalEstimatedTime]);
 
   const handleRemoveFromCart = (
-    serviceType: { id: number },
+    id: number,
     servicePrice: number,
     estimatedTime: number
   ) => {
     dispatch(
       removeFromCart({
-        serviceType: serviceType,
+        id: id,
         servicePrice: servicePrice,
         estimatedTime: estimatedTime,
       })
@@ -39,7 +40,7 @@ const Cart: React.FC = () => {
       <div>
         {cartItems.map((item) => (
           <div
-            key={item.serviceType.id}
+            key={item.id}
             className="flex justify-between items-center border-b border-gray-300 py-2"
           >
             <div className="flex justify-between w-full">
@@ -51,7 +52,7 @@ const Cart: React.FC = () => {
             <button
               onClick={() =>
                 handleRemoveFromCart(
-                  item.serviceType,
+                  item.id,
                   item.servicePrice,
                   item.estimatedTime
                 )

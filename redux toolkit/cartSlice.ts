@@ -5,7 +5,7 @@ const initialState: CartState = {
   total: 0,
   totalEstimatedTime: 0,
   selectedDate: null,
-  selectedStaff: null,
+  selectedStaff: "",
 };
 
 const cartSlice = createSlice({
@@ -13,11 +13,8 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart(state, action: PayloadAction<CartItem>) {
-      const { id, servicePrice, estimatedTime } =
-        action.payload;
-      const existingItem = state.items.find(
-        (item) => item.id === id
-      );
+      const { id, servicePrice, estimatedTime } = action.payload;
+      const existingItem = state.items.find((item) => item.id === id);
       if (existingItem) {
         existingItem.quantity++;
       } else {
@@ -29,20 +26,16 @@ const cartSlice = createSlice({
     removeFromCart(
       state,
       action: PayloadAction<{
-        serviceType: { id: number };
+        id: number;
         servicePrice: number;
         estimatedTime: number;
       }>
     ) {
-      const { serviceType, servicePrice, estimatedTime } = action.payload;
-      const existingItem = state.items.find(
-        (item) => item.serviceType.id === serviceType.id
-      );
+      const { id, servicePrice, estimatedTime } = action.payload;
+      const existingItem = state.items.find((item) => item.id === id);
       if (existingItem) {
         if (existingItem.quantity === 1) {
-          state.items = state.items.filter(
-            (item) => item.serviceType.id !== serviceType.id
-          );
+          state.items = state.items.filter((item) => item.id !== id);
         } else {
           existingItem.quantity--;
         }
@@ -55,12 +48,12 @@ const cartSlice = createSlice({
       state.total = 0;
       state.totalEstimatedTime = 0;
       state.selectedDate = null;
-      state.selectedStaff = null;
+      state.selectedStaff = "";
     },
     setSelectedDate(state, action: PayloadAction<string | null>) {
       state.selectedDate = action.payload;
     },
-    setSelectedStaff(state, action: PayloadAction<Staff | null>) {
+    setSelectedStaff(state, action: PayloadAction<Staff | "" | null>) {
       state.selectedStaff = action.payload;
     },
   },

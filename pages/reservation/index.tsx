@@ -15,7 +15,10 @@ const CartPage: React.FC = () => {
     setSelectDate(date);
   };
   const handleSelectedDateRedux = () => {
-    if (selectDate) dispatch(setSelectedDate(selectDate.toLocaleDateString()));
+    if (selectDate) {
+      const formattedDate = selectDate.toLocaleString("en-GB");
+      dispatch(setSelectedDate(formattedDate));
+    }
     router.push("/confirmation");
   };
 
@@ -39,6 +42,7 @@ const CartPage: React.FC = () => {
         </button>
         <button
           onClick={handleSelectedDateRedux}
+          disabled={!selectDate}
           className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[140px]  shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] "
         >
           Select Date

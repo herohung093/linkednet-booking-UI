@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import NailSalonServiceCard from "./NailSalonServiceCard";
 import { TriangleDown } from "@/icons/TriangleDown";
 import { TriangleUp } from "@/icons/TriangleUp";
+import { Horizon } from "@/icons/Horizon";
 
 export const NailServices: React.FC<{
   data: NailSalonService[];
@@ -10,7 +11,7 @@ export const NailServices: React.FC<{
   const [showMap, setShowMap] = useState(true);
 
   return (
-    <div className="mb-10">
+    <div className="">
       <div className="flex items-center justify-between mx-5">
         <h1 className="p-3 font-bold text-2xl">Category {index + 1}</h1>
         <button
@@ -27,6 +28,7 @@ export const NailServices: React.FC<{
           ))}
         </div>
       )}
+      {!showMap ? <Horizon/> : ""}
     </div>
   );
 };

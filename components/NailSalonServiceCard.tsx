@@ -24,8 +24,9 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   const handleClickAdd = () => {
     dispatch(
       addToCart({
-        serviceType: serviceType,
         id: id,
+        serviceType: serviceType,
+        serviceName: serviceName,
         serviceDescription: serviceDescription,
         estimatedTime: estimatedTime,
         servicePrice: servicePrice,
@@ -37,7 +38,7 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   const handleClickRemove = () => {
     dispatch(
       removeFromCart({
-        serviceType: serviceType,
+        id: id,
         estimatedTime: estimatedTime,
         servicePrice: servicePrice,
       })
@@ -46,11 +47,13 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   return (
     <div className="bg-transparent rounded-lg shadow-md p-4  mx-auto flex items-center justify-between my-2">
       <div>
-        <h2 className="text-lg font-semibold mb-2">{serviceName}</h2>
-        <p className="text-gray-600 mb-4">
-          Estimated time: {estimatedTime} min
-        </p>
-        <p className="text-green-600 font-bold text-xl">${servicePrice}</p>
+        <h2 className="text-lg font-semibold">{serviceName}</h2>
+        <p className="text-gray-600 ">{serviceDescription}</p>
+        <div className="flex items-center justify-start gap-3">
+          <p className="text-gray-600 ">Estimated time: {estimatedTime} min</p>
+          <p>-</p>
+          <p className="text-green-600 font-bold text-xl">${servicePrice}</p>
+        </div>
       </div>
       <div className="mr-7">
         {!isServiceInCart ? (

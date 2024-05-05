@@ -43,7 +43,7 @@ const CartDialog = () => {
                 }}
                 className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px]   shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] "
               >
-                Book
+                Confirm
               </button>
             </Dialog.Close>
           </div>
