@@ -47,5 +47,5 @@ declare interface CartState {
   totalEstimatedTime: number;
   selectedDate: string | null;
   selectedHour: string | null;
-  selectedStaff: number | "" | null;
+  selectedStaff: number | "" | null | Staff;
 }
