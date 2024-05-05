@@ -54,11 +54,9 @@ const cartSlice = createSlice({
     },
     setSelectedDate(state, action: PayloadAction<string | null>) {
       state.selectedDate = action.payload;
-      console.log(state.selectedDate);
     },
     setSelectedHour(state, action: PayloadAction<string | null>) {
       state.selectedHour = action.payload;
-      console.log(state.selectedHour);
     },
     setSelectedStaff(state, action: PayloadAction<number | "" | null>) {
       state.selectedStaff = action.payload;
