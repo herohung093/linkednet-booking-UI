@@ -8,7 +8,7 @@ interface CustomRadioProps {
   id: number;
   label: string;
   date: string;
-  selected: boolean | undefined; // Update type to allow null
+  selected: boolean | undefined;
   onSelect: () => void;
 }
 
@@ -23,7 +23,6 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
   const currentDate = new Date();
   const currentDateString = currentDate.getDate().toLocaleString("en-GB");
 
-  // Auto-select the current day when component loads
   React.useEffect(() => {
     if (date == currentDateString) {
       onSelect();
@@ -42,7 +41,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
         />
         <div
           className={`bg-white rounded-full shadow-md w-[70px] h-[70px] border flex flex-row justify-center items-center cursor-pointer ${
-            selected ? "border border-blue-500 bg-blue-500" : ""
+            selected ? "border border-blue-500 bg-blue-600" : ""
           }`}
         >
           <div className="text-lg font-semibold flex justify-center items-center">

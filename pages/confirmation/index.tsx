@@ -5,9 +5,27 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import AlertDeleteDialog from "@/components/AlertDeleteDialog";
 import AlertSuccessful from "@/components/AlertSuccessful";
+import useSWR from "swr";
+
+type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
+
+const fetcher: FetcherFunction = (...args) =>
+  fetch(...args).then((res) => res.json());
 
 const ConfirmationPage: React.FC = () => {
+  const {
+    data: StaffList,
+    error,
+    isLoading,
+  } = useSWR(
+    "https://big-umbrella-c5c3450b8837.herokuapp.com/staff/?isOnlyActive=true",
+    fetcher
+  );
   const bookingInfo = useSelector((state: any) => state.cart);
+  const staffId = bookingInfo.selectedStaff;
+  const staff = StaffList.filter((staff: Staff) => staff.id == staffId);
+  console.log(bookingInfo);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -48,15 +66,10 @@ const ConfirmationPage: React.FC = () => {
         <h1 className="text-2xl font-semibold mb-5">Booking confirmation</h1>
         <Cart />
         <h2 className="text-xl font-semibold mb-3 mt-3">
-          Date: {bookingInfo.selectedDate}
+          Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
         </h2>
         <h2 className="text-xl font-semibold mb-3">
-          Staff:{" "}
-          {bookingInfo
-            ? bookingInfo?.selectedStaff.firstName +
-              " " +
-              bookingInfo?.selectedStaff.lastName
-            : "N/A"}
+          Staff: {staff ? staff[0].firstName + " " + staff[0].lastName : "N/A"}
         </h2>
         <div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
@@ -86,14 +99,7 @@ const ConfirmationPage: React.FC = () => {
             />
             <div className="flex justify-between items-center mx-10 mt-10">
               <AlertDeleteDialog />
-              <AlertSuccessful formValid={formValid}/>
-              {/* <button
-                type="submit"
-                disabled={!formValid}
-                className={`text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] h-[35px] shadow-green7 inline-flex items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] `}
-              >
-                Confirm
-              </button> */}
+              <AlertSuccessful formValid={formValid} />
             </div>
           </form>
         </div>
