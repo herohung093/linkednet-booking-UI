@@ -32,19 +32,19 @@ const StaffsPage: React.FC = () => {
     "Nov",
     "Dec",
   ];
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [selectHour, setSelectHour] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState(new Date());
-  const days = [...Array(90)].map((_, index) => {
-    const date = new Date(startDate);
+  const days = [...Array(31)].map((_, index) => {
+    const date = new Date();
     date.setDate(date.getDate() + index);
     return date;
   });
+
   const currentDate = new Date();
   const selectedDate =
     selectedIndex !== null ? days[selectedIndex] : currentDate;
   const selectedMonth = monthNames[selectedDate.getMonth()];
+
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const selectedYear = currentDate.getFullYear();
@@ -68,14 +68,12 @@ const StaffsPage: React.FC = () => {
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
-    setSelectedDay(date.toLocaleDateString("en-GB"));
     dispatch(setSelectedDate(date.toLocaleDateString("en-GB")));
   };
 
   useEffect(() => {
     const today = new Date();
     setSelectedIndex(0);
-    setSelectedDay(today.toLocaleDateString("en-GB"));
     dispatch(setSelectedDate(today.toLocaleDateString("en-GB")));
     dispatch(setTimeZone(timezone));
   }, []);
@@ -94,6 +92,7 @@ const StaffsPage: React.FC = () => {
 
   if (error) return <Error />;
   if (isLoading) return <Loading />;
+
   return (
     <div className="mt-10">
       <div className="flex justify-between mx-5 mb-5">
