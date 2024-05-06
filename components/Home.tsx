@@ -3,8 +3,9 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { clearCart } from "@/redux toolkit/cartSlice";
+import { HomeIcon } from "@/icons/HomeIcon";
 
-const AlertDeleteDialog = () => {
+const Home = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const handleDelete = () => {
@@ -13,12 +14,8 @@ const AlertDeleteDialog = () => {
   };
   return (
     <AlertDialog.Root>
-      <AlertDialog.Trigger asChild>
-        <button
-          className={`text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[20px] leading-none focus:shadow-[0_0_0_2px] text-xl hover:text-pink-700 hover:border-pink-700`}
-        >
-          Cancel
-        </button>
+      <AlertDialog.Trigger>
+        <HomeIcon />
       </AlertDialog.Trigger>
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="bg-slate-700 bg-opacity-70 data-[state=open]:animate-overlayShow fixed inset-0" />
@@ -27,7 +24,7 @@ const AlertDeleteDialog = () => {
             Are you absolutely sure?
           </AlertDialog.Title>
           <AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
-            This action cannot be undone. This will permanently delete your
+            This action cannot be undone. This will permanently remove your
             booking.
           </AlertDialog.Description>
           <div className="flex justify-end gap-[25px]">
@@ -50,4 +47,4 @@ const AlertDeleteDialog = () => {
     </AlertDialog.Root>
   );
 };
-export default AlertDeleteDialog;
+export default Home;

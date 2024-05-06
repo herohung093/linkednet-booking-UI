@@ -3,8 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 import CustomRadioDate from "@/components/CustomDateRadio";
 import CustomHourRadio from "@/components/CustomHourRadio";
-import { setSelectedDate, setSelectedHour,setTimeZone } from "@/redux toolkit/cartSlice";
+import {
+  setSelectedDate,
+  setSelectedHour,
+  setTimeZone,
+} from "@/redux toolkit/cartSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Error from "@/components/Error";
+import Loading from "@/components/Loading";
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
 const fetcher: FetcherFunction = (...args) =>
@@ -31,7 +37,6 @@ const StaffsPage: React.FC = () => {
   const dispatch = useDispatch();
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-
   const days = [...Array(90)].map((_, index) => {
     const date = new Date();
     date.setDate(date.getDate() + index);
@@ -45,7 +50,11 @@ const StaffsPage: React.FC = () => {
   const selectedYear = selectedDate.getFullYear();
   const staffId = useSelector((state: any) => state.cart.selectedStaff);
 
-  const { data: availability } = useSWR(
+  const {
+    data: availability,
+    error,
+    isLoading,
+  } = useSWR(
     `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=${staffId}&date=${selectedDate.toLocaleDateString(
       "en-GB"
     )}`,
@@ -63,15 +72,16 @@ const StaffsPage: React.FC = () => {
     }
   }, [hourArray, selectHour, dispatch]);
 
-useEffect(() => {
+  useEffect(() => {
     const today = new Date();
-    const todayIndex = days.findIndex((date) => date.getDate() === today.getDate());
+    const todayIndex = days.findIndex(
+      (date) => date.getDate() === today.getDate()
+    );
     setSelectedIndex(todayIndex);
     dispatch(setSelectedDate(today.toLocaleDateString("en-GB")));
     dispatch(setTimeZone(timezone));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
-
+  }, []);
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
@@ -82,7 +92,8 @@ useEffect(() => {
     setSelectHour(hour);
     dispatch(setSelectedHour(hour));
   };
-
+  if (error) return <Error />;
+  if (isLoading) return <Loading />;
   return (
     <div className="mt-10">
       <div className="flex justify-between mx-5 mb-5">

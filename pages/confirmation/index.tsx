@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AlertDeleteDialog from "@/components/AlertDeleteDialog";
 import AlertSuccessful from "@/components/AlertSuccessful";
 import useSWR from "swr";
+import Error from "@/components/Error";
+import Loading from "@/components/Loading";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -68,6 +70,9 @@ const ConfirmationPage: React.FC = () => {
     console.log(bookingInfo);
     dispatch(clearCart());
   };
+
+  if (error) return <Error />;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="w-[90%] mx-auto mt-9">
