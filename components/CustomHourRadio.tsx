@@ -1,3 +1,4 @@
+import { CheckIcon } from "@/icons/CheckIcon";
 import React from "react";
 
 interface CustomHourRadioProps {
@@ -14,11 +15,12 @@ const CustomHourRadio: React.FC<CustomHourRadioProps> = ({
   return (
     <div className="mx-5">
       <label
-        className={`flex justify-between w-full border-gray-300 py-2  p-3 mb-2 cursor-pointer border rounded-md ${
-          selected ? "border-blue-500 border-2 " : ""
+        className={`flex justify-between w-full  py-2  p-3 mb-2 cursor-pointer border-2 rounded-md ${
+          selected ? "border-blue-500 " : "border-gray-300"
         }`}
       >
         <div className="flex justify-between items-center ">
+          {hour}
           <input
             type="radio"
             checked={selected}
@@ -26,9 +28,8 @@ const CustomHourRadio: React.FC<CustomHourRadioProps> = ({
             value={hour}
             className="hidden"
           />
-          {hour}
-          <button className="px-3 py-1 rounded"></button>
         </div>
+        {selected ? <CheckIcon /> : null}
       </label>
     </div>
   );

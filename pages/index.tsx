@@ -1,9 +1,10 @@
 "use client";
+import Error from "@/components/Error";
+import Loading from "@/components/Loading";
 import { Logo } from "@/components/Logo";
 import { NailServices } from "@/components/NailServices";
 
 import useSWR from "swr";
-
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -11,7 +12,11 @@ const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
 
 export default function Home() {
-  const { data: serviceData } = useSWR(
+  const {
+    data: serviceData,
+    error,
+    isLoading,
+  } = useSWR(
     "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
     fetcher
   );
@@ -33,6 +38,8 @@ export default function Home() {
     return acc;
   }, []);
 
+  if (error) return <Error />;
+  if (isLoading) return <Loading />;
   return (
     <main>
       <div className="sm:w-[80%] m-auto mb-20">

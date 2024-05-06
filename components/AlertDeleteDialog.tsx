@@ -15,7 +15,7 @@ const AlertDeleteDialog = () => {
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
         <button
-          className={`text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] h-[35px] shadow-green7 inline-flex items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] `}
+          className={`text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[20px] leading-none focus:shadow-[0_0_0_2px] text-xl hover:text-pink-700 hover:border-pink-700`}
         >
           Cancel
         </button>

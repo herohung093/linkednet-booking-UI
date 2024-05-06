@@ -6,6 +6,7 @@ const initialState: CartState = {
   totalEstimatedTime: 0,
   selectedDate: null,
   selectedHour: null,
+  timeZone: null,
   selectedStaff: null,
 };
 
@@ -50,6 +51,7 @@ const cartSlice = createSlice({
       state.totalEstimatedTime = 0;
       state.selectedDate = null;
       state.selectedHour = null;
+      state.timeZone = null;
       state.selectedStaff = "";
     },
     setSelectedDate(state, action: PayloadAction<string | null>) {
@@ -57,6 +59,9 @@ const cartSlice = createSlice({
     },
     setSelectedHour(state, action: PayloadAction<string | null>) {
       state.selectedHour = action.payload;
+    },
+    setTimeZone(state, action: PayloadAction<string | null>) {
+      state.timeZone = action.payload;
     },
     setSelectedStaff(state, action: PayloadAction<number | "" | null>) {
       state.selectedStaff = action.payload;
@@ -71,6 +76,7 @@ export const {
   setSelectedDate,
   setSelectedStaff,
   setSelectedHour,
+  setTimeZone,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

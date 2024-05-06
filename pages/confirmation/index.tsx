@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Cart from "@/components/Cart";
-import { clearCart } from "@/redux toolkit/cartSlice";
-import { useRouter } from "next/navigation";
+import { clearCart, setSelectedStaff } from "@/redux toolkit/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AlertDeleteDialog from "@/components/AlertDeleteDialog";
 import AlertSuccessful from "@/components/AlertSuccessful";
@@ -13,6 +12,7 @@ const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
 
 const ConfirmationPage: React.FC = () => {
+  const dispatch = useDispatch();
   const {
     data: StaffList,
     error,
@@ -23,10 +23,20 @@ const ConfirmationPage: React.FC = () => {
   );
   const bookingInfo = useSelector((state: any) => state.cart);
   const staffId = bookingInfo.selectedStaff;
-  const staff = StaffList?.filter((staff: Staff) => staff.id == staffId);
 
-  const router = useRouter();
-  const dispatch = useDispatch();
+  let staff: Staff;
+  if (staffId === -1) {
+    const randomIndex = Math.floor(Math.random() * StaffList.length);
+    staff = StaffList[randomIndex];
+  } else {
+    staff = StaffList?.find((staff: Staff) => staff.id == staffId);
+  }
+
+  useEffect(() => {
+    if (staff) {
+      dispatch(setSelectedStaff(staff.id));
+    }
+  }, [staff, dispatch]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -68,10 +78,7 @@ const ConfirmationPage: React.FC = () => {
           Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
         </h2>
         <h2 className="text-xl font-semibold mb-3">
-          Staff:{" "}
-          {staff 
-            ? staff[0]?.firstName + " " + staff[0]?.lastName
-            : "N/A"}
+          Staff: {staff && staff?.firstName + " " + staff?.lastName}
         </h2>
         <div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
@@ -81,7 +88,7 @@ const ConfirmationPage: React.FC = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Name"
-              className="border-2 rounded-md outline-none px-2 "
+              className="border-2 rounded-md outline-none px-4 py-2 "
             />
             <input
               type="tel"
@@ -89,7 +96,7 @@ const ConfirmationPage: React.FC = () => {
               value={formData.phoneNumber}
               onChange={handleChange}
               placeholder="Phone Number"
-              className="border-2 rounded-md outline-none px-2 "
+              className="border-2 rounded-md outline-none px-4 py-2 "
             />
             <input
               type="email"
@@ -97,7 +104,7 @@ const ConfirmationPage: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Email"
-              className="border-2 rounded-md outline-none px-2 "
+              className="border-2 rounded-md outline-none px-4 py-2 "
             />
             <div className="flex justify-between items-center mx-10 mt-10">
               <AlertDeleteDialog />

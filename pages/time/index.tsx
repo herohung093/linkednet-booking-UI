@@ -1,10 +1,10 @@
-import CustomRadioDate from "@/components/CustomDateRadio";
-import CustomHourRadio from "@/components/CustomHourRadio";
-import { setSelectedDate, setSelectedHour } from "@/redux toolkit/cartSlice";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
-
+import CustomRadioDate from "@/components/CustomDateRadio";
+import CustomHourRadio from "@/components/CustomHourRadio";
+import { setSelectedDate, setSelectedHour,setTimeZone } from "@/redux toolkit/cartSlice";
+import { Swiper, SwiperSlide } from "swiper/react";
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
 const fetcher: FetcherFunction = (...args) =>
@@ -27,11 +27,13 @@ const StaffsPage: React.FC = () => {
     "Dec",
   ];
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [selectHour, setSelectHour] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState(new Date());
-  const days = [...Array(5)].map((_, index) => {
-    const date = new Date(startDate);
+  const dispatch = useDispatch();
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+
+  const days = [...Array(90)].map((_, index) => {
+    const date = new Date();
     date.setDate(date.getDate() + index);
     return date;
   });
@@ -44,7 +46,7 @@ const StaffsPage: React.FC = () => {
   const staffId = useSelector((state: any) => state.cart.selectedStaff);
 
   const { data: availability } = useSWR(
-    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=5&date=${selectedDate.toLocaleDateString(
+    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=${staffId}&date=${selectedDate.toLocaleDateString(
       "en-GB"
     )}`,
     fetcher
@@ -54,72 +56,57 @@ const StaffsPage: React.FC = () => {
     (time: string) => time
   );
 
-  const handleNext = () => {
-    setSelectedIndex(null);
-    setStartDate((prevDate) => {
-      const nextDate = new Date(prevDate);
-      nextDate.setDate(nextDate.getDate() + 5);
-      return nextDate;
-    });
-  };
+  useEffect(() => {
+    if (hourArray.length > 0 && selectHour === null) {
+      setSelectHour(hourArray[0]);
+      dispatch(setSelectedHour(hourArray[0]));
+    }
+  }, [hourArray, selectHour, dispatch]);
 
-  const handlePrevious = () => {
-    setSelectedIndex(null);
-    setStartDate((prevDate) => {
-      const previousDate = new Date(prevDate);
-      previousDate.setDate(previousDate.getDate() - 5);
-      return previousDate;
-    });
-  };
+useEffect(() => {
+    const today = new Date();
+    const todayIndex = days.findIndex((date) => date.getDate() === today.getDate());
+    setSelectedIndex(todayIndex);
+    dispatch(setSelectedDate(today.toLocaleDateString("en-GB")));
+    dispatch(setTimeZone(timezone));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
 
-  const dispatch = useDispatch();
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
-    setSelectedDay(date.toLocaleDateString("en-GB"));
     dispatch(setSelectedDate(date.toLocaleDateString("en-GB")));
   };
 
   const handleSelectedHour = (hour: string) => {
     setSelectHour(hour);
-    console.log(hour);
     dispatch(setSelectedHour(hour));
   };
+
   return (
     <div className="mt-10">
       <div className="flex justify-between mx-5 mb-5">
         <div>
           <h2 className="text-2xl font-bold">{`${selectedMonth} ${selectedYear}`}</h2>
         </div>
-        <div className="flex gap-x-5">
-          <button
-            className="border-2 p4 bg-white h-8 w-8 rounded-md "
-            onClick={handlePrevious}
-          >
-            {"<"}
-          </button>
-          <button
-            className="border-2 p4 bg-white h-8 w-8 rounded-md "
-            onClick={handleNext}
-          >
-            {">"}
-          </button>
-        </div>
       </div>
       <div className="flex items-center justify-center gap-4 mb-4">
-        <div className="flex gap-4">
-          {days.map((date, index) => (
-            <CustomRadioDate
-              key={index}
-              index={index}
-              id={index}
-              label={dayLabels[date.getDay()]}
-              date={date.getDate().toString()}
-              selected={selectedIndex === index}
-              onSelect={() => handleSelectedDate(index, date)}
-            />
-          ))}
-        </div>
+        <Swiper spaceBetween={0} slidesPerView={6}>
+          <div className="flex gap-4">
+            {days.map((date, index) => (
+              <SwiperSlide key={index}>
+                <CustomRadioDate
+                  index={index}
+                  id={index}
+                  label={dayLabels[date.getDay()]}
+                  date={date.getDate().toString()}
+                  selected={selectedIndex === index}
+                  onSelect={() => handleSelectedDate(index, date)}
+                />
+              </SwiperSlide>
+            ))}
+          </div>
+        </Swiper>
       </div>
       <div>
         {hourArray?.map((hour: string, index: number) => (

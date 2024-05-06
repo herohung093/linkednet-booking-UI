@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 interface ChildProps {
-  onClick: () => void;
+  onClick?: () => void;
 }
 export const CheckIcon: React.FC<ChildProps> = ({ onClick }) => {
   return (

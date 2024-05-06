@@ -6,7 +6,6 @@ import { addToCart, removeFromCart } from "@/redux toolkit/cartSlice";
 import { CheckIcon } from "@/icons/CheckIcon";
 import "@radix-ui/themes/styles.css";
 import useSWR from "swr";
-import Loading from "./Loading";
 import { Spinner } from "@radix-ui/themes";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;

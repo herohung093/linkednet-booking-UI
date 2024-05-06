@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-// CustomRadio.tsx
-
 import React, { useEffect } from "react";
 
 interface CustomRadioProps {
@@ -13,7 +10,6 @@ interface CustomRadioProps {
 }
 
 const CustomRadio: React.FC<CustomRadioProps> = ({
-  index,
   id,
   label,
   date,
@@ -40,13 +36,13 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
           className="hidden"
         />
         <div
-          className={`bg-white rounded-full shadow-md w-[70px] h-[70px] border flex flex-row justify-center items-center cursor-pointer ${
-            selected ? "border bg-blue-700 border-blue-500 " : ""
+          className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer ${
+            selected ? " bg-blue-700 border-blue-500 " : "bg-white"
           }`}
         >
           <div className="text-lg font-semibold flex justify-center items-center">
             <p
-              className={`text-3xl ${
+              className={`text-2xl ${
                 selected ? "text-white" : "text-slate-950"
               }`}
             >
