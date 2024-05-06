@@ -49,7 +49,6 @@ const StaffsPage: React.FC = () => {
 
   const selectedYear = currentDate.getFullYear();
   const staffId = useSelector((state: any) => state.cart.selectedStaff);
-  console.log(selectedDate);
 
   const {
     data: availability,
@@ -78,6 +77,7 @@ const StaffsPage: React.FC = () => {
     setSelectedIndex(0);
     setSelectedDay(today.toLocaleDateString("en-GB"));
     dispatch(setSelectedDate(today.toLocaleDateString("en-GB")));
+    dispatch(setTimeZone(timezone));
   }, []);
 
   useEffect(() => {
@@ -89,10 +89,8 @@ const StaffsPage: React.FC = () => {
 
   const handleSelectedHour = (hour: string) => {
     setSelectHour(hour);
-    console.log(hour);
     dispatch(setSelectedHour(hour));
   };
-  console.log(selectedIndex);
 
   if (error) return <Error />;
   if (isLoading) return <Loading />;
