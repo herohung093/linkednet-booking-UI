@@ -16,6 +16,7 @@ type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
 const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
+
 const StaffsPage: React.FC = () => {
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const monthNames = [
@@ -32,53 +33,39 @@ const StaffsPage: React.FC = () => {
     "Nov",
     "Dec",
   ];
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  const [selectHour, setSelectHour] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [startDate, setStartDate] = useState(new Date());
+  const [selectHour, setSelectHour] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   const days = [...Array(90)].map((_, index) => {
     const date = new Date(startDate);
     date.setDate(date.getDate() + index);
     return date;
   });
+
   const currentDate = new Date();
   const selectedDate =
     selectedIndex !== null ? days[selectedIndex] : currentDate;
   const selectedMonth = monthNames[selectedDate.getMonth()];
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  const selectedYear = currentDate.getFullYear();
+  const selectedYear = selectedDate.getFullYear();
   const staffId = useSelector((state: any) => state.cart.selectedStaff);
-  console.log(selectedDate);
 
   const {
     data: availability,
     error,
     isLoading,
   } = useSWR(
-    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=5&date=${currentDate.toLocaleDateString(
+    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=${staffId}&date=${selectedDate.toLocaleDateString(
       "en-GB"
     )}`,
     fetcher
   );
+
   const hourArray: string[] = Object.keys(availability || {}).map(
     (time: string) => time
   );
-
-  const dispatch = useDispatch();
-
-  const handleSelectedDate = (index: number, date: Date) => {
-    setSelectedIndex(index);
-    setSelectedDay(date.toLocaleDateString("en-GB"));
-    dispatch(setSelectedDate(date.toLocaleDateString("en-GB")));
-  };
-
-  useEffect(() => {
-    const today = new Date();
-    setSelectedIndex(0);
-    setSelectedDay(today.toLocaleDateString("en-GB"));
-    dispatch(setSelectedDate(today.toLocaleDateString("en-GB")));
-  }, []);
 
   useEffect(() => {
     if (hourArray.length > 0 && selectHour === null) {
@@ -87,13 +74,26 @@ const StaffsPage: React.FC = () => {
     }
   }, [hourArray, selectHour, dispatch]);
 
+  useEffect(() => {
+    const today = new Date();
+    const todayIndex = days.findIndex(
+      (date) => date.getDate() === today.getDate()
+    );
+    setSelectedIndex(todayIndex);
+    dispatch(setSelectedDate(today.toLocaleDateString("en-GB")));
+    dispatch(setTimeZone(timezone));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSelectedDate = (index: number, date: Date) => {
+    setSelectedIndex(index);
+    dispatch(setSelectedDate(date.toLocaleDateString("en-GB")));
+  };
+
   const handleSelectedHour = (hour: string) => {
     setSelectHour(hour);
-    console.log(hour);
     dispatch(setSelectedHour(hour));
   };
-  console.log(selectedIndex);
-
   if (error) return <Error />;
   if (isLoading) return <Loading />;
   return (
