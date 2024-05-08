@@ -32,7 +32,11 @@ const StaffsPage: React.FC = () => {
     "Nov",
     "Dec",
   ];
+  const currentDate = new Date();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectDay, setSelectDay] = useState<string | null>(
+    currentDate.toLocaleDateString("en-GB")
+  );
   const [selectHour, setSelectHour] = useState<string | null>(null);
   const days = [...Array(31)].map((_, index) => {
     const date = new Date();
@@ -40,7 +44,6 @@ const StaffsPage: React.FC = () => {
     return date;
   });
 
-  const currentDate = new Date();
   const selectedDate =
     selectedIndex !== null ? days[selectedIndex] : currentDate;
   const selectedMonth = monthNames[selectedDate.getMonth()];
@@ -55,31 +58,32 @@ const StaffsPage: React.FC = () => {
     error,
     isLoading,
   } = useSWR(
-    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=5&date=${currentDate.toLocaleDateString(
-      "en-GB"
-    )}`,
+    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/staffAvailability?staffId=${staffId}&date=${selectDay}`,
     fetcher
   );
-  const hourArray: string[] = Object.keys(availability || {}).map(
-    (time: string) => time
-  );
+
+  const hour: string[] = availability?.timeSlots;
+  const hourArray = hour?.map((time) => {
+    const [hour, minute] = time.split(":").map(Number);
+    return `${hour}:${minute === 0 ? "00" : minute}`;
+  });
 
   const dispatch = useDispatch();
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
     dispatch(setSelectedDate(date.toLocaleDateString("en-GB")));
+    setSelectDay(date.toLocaleDateString("en-GB"));
   };
 
   useEffect(() => {
-    const today = new Date();
     setSelectedIndex(0);
-    dispatch(setSelectedDate(today.toLocaleDateString("en-GB")));
+    dispatch(setSelectedDate(currentDate.toLocaleDateString("en-GB")));
     dispatch(setTimeZone(timezone));
   }, []);
 
   useEffect(() => {
-    if (hourArray.length > 0 && selectHour === null) {
+    if (hourArray?.length > 0 && selectHour === null) {
       setSelectHour(hourArray[0]);
       dispatch(setSelectedHour(hourArray[0]));
     }
@@ -89,9 +93,6 @@ const StaffsPage: React.FC = () => {
     setSelectHour(hour);
     dispatch(setSelectedHour(hour));
   };
-
-  if (error) return <Error />;
-  if (isLoading) return <Loading />;
 
   return (
     <div className="mt-10">
@@ -118,9 +119,11 @@ const StaffsPage: React.FC = () => {
           </div>
         </Swiper>
       </div>
-      <div>
+      <div className="mb-24">
         {hourArray?.map((hour: string, index: number) => (
           <CustomHourRadio
+          error={error}
+          isLoading={isLoading}
             hour={hour}
             key={index}
             onSelect={() => handleSelectedHour(hour)}

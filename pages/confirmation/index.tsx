@@ -3,9 +3,7 @@ import Cart from "@/components/Cart";
 import { clearCart, setSelectedStaff } from "@/redux toolkit/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AlertDeleteDialog from "@/components/AlertDeleteDialog";
-import AlertSuccessful from "@/components/AlertSuccessful";
 import useSWR from "swr";
-import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
@@ -46,32 +44,80 @@ const ConfirmationPage: React.FC = () => {
     email: "",
   });
 
-  const [formValid, setFormValid] = useState(false);
+  const [formValid, setFormValid] = useState<boolean>(false);
+  const [contactMethod, setContactMethod] = useState<"phoneNumber" | "email">(
+    "phoneNumber"
+  );
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
+    let newValue = value;
+
+    if (name === "phoneNumber" && !/^\d*$/.test(value)) {
+      return;
+    }
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: newValue,
     });
   };
 
   useEffect(() => {
     const isValid =
       formData.name.trim() !== "" &&
-      formData.phoneNumber.trim() !== "" &&
-      formData.email.trim() !== "";
+      (contactMethod === "phoneNumber"
+        ? formData.phoneNumber.trim() !== ""
+        : formData.email.trim() !== "");
     setFormValid(isValid);
-  }, [formData]);
+  }, [formData, contactMethod]);
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(formData);
-    console.log(bookingInfo);
-    dispatch(clearCart());
+    // console.log(bookingInfo);
+
+    const serviceItems = bookingInfo?.items?.map((service: any) => ({
+      id: service.id,
+    }));
+
+    const payload = {
+      customer: {
+        // name: formData.name,
+        phone: formData.phoneNumber,
+      },
+      note: `{I want ${staff.firstName} ${staff.lastName}}`,
+      bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
+      staff: {
+        id: staff.id,
+      },
+      status: "PENDING",
+      serviceItems: serviceItems,
+      // timeZone: bookingInfo.timeZone,
+    };
+    console.log(payload);
+
+    try {
+      const response = await fetch(
+        "https://big-umbrella-c5c3450b8837.herokuapp.com/reservation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+console.log(response);
+
+      if (!response.ok) {
+        throw new Error("Failed to submit booking.");
+      }
+      dispatch(clearCart());
+    } catch (error) {
+      console.error("Error submitting booking:", error);
+    }
   };
 
-  if (error) return <Error />;
   if (isLoading) return <Loading />;
 
   return (
@@ -95,25 +141,50 @@ const ConfirmationPage: React.FC = () => {
               placeholder="Name"
               className="border-2 rounded-md outline-none px-4 py-2 "
             />
+            <div className="flex justify-evenly">
+              <button
+                type="button"
+                onClick={() => setContactMethod("phoneNumber")}
+                className={`${
+                  contactMethod === "phoneNumber"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-gray-700"
+                } rounded-md px-4 py-2 w-[140px]`}
+              >
+                Phone Number
+              </button>
+              <button
+                type="button"
+                onClick={() => setContactMethod("email")}
+                className={`${
+                  contactMethod === "email"
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-gray-700"
+                } rounded-md px-4 py-2 w-[140px]`}
+              >
+                Email
+              </button>
+            </div>
             <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
+              type={contactMethod === "phoneNumber" ? "tel" : "email"}
+              name={contactMethod}
+              value={formData[contactMethod]}
               onChange={handleChange}
-              placeholder="Phone Number"
-              className="border-2 rounded-md outline-none px-4 py-2 "
+              placeholder={
+                contactMethod === "phoneNumber" ? "Phone Number" : "Email"
+              }
+              className="border-2 rounded-md outline-none px-4 py-2"
             />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="border-2 rounded-md outline-none px-4 py-2 "
-            />
+
             <div className="flex justify-between items-center mx-10 mt-10">
               <AlertDeleteDialog />
-              <AlertSuccessful formValid={formValid} />
+              <button
+                type="submit"
+                disabled={!formValid}
+                className={`text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[20px] leading-none focus:shadow-[0_0_0_2px] text-xl cursor-pointer  hover:text-pink-700 hover:border-pink-700`}
+              >
+                Confirm
+              </button>
             </div>
           </form>
         </div>
@@ -121,5 +192,4 @@ const ConfirmationPage: React.FC = () => {
     </div>
   );
 };
-
 export default ConfirmationPage;
