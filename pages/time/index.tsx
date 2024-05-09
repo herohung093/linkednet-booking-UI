@@ -65,7 +65,9 @@ const StaffsPage: React.FC = () => {
   const hour: string[] = availability?.timeSlots;
   const hourArray = hour?.map((time) => {
     const [hour, minute] = time.split(":").map(Number);
-    return `${hour}:${minute === 0 ? "00" : minute}`;
+    return `${hour.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")}`;
   });
 
   const dispatch = useDispatch();
@@ -96,9 +98,10 @@ const StaffsPage: React.FC = () => {
 
   return (
     <div className="mt-10">
+      <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select time</h1>
       <div className="flex justify-between mx-5 mb-5">
         <div>
-          <h2 className="text-2xl font-bold">{`${selectedMonth} ${selectedYear}`}</h2>
+          <h2 className="text-xl font-bold">{`${selectedMonth} ${selectedYear}`}</h2>
         </div>
       </div>
       <div className="flex items-center justify-center gap-4 mb-4">
@@ -122,8 +125,8 @@ const StaffsPage: React.FC = () => {
       <div className="mb-24">
         {hourArray?.map((hour: string, index: number) => (
           <CustomHourRadio
-          error={error}
-          isLoading={isLoading}
+            error={error}
+            isLoading={isLoading}
             hour={hour}
             key={index}
             onSelect={() => handleSelectedHour(hour)}

@@ -12,25 +12,23 @@ const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
 
 const ConfirmationPage: React.FC = () => {
+  const bookingInfo = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
-  const {
-    data: StaffList,
-    error,
-    isLoading,
-  } = useSWR(
-    "https://big-umbrella-c5c3450b8837.herokuapp.com/staff/?isOnlyActive=true",
+  const { data: staffList, isLoading } = useSWR(
+    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allAvailableStaffByDate?date=${bookingInfo?.selectedDate}&skillLevel=1`,
     fetcher
   );
-  const bookingInfo = useSelector((state: any) => state.cart);
   const staffId = bookingInfo.selectedStaff;
+  console.log(staffList);
 
   let staff: Staff;
-  if (staffId === -1) {
-    const randomIndex = Math.floor(Math.random() * StaffList.length);
-    staff = StaffList[randomIndex];
+  if (staffId === 0 && staffList) {
+    const randomIndex = Math.floor(Math.random() * staffList?.length);
+    staff = staffList[randomIndex];
   } else {
-    staff = StaffList?.find((staff: Staff) => staff.id == staffId);
+    staff = staffList?.find((staff: Staff) => staff.id == staffId);
   }
+  console.log(staff);
 
   useEffect(() => {
     if (staff) {
@@ -40,20 +38,20 @@ const ConfirmationPage: React.FC = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    phoneNumber: "",
+    phone: "",
     email: "",
   });
 
   const [formValid, setFormValid] = useState<boolean>(false);
-  const [contactMethod, setContactMethod] = useState<"phoneNumber" | "email">(
-    "phoneNumber"
+  const [contactMethod, setContactMethod] = useState<"phone" | "email">(
+    "phone"
   );
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     let newValue = value;
 
-    if (name === "phoneNumber" && !/^\d*$/.test(value)) {
+    if (name === "phone" && !/^\d*$/.test(value)) {
       return;
     }
 
@@ -66,15 +64,14 @@ const ConfirmationPage: React.FC = () => {
   useEffect(() => {
     const isValid =
       formData.name.trim() !== "" &&
-      (contactMethod === "phoneNumber"
-        ? formData.phoneNumber.trim() !== ""
+      (contactMethod === "phone"
+        ? formData.phone.trim() !== ""
         : formData.email.trim() !== "");
     setFormValid(isValid);
   }, [formData, contactMethod]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    // console.log(bookingInfo);
 
     const serviceItems = bookingInfo?.items?.map((service: any) => ({
       id: service.id,
@@ -83,7 +80,7 @@ const ConfirmationPage: React.FC = () => {
     const payload = {
       customer: {
         // name: formData.name,
-        phone: formData.phoneNumber,
+        phone: formData.phone,
       },
       note: `{I want ${staff.firstName} ${staff.lastName}}`,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
@@ -92,7 +89,6 @@ const ConfirmationPage: React.FC = () => {
       },
       status: "PENDING",
       serviceItems: serviceItems,
-      // timeZone: bookingInfo.timeZone,
     };
     console.log(payload);
 
@@ -107,7 +103,7 @@ const ConfirmationPage: React.FC = () => {
           body: JSON.stringify(payload),
         }
       );
-console.log(response);
+      console.log(response);
 
       if (!response.ok) {
         throw new Error("Failed to submit booking.");
@@ -129,7 +125,7 @@ console.log(response);
           Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
         </h2>
         <h2 className="text-xl font-semibold mb-3">
-          Staff: {staff && staff?.firstName + " " + staff?.lastName}
+          Staff: {staff ? staff?.firstName + " " + staff?.lastName : "N/A"}
         </h2>
         <div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
@@ -144,35 +140,33 @@ console.log(response);
             <div className="flex justify-evenly">
               <button
                 type="button"
-                onClick={() => setContactMethod("phoneNumber")}
+                onClick={() => setContactMethod("phone")}
                 className={`${
-                  contactMethod === "phoneNumber"
-                    ? "bg-blue-500 text-white"
+                  contactMethod === "phone"
+                    ? "bg-pink-500 text-white"
                     : "bg-white text-gray-700"
-                } rounded-md px-4 py-2 w-[140px]`}
+                } rounded-md px-4 py-2 w-[100px]`}
               >
-                Phone Number
+                Phone
               </button>
               <button
                 type="button"
                 onClick={() => setContactMethod("email")}
                 className={`${
                   contactMethod === "email"
-                    ? "bg-blue-500 text-white"
+                    ? "bg-pink-500 text-white"
                     : "bg-white text-gray-700"
-                } rounded-md px-4 py-2 w-[140px]`}
+                } rounded-md px-4 py-2 w-[100px]`}
               >
                 Email
               </button>
             </div>
             <input
-              type={contactMethod === "phoneNumber" ? "tel" : "email"}
+              type={contactMethod === "phone" ? "tel" : "email"}
               name={contactMethod}
               value={formData[contactMethod]}
               onChange={handleChange}
-              placeholder={
-                contactMethod === "phoneNumber" ? "Phone Number" : "Email"
-              }
+              placeholder={contactMethod === "phone" ? "Phone Number" : "Email"}
               className="border-2 rounded-md outline-none px-4 py-2"
             />
 
