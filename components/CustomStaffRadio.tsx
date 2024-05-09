@@ -37,7 +37,7 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
         className="hidden"
       />
       <div
-        className={`bg-white border-2 rounded-lg shadow-md py-2 mx-5 flex flex-col justify-center items-center cursor-pointer ${
+        className={` bg-white border-2 rounded-lg shadow-md py-2 mx-5 flex flex-col justify-center items-center cursor-pointer ${
           selected ? "border-blue-500" : ""
         }`}
       >

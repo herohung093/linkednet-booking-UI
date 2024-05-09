@@ -4,16 +4,15 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { Theme } from "@radix-ui/themes";
-import 'swiper/css';
-import 'swiper/css/navigation'; 
-import 'swiper/css/pagination'; 
-import 'swiper/css/scrollbar'; 
-
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Theme className={` bg-gradient-to-l from-pink-100`}>
+      <Theme>
         <Layout>
           <Component {...pageProps} />
         </Layout>

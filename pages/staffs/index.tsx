@@ -6,6 +6,8 @@ import { setSelectedStaff } from "@/redux toolkit/cartSlice";
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 
+import { CartSide } from "@/components/CartSide";
+
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
 const fetcher: FetcherFunction = (...args) =>
@@ -53,24 +55,29 @@ const StaffsPage: React.FC = () => {
   if (error) return <Error />;
   if (isLoading) return <Loading />;
   return (
-    <div>
-      <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">
-        Select professional
-      </h1>
-      <div className="grid grid-cols-2 gap-x-1 gap-y-4 ">
-        {newStaffsArray?.map((staff: Staff) => (
-          <CustomStaffRadio
-            error={error}
-            isLoading={isLoading}
-            key={staff.id}
-            id={staff.id}
-            firstName={staff.firstName}
-            lastName={staff.lastName}
-            nickName={staff.nickName}
-            selected={selectStaff === staff.id}
-            onSelect={handleSelectStaff}
-          />
-        ))}
+    <div className="md:flex md:gap-20 md:justify-around">
+      <div>
+        <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">
+          Select professional
+        </h1>
+        <div className="grid grid-cols-2 md:grid-cols-3  gap-x-1 gap-y-4 ">
+          {newStaffsArray?.map((staff: Staff) => (
+            <CustomStaffRadio
+              error={error}
+              isLoading={isLoading}
+              key={staff.id}
+              id={staff.id}
+              firstName={staff.firstName}
+              lastName={staff.lastName}
+              nickName={staff.nickName}
+              selected={selectStaff === staff.id}
+              onSelect={handleSelectStaff}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="mt-20">
+        <CartSide />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
+import Cart from "@/components/Cart";
+import { CartSide } from "@/components/CartSide";
 import Error from "@/components/Error";
-import Loading from "@/components/Loading";
 import { Logo } from "@/components/Logo";
 import { NailServices } from "@/components/NailServices";
 
@@ -39,16 +40,23 @@ export default function Home() {
   }, []);
 
   if (error) return <Error />;
-  if (isLoading) return <Loading />;
   return (
     <main>
-      <div className="sm:w-[80%] m-auto mb-20">
-        <Logo />
-        {groupedData &&
-          groupedData.map((item: any, index: number) => (
-            <NailServices key={index} data={item} index={index} />
-          ))}
+      <div>
+        <div>
+          <Logo isLoading={isLoading} />
+        </div>
+        <div className="md:flex md:gap-20 md:justify-around">
+          <div>
+            {groupedData &&
+              groupedData.map((item: any, index: number) => (
+                <NailServices key={index} data={item} index={index} />
+              ))}
+          </div>
+        <CartSide/>
+        </div>
       </div>
+      <div></div>
     </main>
   );
 }

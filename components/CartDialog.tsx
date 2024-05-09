@@ -2,7 +2,6 @@
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { CartIcon } from "@/icons/CartIcon";
 import Cart from "./Cart";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";

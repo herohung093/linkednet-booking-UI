@@ -127,8 +127,11 @@ const ConfirmationPage: React.FC = () => {
         <h2 className="text-xl font-semibold mb-3">
           Staff: {staff ? staff?.firstName + " " + staff?.lastName : "N/A"}
         </h2>
-        <div>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
+        <div className="max-w-[500px] mx-auto mt-10">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-y-5 justify-center  "
+          >
             <input
               type="text"
               name="name"

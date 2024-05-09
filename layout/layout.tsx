@@ -13,10 +13,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [cartItems]);
 
   return (
-    <div >
+    <div  className="sm:w-[80%] m-auto mb-20">
       <NavBar/>
-      <main>{children}</main>
-      {cartHasItem ? <BookingCart bookingInfo={bookingInfo} /> : ""}
+      <main>
+        {children}
+        </main>   
+      {cartHasItem ? <BookingCart bookingInfo={bookingInfo} /> : ""}    
     </div>
   );
 };
