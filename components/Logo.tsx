@@ -13,7 +13,7 @@ export const Logo: React.FC<PropsInterface> = ({ isLoading }) => {
         <Loading />
       ) : (
         <img
-          src="https://images.unsplash.com/photo-1631214524049-0ebbbe6d81aa?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src="https://media.istockphoto.com/id/165781365/photo/perfect-fingernails.jpg?s=1024x1024&w=is&k=20&c=1Nq9gwZGyABdvn9-SEsOty2u-80Y5nDkJi0YUDd8_Ro="
           alt="logo"
           width={1200}
           height={1000}

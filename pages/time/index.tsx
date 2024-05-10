@@ -82,6 +82,7 @@ const StaffsPage: React.FC = () => {
     setSelectedIndex(0);
     dispatch(setSelectedDate(currentDate.toLocaleDateString("en-GB")));
     dispatch(setTimeZone(timezone));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

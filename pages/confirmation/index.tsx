@@ -19,7 +19,6 @@ const ConfirmationPage: React.FC = () => {
     fetcher
   );
   const staffId = bookingInfo.selectedStaff;
-  console.log(staffList);
 
   let staff: Staff;
   if (staffId === 0 && staffList) {
@@ -28,7 +27,6 @@ const ConfirmationPage: React.FC = () => {
   } else {
     staff = staffList?.find((staff: Staff) => staff.id == staffId);
   }
-  console.log(staff);
 
   useEffect(() => {
     if (staff) {
@@ -37,7 +35,8 @@ const ConfirmationPage: React.FC = () => {
   }, [staff, dispatch]);
 
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     email: "",
   });
@@ -63,7 +62,8 @@ const ConfirmationPage: React.FC = () => {
 
   useEffect(() => {
     const isValid =
-      formData.name.trim() !== "" &&
+      formData.firstName.trim() !== "" &&
+      formData.lastName.trim() !== "" &&
       (contactMethod === "phone"
         ? formData.phone.trim() !== ""
         : formData.email.trim() !== "");
@@ -79,7 +79,8 @@ const ConfirmationPage: React.FC = () => {
 
     const payload = {
       customer: {
-        // name: formData.name,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         phone: formData.phone,
       },
       note: `{I want ${staff.firstName} ${staff.lastName}}`,
@@ -134,10 +135,18 @@ const ConfirmationPage: React.FC = () => {
           >
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
-              placeholder="Name"
+              placeholder="First Name"
+              className="border-2 rounded-md outline-none px-4 py-2 "
+            />
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Last Name"
               className="border-2 rounded-md outline-none px-4 py-2 "
             />
             <div className="flex justify-evenly">
