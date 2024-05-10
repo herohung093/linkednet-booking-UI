@@ -24,7 +24,7 @@ const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
     }
   };
   return (
-    <div className="fixed bottom-0 w-full md:bottom-5 flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out md:w-[80%]">
+    <div className="fixed bottom-0 w-full flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out ">
       {slug != "/confirmation" && (
         <div className="mx-4 flex justify-between items-center w-full">
           <CartDialog />
