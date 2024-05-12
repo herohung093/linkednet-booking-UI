@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 import CustomRadioDate from "@/components/CustomDateRadio";
-import CustomHourRadio from "@/components/CustomHourRadio";
-import {
-  setSelectedDate,
-  setSelectedHour,
-  setTimeZone,
-} from "@/redux toolkit/cartSlice";
+import { setSelectedDate, setSelectedHour } from "@/redux toolkit/cartSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Error from "@/components/Error";
-import Loading from "@/components/Loading";
+import CustomHourRadio from "@/components/CustomHourRadio";
+import { setSelectedStaffByHour } from "@/redux toolkit/staffSlice";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -32,12 +27,14 @@ const StaffsPage: React.FC = () => {
     "Nov",
     "Dec",
   ];
+  const dispatch = useDispatch();
   const currentDate = new Date();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [selectDay, setSelectDay] = useState<string | null>(
     currentDate.toLocaleDateString("en-GB")
   );
   const [selectHour, setSelectHour] = useState<string | null>(null);
+
   const days = [...Array(31)].map((_, index) => {
     const date = new Date();
     date.setDate(date.getDate() + index);
@@ -48,29 +45,27 @@ const StaffsPage: React.FC = () => {
     selectedIndex !== null ? days[selectedIndex] : currentDate;
   const selectedMonth = monthNames[selectedDate.getMonth()];
 
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   const selectedYear = currentDate.getFullYear();
-  const staffId = useSelector((state: any) => state.cart.selectedStaff);
+  const staff = useSelector((state: any) => state.cart.selectedStaff);
+  const staffList = useSelector((state: any) => state.staff.selectedStaffList);
 
   const {
     data: availability,
     error,
     isLoading,
   } = useSWR(
-    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/staffAvailability?staffId=${staffId}&date=${selectDay}`,
+    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=${staff?.id}&date=${selectDay}`,
     fetcher
   );
 
-  const hour: string[] = availability?.timeSlots;
-  const hourArray = hour?.map((time) => {
-    const [hour, minute] = time.split(":").map(Number);
-    return `${hour.toString().padStart(2, "0")}:${minute
-      .toString()
-      .padStart(2, "0")}`;
-  });
+  const hourArray: { time: string; staffs: number[] }[] = useMemo(() => {
+    if (!availability) return [];
+    return Object.entries(availability).map(([time, staffs]) => ({
+      time,
+      staffs: staffs as number[],
+    }));
+  }, [availability]);
 
-  const dispatch = useDispatch();
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
@@ -81,20 +76,18 @@ const StaffsPage: React.FC = () => {
   useEffect(() => {
     setSelectedIndex(0);
     dispatch(setSelectedDate(currentDate.toLocaleDateString("en-GB")));
-    dispatch(setTimeZone(timezone));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (hourArray?.length > 0 && selectHour === null) {
-      setSelectHour(hourArray[0]);
-      dispatch(setSelectedHour(hourArray[0]));
-    }
-  }, [hourArray, selectHour, dispatch]);
-
-  const handleSelectedHour = (hour: string) => {
-    setSelectHour(hour);
-    dispatch(setSelectedHour(hour));
+  const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
+    setSelectHour(hour.time);
+    dispatch(setSelectedHour(hour.time));
+    const randomIndex = Math.floor(Math.random() * hour.staffs?.length);
+    const randomStaffId = hour.staffs[randomIndex];
+    const selectedRandomStaff = [...staffList]?.find(
+      (staff: any) => staff.id == randomStaffId
+    );
+    dispatch(setSelectedStaffByHour(selectedRandomStaff));
   };
 
   return (
@@ -108,32 +101,37 @@ const StaffsPage: React.FC = () => {
       <div className="flex items-center justify-center gap-4 mb-4">
         <Swiper spaceBetween={0} slidesPerView={6}>
           <div className="flex gap-4">
-            {days.map((date, index) => (
-              <SwiperSlide key={index}>
-                <CustomRadioDate
-                  index={index}
-                  id={index}
-                  label={dayLabels[date.getDay()]}
-                  date={date.getDate().toString()}
-                  selected={selectedIndex === index}
-                  onSelect={() => handleSelectedDate(index, date)}
-                />
-              </SwiperSlide>
-            ))}
+            {days.map((date, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <CustomRadioDate
+                    index={index}
+                    id={index}
+                    label={dayLabels[date.getDay()]}
+                    date={date.getDate().toString()}
+                    selected={selectedIndex === index}
+                    onSelect={() => handleSelectedDate(index, date)}
+                  />
+                </SwiperSlide>
+              );
+            })}
           </div>
         </Swiper>
       </div>
       <div className="mb-24">
-        {hourArray?.map((hour: string, index: number) => (
-          <CustomHourRadio
-            error={error}
-            isLoading={isLoading}
-            hour={hour}
-            key={index}
-            onSelect={() => handleSelectedHour(hour)}
-            selected={selectHour === hour}
-          />
-        ))}
+        {hourArray?.map(
+          (hour: { time: string; staffs: number[] }, index: number) => (
+            <CustomHourRadio
+              staffs={hour.staffs}
+              error={error}
+              isLoading={isLoading}
+              hour={hour.time}
+              key={index}
+              onSelect={() => handleSelectedHour(hour)}
+              selected={selectHour === hour.time}
+            />
+          )
+        )}
       </div>
     </div>
   );

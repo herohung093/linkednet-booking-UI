@@ -5,6 +5,7 @@ import Error from "@/components/Error";
 import { Logo } from "@/components/Logo";
 import { NailServices } from "@/components/NailServices";
 
+
 import useSWR from "swr";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
@@ -21,6 +22,12 @@ export default function Home() {
     "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
     fetcher
   );
+  const { data: storeConfig } = useSWR(
+    "https://big-umbrella-c5c3450b8837.herokuapp.com/storeConfig/1",
+    fetcher
+  );
+
+
 
   const sortedData = serviceData?.sort((a: any, b: any) =>
     a.serviceType.type.localeCompare(b.serviceType.type)
@@ -53,7 +60,7 @@ export default function Home() {
                 <NailServices key={index} data={item} index={index} />
               ))}
           </div>
-        <CartSide/>
+          <CartSide />
         </div>
       </div>
       <div></div>

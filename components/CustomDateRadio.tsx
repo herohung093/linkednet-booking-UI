@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 interface CustomRadioProps {
   index: number;
@@ -23,6 +23,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
     if (date == currentDateString) {
       onSelect();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="flex flex-col items-center">
@@ -38,13 +39,13 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
         <div
           className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer ${
             selected ? " bg-blue-700 border-blue-500 " : "bg-white"
-          }`}
+          } `}
         >
           <div className="text-lg font-semibold flex justify-center items-center">
             <p
               className={`text-2xl ${
                 selected ? "text-white" : "text-slate-950"
-              }`}
+              } `}
             >
               {date}
             </p>

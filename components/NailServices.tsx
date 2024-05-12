@@ -13,7 +13,7 @@ export const NailServices: React.FC<{
 
   return (
     <div>
-      <div className="flex items-center justify-between mx-5 min-w-[400px]">
+      <div className="flex items-center justify-between mx-5 min-w-[300px]">
         <h1 className="p-3 font-bold text-2xl">{data[0].serviceType.type}</h1>
         <button
           onClick={() => setShowMap((prevShowMap) => !prevShowMap)}

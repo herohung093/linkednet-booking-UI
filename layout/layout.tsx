@@ -18,7 +18,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <main>
         {children}
         </main>   
-      {cartHasItem ? <BookingCart bookingInfo={bookingInfo} /> : ""}    
+      <BookingCart bookingInfo={bookingInfo} />  
     </div>
   );
 };

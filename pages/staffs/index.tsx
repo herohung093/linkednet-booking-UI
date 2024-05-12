@@ -7,6 +7,7 @@ import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 
 import { CartSide } from "@/components/CartSide";
+import { setSelectedStaffList } from "@/redux toolkit/staffSlice";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -18,6 +19,7 @@ const StaffsPage: React.FC = () => {
     "https://big-umbrella-c5c3450b8837.herokuapp.com/staff/?isOnlyActive=true",
     fetcher
   );
+
   const dispatch = useDispatch();
   const [selectStaff, setSelectStaff] = useState<number | null>(null);
 
@@ -36,6 +38,9 @@ const StaffsPage: React.FC = () => {
     }),
     []
   );
+  useEffect(() => {
+    dispatch(setSelectedStaffList(data));
+  });
 
   const newStaffsArray = useMemo(() => {
     return data ? [anyStaff, ...data] : [anyStaff];
@@ -43,13 +48,13 @@ const StaffsPage: React.FC = () => {
   useEffect(() => {
     if (newStaffsArray.length > 0 && selectStaff === null) {
       setSelectStaff(newStaffsArray[0].id);
-      dispatch(setSelectedStaff(newStaffsArray[0].id));
+      dispatch(setSelectedStaff(newStaffsArray[0]));
     }
-  }, [newStaffsArray, selectStaff, dispatch]);
+  }, [newStaffsArray, selectStaff, dispatch, data]);
 
-  const handleSelectStaff = (staffId: number) => {
-    setSelectStaff(staffId);
-    dispatch(setSelectedStaff(staffId));
+  const handleSelectStaff = (staff: Staff) => {
+    setSelectStaff(staff.id);
+    dispatch(setSelectedStaff(staff));
   };
 
   if (error) return <Error />;
@@ -66,10 +71,7 @@ const StaffsPage: React.FC = () => {
               error={error}
               isLoading={isLoading}
               key={staff.id}
-              id={staff.id}
-              firstName={staff.firstName}
-              lastName={staff.lastName}
-              nickName={staff.nickName}
+              staff={staff}
               selected={selectStaff === staff.id}
               onSelect={handleSelectStaff}
             />

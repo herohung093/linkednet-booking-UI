@@ -49,4 +49,19 @@ declare interface CartState {
   selectedHour: string | null;
   timeZone: string | null;
   selectedStaff: number | "" | null | Staff;
+  StoreConfig: StoreConfig | null;
+}
+declare interface StoreConfig {
+  businessHoursList: {
+    id: number;
+    dayOfWeek: string;
+    openingTime: string;
+    closingTime: string;
+  }[];
+  shortStoreName: string;
+  storeAddress: string;
+  storeEmail: string;
+  storeName: string;
+  storePhoneNumber: string;
+  zoneId: string;
 }

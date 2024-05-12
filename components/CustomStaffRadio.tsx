@@ -4,21 +4,15 @@ import Loading from "./Loading";
 import Error from "./Error";
 
 interface CustomStaffRadio {
-  id: number;
-  firstName: string;
-  lastName: string;
-  nickName: string;
+  staff: Staff;
   selected: boolean;
-  onSelect: (id: number) => void;
+  onSelect: (staff: Staff) => void;
   error: unknown;
   isLoading: boolean;
 }
 
 const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
-  id,
-  firstName,
-  lastName,
-  nickName,
+  staff,
   selected,
   onSelect,
   error,
@@ -31,8 +25,8 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
       <input
         type="radio"
         checked={selected}
-        onChange={() => onSelect(id)}
-        value={id}
+        onChange={() => onSelect(staff)}
+        value={staff.id}
         name="staff-radio"
         className="hidden"
       />
@@ -43,9 +37,9 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
       >
         <div className="text-base xs:text-sm font-semibold flex flex-col justify-center gap-2 mb-2 items-center">
           <AccountCircleIcon />
-          {firstName} {lastName}
+          {staff.firstName} {staff.lastName}
         </div>
-        <p className="text-gray-600 mb-4 text-base">Nickname: {nickName}</p>
+        <p className="text-gray-600 mb-4 text-base">Nickname: {staff.nickName}</p>
       </div>
     </label>
   );

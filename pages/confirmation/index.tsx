@@ -14,25 +14,11 @@ const fetcher: FetcherFunction = (...args) =>
 const ConfirmationPage: React.FC = () => {
   const bookingInfo = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
-  const { data: staffList, isLoading } = useSWR(
-    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allAvailableStaffByDate?date=${bookingInfo?.selectedDate}&skillLevel=1`,
-    fetcher
-  );
-  const staffId = bookingInfo.selectedStaff;
 
-  let staff: Staff;
-  if (staffId === 0 && staffList) {
-    const randomIndex = Math.floor(Math.random() * staffList?.length);
-    staff = staffList[randomIndex];
-  } else {
-    staff = staffList?.find((staff: Staff) => staff.id == staffId);
-  }
+ 
+  const staff = useSelector((state:any) =>state.staff.selectedStaffByHour)  
 
-  useEffect(() => {
-    if (staff) {
-      dispatch(setSelectedStaff(staff.id));
-    }
-  }, [staff, dispatch]);
+
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -95,7 +81,7 @@ const ConfirmationPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://big-umbrella-c5c3450b8837.herokuapp.com/reservation",
+        "https://big-umbrella-c5c3450b8837.herokuapp.com/reservation/",
         {
           method: "POST",
           headers: {
@@ -115,7 +101,7 @@ const ConfirmationPage: React.FC = () => {
     }
   };
 
-  if (isLoading) return <Loading />;
+  // if (isLoading) return <Loading />;
 
   return (
     <div className="w-[90%] mx-auto mt-9">
