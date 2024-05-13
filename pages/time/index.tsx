@@ -1,3 +1,4 @@
+'use-client'
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
@@ -6,6 +7,7 @@ import { setSelectedDate, setSelectedHour } from "@/redux toolkit/cartSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
 import CustomHourRadio from "@/components/CustomHourRadio";
 import { setSelectedStaffByHour } from "@/redux toolkit/staffSlice";
+import { useRouter } from "next/router";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -28,6 +30,13 @@ const StaffsPage: React.FC = () => {
     "Dec",
   ];
   const dispatch = useDispatch();
+  const bookingInfo = useSelector((state: any) => state.cart);
+  const router = useRouter();
+  useEffect(() => {
+    if (bookingInfo?.items.length === 0) {
+      router.push("/");
+    }
+  }, [bookingInfo,router]);
   const currentDate = new Date();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [selectDay, setSelectDay] = useState<string | null>(
@@ -65,7 +74,6 @@ const StaffsPage: React.FC = () => {
       staffs: staffs as number[],
     }));
   }, [availability]);
-
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);

@@ -1,6 +1,7 @@
+'use-client'
 import CustomStaffRadio from "@/components/CustomStaffRadio";
 import React, { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 import { setSelectedStaff } from "@/redux toolkit/cartSlice";
 import Error from "@/components/Error";
@@ -8,6 +9,7 @@ import Loading from "@/components/Loading";
 
 import { CartSide } from "@/components/CartSide";
 import { setSelectedStaffList } from "@/redux toolkit/staffSlice";
+import { useRouter } from "next/router";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -19,6 +21,13 @@ const StaffsPage: React.FC = () => {
     "https://big-umbrella-c5c3450b8837.herokuapp.com/staff/?isOnlyActive=true",
     fetcher
   );
+  const bookingInfo = useSelector((state: any) => state.cart);
+  const router = useRouter();
+  useEffect(() => {
+    if (bookingInfo?.items.length === 0) {
+      router.push("/");
+    }
+  }, [bookingInfo,router]);
 
   const dispatch = useDispatch();
   const [selectStaff, setSelectStaff] = useState<number | null>(null);

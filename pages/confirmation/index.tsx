@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AlertDeleteDialog from "@/components/AlertDeleteDialog";
 import useSWR from "swr";
 import Loading from "@/components/Loading";
+import { useRouter } from "next/router";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -14,11 +15,13 @@ const fetcher: FetcherFunction = (...args) =>
 const ConfirmationPage: React.FC = () => {
   const bookingInfo = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
-
- 
-  const staff = useSelector((state:any) =>state.staff.selectedStaffByHour)  
-
-
+  const router = useRouter();
+  useEffect(() => {
+    if (bookingInfo?.items.length === 0) {
+      router.push("/");
+    }
+  }, [bookingInfo, router]);
+  const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -77,7 +80,6 @@ const ConfirmationPage: React.FC = () => {
       status: "PENDING",
       serviceItems: serviceItems,
     };
-    console.log(payload);
 
     try {
       const response = await fetch(
@@ -90,7 +92,7 @@ const ConfirmationPage: React.FC = () => {
           body: JSON.stringify(payload),
         }
       );
-      console.log(response);
+      router.push("/");
 
       if (!response.ok) {
         throw new Error("Failed to submit booking.");
@@ -100,8 +102,6 @@ const ConfirmationPage: React.FC = () => {
       console.error("Error submitting booking:", error);
     }
   };
-
-  // if (isLoading) return <Loading />;
 
   return (
     <div className="w-[90%] mx-auto mt-9">

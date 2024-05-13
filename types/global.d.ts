@@ -65,3 +65,21 @@ declare interface StoreConfig {
   storePhoneNumber: string;
   zoneId: string;
 }
+
+declare interface StoreInfo {
+  id: number;
+  storeName: string;
+  shortStoreName: string;
+  zoneId: string;
+  storeAddress: string;
+  storePhoneNumber: string;
+  storeEmail: string;
+  businessHoursList: BusinessHours[];
+}
+
+declare interface BusinessHours {
+  id: number;
+  dayOfWeek: string;
+  openingTime: string;
+  closingTime: string;
+}

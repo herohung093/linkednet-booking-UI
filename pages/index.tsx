@@ -1,10 +1,12 @@
 "use client";
-import Cart from "@/components/Cart";
 import { CartSide } from "@/components/CartSide";
 import Error from "@/components/Error";
 import { Logo } from "@/components/Logo";
 import { NailServices } from "@/components/NailServices";
-
+import OpeningTime from "@/components/OpeningTime";
+import { setSelectedStoreInfo } from "@/redux toolkit/storeInfo";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import useSWR from "swr";
 
@@ -26,8 +28,12 @@ export default function Home() {
     "https://big-umbrella-c5c3450b8837.herokuapp.com/storeConfig/1",
     fetcher
   );
+  const dispatch = useDispatch();
 
-
+  useEffect(() => {
+    dispatch(setSelectedStoreInfo(storeConfig));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storeConfig]);
 
   const sortedData = serviceData?.sort((a: any, b: any) =>
     a.serviceType.type.localeCompare(b.serviceType.type)
@@ -48,7 +54,7 @@ export default function Home() {
 
   if (error) return <Error />;
   return (
-    <main>
+    <main className="mb-20">
       <div>
         <div>
           <Logo isLoading={isLoading} />
@@ -60,10 +66,13 @@ export default function Home() {
                 <NailServices key={index} data={item} index={index} />
               ))}
           </div>
+          <OpeningTime
+            key={storeConfig?.id}
+            businessHours={storeConfig?.businessHoursList}
+          ></OpeningTime>
           <CartSide />
         </div>
       </div>
-      <div></div>
     </main>
   );
 }
