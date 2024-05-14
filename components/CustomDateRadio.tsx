@@ -7,6 +7,7 @@ interface CustomRadioProps {
   date: string;
   selected: boolean | undefined;
   onSelect: () => void;
+  unavailable: boolean;
 }
 
 const CustomRadio: React.FC<CustomRadioProps> = ({
@@ -15,6 +16,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
   date,
   selected,
   onSelect,
+  unavailable,
 }) => {
   const currentDate = new Date();
   const currentDateString = currentDate.getDate().toLocaleString("en-GB");
@@ -39,7 +41,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
         <div
           className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer ${
             selected ? " bg-blue-700 border-blue-500 " : "bg-white"
-          } `}
+          } ${unavailable && "line-through bg-slate-400"} `}
         >
           <div className="text-lg font-semibold flex justify-center items-center">
             <p

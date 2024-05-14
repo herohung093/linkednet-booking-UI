@@ -1,4 +1,4 @@
-'use-client'
+"use-client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
@@ -14,7 +14,17 @@ type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
 const StaffsPage: React.FC = () => {
-  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayLabels: { [key: number]: string } = {  
+    0: "Sun",
+    1: "Mon",
+    2: "Tue",
+    3: "Wed",
+    4: "Thu",
+    5: "Fri",
+    6: "Sat",
+    7: "Sun",
+    // 7: "Sun",
+  };
   const monthNames = [
     "Jan",
     "Feb",
@@ -36,7 +46,7 @@ const StaffsPage: React.FC = () => {
     if (bookingInfo?.items.length === 0) {
       router.push("/");
     }
-  }, [bookingInfo,router]);
+  }, [bookingInfo, router]);
   const currentDate = new Date();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [selectDay, setSelectDay] = useState<string | null>(
@@ -98,6 +108,17 @@ const StaffsPage: React.FC = () => {
     dispatch(setSelectedStaffByHour(selectedRandomStaff));
   };
 
+  const unavailableDates = useMemo(() => {
+    if (!staff || !staff.workingDays || !availability) return [];
+    const workingDays = staff.workingDays.split(",")
+    console.log(workingDays);
+
+    return days.filter((date) => {
+      const dayIndex = date.getDay();
+      return !workingDays.toString().includes(dayIndex.toString());
+    });
+  }, [staff, availability, days]);
+
   return (
     <div className="mt-10">
       <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select time</h1>
@@ -110,6 +131,10 @@ const StaffsPage: React.FC = () => {
         <Swiper spaceBetween={0} slidesPerView={6}>
           <div className="flex gap-4">
             {days.map((date, index) => {
+              const isUnavailable = unavailableDates.some(
+                (unavailableDate) =>
+                  unavailableDate.getTime() === date.getTime()
+              );
               return (
                 <SwiperSlide key={index}>
                   <CustomRadioDate
@@ -119,6 +144,7 @@ const StaffsPage: React.FC = () => {
                     date={date.getDate().toString()}
                     selected={selectedIndex === index}
                     onSelect={() => handleSelectedDate(index, date)}
+                    unavailable={isUnavailable}
                   />
                 </SwiperSlide>
               );

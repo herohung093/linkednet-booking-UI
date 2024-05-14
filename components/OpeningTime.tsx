@@ -14,7 +14,7 @@ const OpeningTime: React.FC<{ businessHours: BusinessHours[] }> = ({
     <div>
       <h2 className="text-xl font-bold mt-10 mx-5 mb-5">Opening times</h2>
       {businessHours?.map((day) => (
-        <div key={day.dayOfWeek} className="flex justify-between py-2 mx-3">
+        <div key={day.dayOfWeek} className="flex justify-between py-2 mx-10">
           <h3 className="text-base font-medium">{day.dayOfWeek}</h3>
           {day.openingTime === "Closed" ? (
             <p className="text-base font-medium text-red-500">Closed</p>

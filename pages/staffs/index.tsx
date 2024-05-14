@@ -1,4 +1,4 @@
-'use-client'
+"use-client";
 import CustomStaffRadio from "@/components/CustomStaffRadio";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +27,7 @@ const StaffsPage: React.FC = () => {
     if (bookingInfo?.items.length === 0) {
       router.push("/");
     }
-  }, [bookingInfo,router]);
+  }, [bookingInfo, router]);
 
   const dispatch = useDispatch();
   const [selectStaff, setSelectStaff] = useState<number | null>(null);
@@ -42,7 +42,7 @@ const StaffsPage: React.FC = () => {
       skillLevel: 1,
       dateOfBirth: "",
       rate: 1,
-      workingDays: "",
+      workingDays: "1,2,3,4,5,6,7",
       active: true,
     }),
     []

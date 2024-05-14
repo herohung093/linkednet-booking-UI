@@ -11,17 +11,11 @@ const NavBar: React.FC = () => {
   const dispatch = useDispatch();
   const storeInfo = useSelector((state: any) => state.storeInfo.storeInfo);
   const [store, setStore] = useState<string | null>(null);
-  console.log(storeInfo);
   useEffect(() => {
     setStore(storeInfo?.storeName);
   }, [storeInfo]);
   const goBack = () => {
     router.back();
-  };
-
-  const goToHome = () => {
-    dispatch(clearCart());
-    router.push("/");
   };
 
   return (

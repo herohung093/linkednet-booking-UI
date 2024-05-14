@@ -66,6 +66,8 @@ const cartSlice = createSlice({
     },
     setSelectedStaff(state, action: PayloadAction<Staff | null>) {
       state.selectedStaff = action.payload;
+      console.log(action.payload);
+      
     },
     setStoreConfig(state, action: PayloadAction<StoreConfig>) {
       state.StoreConfig = action.payload;
