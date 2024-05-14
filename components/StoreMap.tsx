@@ -1,13 +1,27 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export const StoreMap: React.FC<any> = ({ storeConfig }) => {
+  const storeAddress = storeConfig?.storeAddress;
+  const [directionUrl, setDirectionUrl] = useState<string>("");
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodeURIComponent(storeAddress)}`;
+        setDirectionUrl(url);
+      });
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, [storeAddress]);
+
   const router = useRouter();
   const getDirection = () => {
-    router.push(
-      "https://www.google.com/maps/dir/-37.7240234,144.8401234/33+Nanovich+Ave,+Girrawheen+WA+6064/@-33.9007252,119.7453325,5z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x2a32ae0e1097fcfb:0x19b1a0dc03d86c2a!2m2!1d115.8354706!2d-31.8433801?entry=ttu"
-    );
+    router.push(directionUrl);
   };
+
   return (
     <div className="p-6 cursor-pointer" onClick={getDirection}>
       <img src="/map.png" alt="map" className="mb-5" />

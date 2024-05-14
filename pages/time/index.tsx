@@ -22,17 +22,8 @@ const StaffsPage: React.FC = () => {
     4: "Thu",
     5: "Fri",
     6: "Sat",
-    // 7: "Sun",
   };
-  // const dayLabels: { [key: number]: string } = {
-  //   0: "Mon",
-  //   1: "Tue",
-  //   2: "Wed",
-  //   3: "Thu",
-  //   4: "Fri",
-  //   5: "Sat",
-  //   6: "Sun",
-  // };
+
   const monthNames = [
     "Jan",
     "Feb",
@@ -85,13 +76,22 @@ const StaffsPage: React.FC = () => {
     fetcher
   );
 
+  const currentHour = currentDate.getHours();
+
   const hourArray: { time: string; staffs: number[] }[] = useMemo(() => {
     if (!availability) return [];
-    return Object.entries(availability).map(([time, staffs]) => ({
-      time,
-      staffs: staffs as number[],
-    }));
-  }, [availability]);
+    return Object.entries(availability)
+      .map(([time, staffs]) => ({
+        time,
+        staffs: staffs as number[],
+      }))
+      .filter(({ time }) => {
+        const hour = parseInt(time.split(":")[0]);
+        return selectedDate.getDate() === currentDate.getDate()
+          ? hour >= currentHour
+          : true;
+      });
+  }, [availability, currentHour, selectedDate, currentDate]);
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
@@ -119,12 +119,17 @@ const StaffsPage: React.FC = () => {
   const unavailableDates = useMemo(() => {
     if (!staff || !staff.workingDays || !availability) return [];
     const workingDays = staff.workingDays.split(",");
-    const normalizedWorkingDays = workingDays.map((day:any) => parseInt(day));
+    const normalizedWorkingDays = workingDays.map((day: any) => parseInt(day));
     return days.filter((date) => {
       const dayIndex = date.getDay();
       return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
     });
   }, [staff, availability, days]);
+
+  const latestHour =
+    hourArray.length > 0
+      ? parseInt(hourArray[hourArray.length - 1].time.split(":")[0])
+      : 0;
 
   return (
     <div className="mt-10">
@@ -135,7 +140,7 @@ const StaffsPage: React.FC = () => {
         </div>
       </div>
       <div className="flex items-center justify-center gap-4 mb-4">
-        <Swiper spaceBetween={0} slidesPerView={6}>
+        <Swiper spaceBetween={0} slidesPerView={5} style={{ zIndex: 1 }}>
           <div className="flex gap-4">
             {days.map((date, index) => {
               const isUnavailable = unavailableDates.some(
@@ -159,6 +164,11 @@ const StaffsPage: React.FC = () => {
           </div>
         </Swiper>
       </div>
+      {currentHour >= latestHour && (
+        <div className="mb-5 mx-5 text-red-600 font-bold">
+          Fully booked on this date
+        </div>
+      )}
       <div className="mb-24">
         {hourArray?.map(
           (hour: { time: string; staffs: number[] }, index: number) => (
