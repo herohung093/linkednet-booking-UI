@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Cart from "@/components/Cart";
-import { clearCart, setSelectedStaff } from "@/redux toolkit/cartSlice";
+import { clearCart } from "@/redux toolkit/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AlertDeleteDialog from "@/components/AlertDeleteDialog";
-import useSWR from "swr";
-import Loading from "@/components/Loading";
+
 import { useRouter } from "next/router";
+import AlertSuccessful from "@/components/AlertSuccessful";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -13,6 +13,7 @@ const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
 
 const ConfirmationPage: React.FC = () => {
+  const [ok,setOk] = useState<boolean | null>(null)
   const bookingInfo = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -92,12 +93,10 @@ const ConfirmationPage: React.FC = () => {
           body: JSON.stringify(payload),
         }
       );
-      router.push("/");
-
+      setOk(response.ok)
       if (!response.ok) {
         throw new Error("Failed to submit booking.");
       }
-      dispatch(clearCart());
     } catch (error) {
       console.error("Error submitting booking:", error);
     }
@@ -170,13 +169,8 @@ const ConfirmationPage: React.FC = () => {
 
             <div className="flex justify-between items-center mx-10 mt-10">
               <AlertDeleteDialog />
-              <button
-                type="submit"
-                disabled={!formValid}
-                className={`text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[20px] leading-none focus:shadow-[0_0_0_2px] text-xl cursor-pointer  hover:text-pink-700 hover:border-pink-700`}
-              >
-                Confirm
-              </button>
+              <AlertSuccessful formValid={formValid} bookingInfo={bookingInfo} ok={ok}/>
+        
             </div>
           </form>
         </div>
