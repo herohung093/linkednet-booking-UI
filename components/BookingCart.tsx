@@ -45,15 +45,15 @@ const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
 
   return (
     <>
-      <div className="fixed bottom-0 w-full flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out ">
+      <div className={`fixed bottom-0 w-full flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out z-[1] `}>
         {slug != "/confirmation" && (
           <div className="mx-4 flex justify-between items-center w-full">
             <CartDialog />
-            <CartIcon onClick={handleRoute} disabled={cart.items.length == 0} />
+            <CartIcon onClick={handleRoute} disabled={cart.items.length == 0 } />
             {showDialog && (
-              <div className="fixed top-24 left-0 w-full h-full flex items-center justify-center">
-                <div className="bg-white border border-gray-200 rounded p-6 shadow-md flex flex-col ">
-                  <p className="mb-6 text-lg">{dialogMessage}</p>
+              <div className="fixed top-24 left-0 w-full h-full flex items-center justify-center z-[2]">
+                <div className="bg-white border border-gray-200 rounded p-6 shadow-md flex flex-col  ">
+                  <p className="mb-6 text-lg z-[99]]">{dialogMessage}</p>
                   <button
                     onClick={closeDialog}
                     className="bg-pink-400 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded mt-2"

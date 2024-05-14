@@ -119,7 +119,8 @@ const TimePage: React.FC = () => {
     const selectedRandomStaff = [...staffList]?.find(
       (staff: any) => staff.id == randomStaffId
     );
-    dispatch(setSelectedStaff(selectedRandomStaff));
+    
+    dispatch(setSelectedStaffByHour(selectedRandomStaff));
   };
 
   const unavailableDates = useMemo(() => {
@@ -172,14 +173,14 @@ const TimePage: React.FC = () => {
       </div>
       <div className="flex items-center justify-center gap-4 mb-4">
         <Swiper spaceBetween={0} slidesPerView={5} style={{ zIndex: 1 }}>
-          <div className="flex gap-4">
+          <div className="flex gap-4 z-[1]">
             {days.map((date, index) => {
               const isUnavailable = unavailableDates.some(
                 (unavailableDate) =>
                   unavailableDate.getTime() === date.getTime()
               );
               return (
-                <SwiperSlide key={index}>
+                <SwiperSlide key={index} >
                   <CustomRadioDate
                     index={index}
                     id={index}
