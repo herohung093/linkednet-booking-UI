@@ -14,7 +14,7 @@ type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
 const StaffsPage: React.FC = () => {
-  const dayLabels: { [key: number]: string } = {  
+  const dayLabels: { [key: number]: string } = {
     0: "Sun",
     1: "Mon",
     2: "Tue",
@@ -22,9 +22,17 @@ const StaffsPage: React.FC = () => {
     4: "Thu",
     5: "Fri",
     6: "Sat",
-    7: "Sun",
     // 7: "Sun",
   };
+  // const dayLabels: { [key: number]: string } = {
+  //   0: "Mon",
+  //   1: "Tue",
+  //   2: "Wed",
+  //   3: "Thu",
+  //   4: "Fri",
+  //   5: "Sat",
+  //   6: "Sun",
+  // };
   const monthNames = [
     "Jan",
     "Feb",
@@ -110,12 +118,11 @@ const StaffsPage: React.FC = () => {
 
   const unavailableDates = useMemo(() => {
     if (!staff || !staff.workingDays || !availability) return [];
-    const workingDays = staff.workingDays.split(",")
-    console.log(workingDays);
-
+    const workingDays = staff.workingDays.split(",");
+    const normalizedWorkingDays = workingDays.map((day:any) => parseInt(day));
     return days.filter((date) => {
       const dayIndex = date.getDay();
-      return !workingDays.toString().includes(dayIndex.toString());
+      return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
     });
   }, [staff, availability, days]);
 
