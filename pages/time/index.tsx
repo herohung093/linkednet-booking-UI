@@ -3,17 +3,23 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 import CustomRadioDate from "@/components/CustomDateRadio";
-import { setSelectedDate, setSelectedHour } from "@/redux toolkit/cartSlice";
+import {
+  setSelectedDate,
+  setSelectedHour,
+  setSelectedStaff,
+} from "@/redux toolkit/cartSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
 import CustomHourRadio from "@/components/CustomHourRadio";
 import { setSelectedStaffByHour } from "@/redux toolkit/staffSlice";
 import { useRouter } from "next/router";
+import Select from "react-select";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
 const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
-const StaffsPage: React.FC = () => {
+
+const TimePage: React.FC = () => {
   const dayLabels: { [key: number]: string } = {
     0: "Sun",
     1: "Mon",
@@ -113,7 +119,7 @@ const StaffsPage: React.FC = () => {
     const selectedRandomStaff = [...staffList]?.find(
       (staff: any) => staff.id == randomStaffId
     );
-    dispatch(setSelectedStaffByHour(selectedRandomStaff));
+    dispatch(setSelectedStaff(selectedRandomStaff));
   };
 
   const unavailableDates = useMemo(() => {
@@ -127,12 +133,37 @@ const StaffsPage: React.FC = () => {
   }, [staff, availability, days]);
 
   const latestHour =
-    hourArray.length > 0
-      ? parseInt(hourArray[hourArray.length - 1].time.split(":")[0])
-      : 0;
+    hourArray.length > 0 &&
+    parseInt(hourArray[hourArray.length - 1].time.split(":")[0]);
+
+  const [selectStaff, setSelectStaff] = useState<any>({
+    value: staff?.id,
+    label: staff?.firstName + " " + staff?.lastName,
+  });
+
+  const handleStaffChange = (selectedOption: any) => {
+    setSelectStaff(selectedOption);
+    const selectedStaffMember = staffList.find(
+      (staff: any) => staff.id === selectedOption.value
+    );
+
+    dispatch(setSelectedStaff(selectedStaffMember));
+  };
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 ">
+      <div className="mx-6 ">
+        <h1 className="text-lg font-bold mb-3">Select Staff</h1>
+        <Select
+          options={staffList?.map((staff: any) => ({
+            value: staff.id,
+            label: staff.firstName + " " + staff.lastName,
+          }))}
+          value={selectStaff}
+          onChange={handleStaffChange}
+          className="z-[2]"
+        />
+      </div>
       <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select time</h1>
       <div className="flex justify-between mx-5 mb-5">
         <div>
@@ -164,7 +195,7 @@ const StaffsPage: React.FC = () => {
           </div>
         </Swiper>
       </div>
-      {currentHour >= latestHour && (
+      {latestHour && currentHour >= latestHour && (
         <div className="mb-5 mx-5 text-red-600 font-bold">
           Fully booked on this date
         </div>
@@ -188,4 +219,4 @@ const StaffsPage: React.FC = () => {
   );
 };
 
-export default StaffsPage;
+export default TimePage;

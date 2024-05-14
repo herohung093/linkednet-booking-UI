@@ -47,15 +47,15 @@ const StaffsPage: React.FC = () => {
     }),
     []
   );
-  useEffect(() => {
-    dispatch(setSelectedStaffList(data));
-  });
 
   const newStaffsArray = useMemo(() => {
     return data ? [anyStaff, ...data] : [anyStaff];
   }, [data, anyStaff]);
   useEffect(() => {
-    if (newStaffsArray.length > 0 && selectStaff === null) {
+    dispatch(setSelectedStaffList(newStaffsArray));
+  });
+  useEffect(() => {
+    if (newStaffsArray?.length > 0 && selectStaff === null) {
       setSelectStaff(newStaffsArray[0].id);
       dispatch(setSelectedStaff(newStaffsArray[0]));
     }
