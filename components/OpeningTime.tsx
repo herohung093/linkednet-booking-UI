@@ -11,7 +11,7 @@ const OpeningTime: React.FC<{ businessHours: BusinessHours[] }> = ({
   };
 
   return (
-    <div>
+    <div className="mb-10">
       <h2 className="text-xl font-bold mt-10 mx-5 mb-5">Opening times</h2>
       {businessHours?.map((day) => (
         <div key={day.dayOfWeek} className="flex justify-between py-2 mx-10">

@@ -4,6 +4,8 @@ import Error from "@/components/Error";
 import { Logo } from "@/components/Logo";
 import { NailServices } from "@/components/NailServices";
 import OpeningTime from "@/components/OpeningTime";
+import { StoreInfo } from "@/components/StoreInfo";
+import { StoreMap } from "@/components/StoreMap";
 import { setSelectedStoreInfo } from "@/redux toolkit/storeInfo";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -59,6 +61,7 @@ export default function Home() {
         <div>
           <Logo isLoading={isLoading} />
         </div>
+        <div><StoreInfo storeConfig={storeConfig} /></div>
         <div className="md:flex md:gap-20 md:justify-around">
           <div>
             {groupedData &&
@@ -70,6 +73,7 @@ export default function Home() {
             key={storeConfig?.id}
             businessHours={storeConfig?.businessHoursList}
           ></OpeningTime>
+          <StoreMap storeConfig={storeConfig} />
           <CartSide />
         </div>
       </div>
