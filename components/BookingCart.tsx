@@ -44,21 +44,26 @@ const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
 
   return (
     <>
-      <div className={`fixed bottom-0 w-full flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out z-[1] `}>
+      <div
+        className={`fixed bottom-0 w-full flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out z-[10] `}
+      >
         {slug != "/confirmation" && (
           <div className="mx-4 flex justify-between items-center w-full">
             <CartDialog />
-            <CartIcon onClick={handleRoute} disabled={cart.items.length == 0 } />
+            <CartIcon onClick={handleRoute} disabled={cart.items.length == 0} />
             {showDialog && (
-              <div className="fixed top-24 left-0 w-full h-full flex items-center justify-center z-[2]">
-                <div className="bg-white border border-gray-200 rounded p-6 shadow-md flex flex-col  ">
-                  <p className="mb-6 text-lg z-[99]]">{dialogMessage}</p>
-                  <button
-                    onClick={closeDialog}
-                    className="bg-pink-400 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded mt-2"
-                  >
-                    OK
-                  </button>
+              <div className="fixed top-0 left-0 w-screen h-screen z-[9]">
+                <div className="fixed top-0 left-0 w-screen h-screen bg-slate-600 opacity-55 z-[9]"></div>
+                <div className="fixed top-24 left-0 w-full h-full flex items-center justify-center z-[10] ">
+                  <div className="bg-white border border-gray-200 rounded p-6 shadow-md flex flex-col  ">
+                    <p className="mb-6 text-lg z-[99]]">{dialogMessage}</p>
+                    <button
+                      onClick={closeDialog}
+                      className="bg-pink-400 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded mt-2"
+                    >
+                      OK
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
