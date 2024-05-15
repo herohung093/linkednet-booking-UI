@@ -39,15 +39,13 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
           className="hidden"
         />
         <div
-          className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer ${
-            unavailable ? "line-through bg-gray-500" : "bg-white"
-          }  ${selected ? " bg-blue-600 border-blue-500 " : ""}${selected && unavailable ? " bg-gray-600 border-gray-500 " : ""} `}
+          className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer  ${
+            !selected ? "bg-white  " : " bg-blue-500 border-blue-500"
+          } ${unavailable ? "line-through bg-gray-700" : "bg-white"}`}
         >
           <div className="text-lg font-semibold flex justify-center items-center">
             <p
-              className={`text-2xl ${
-                selected ? "text-white" : "text-slate-950"
-              } `}
+              className={`text-2xl ${!selected ? "text-black" : "text-white"} `}
             >
               {date}
             </p>
