@@ -3,7 +3,6 @@ import CartDialog from "./CartDialog";
 import { CartIcon } from "@/icons/CartIcon";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import CustomAlertDialog from "./CustomAlertDialog";
 
 const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
   const router = useRouter();

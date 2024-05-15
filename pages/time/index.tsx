@@ -196,11 +196,11 @@ const TimePage: React.FC = () => {
           </div>
         </Swiper>
       </div>
-      {/* {latestHour && currentHour >= latestHour && (
-        <div className="mb-5 mx-5 text-red-600 font-bold">
+      {hourArray?.length == 0 && (
+        <div className="mb-5 mx-5 text-red-600 font-bold w-full h-[400px] flex justify-center items-center">
           Fully booked on this date
         </div>
-      )} */}
+      )}
       <div className="mb-24">
         {hourArray?.map(
           (hour: { time: string; staffs: number[] }, index: number) => (
