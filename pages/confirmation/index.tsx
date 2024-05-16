@@ -59,7 +59,7 @@ const ConfirmationPage: React.FC = () => {
         : formData.email.trim() !== "");
     setFormValid(isValid);
   }, [formData, contactMethod]);
-const [res,setRes] = useState<any>(null)
+  const [res, setRes] = useState<any>(null);
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -72,6 +72,7 @@ const [res,setRes] = useState<any>(null)
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
+        email: formData.email,
       },
       note: `{I want ${staff.firstName} ${staff.lastName}}`,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
@@ -100,8 +101,7 @@ const [res,setRes] = useState<any>(null)
       if (!response.ok) {
         throw new Error("Failed to submit booking.");
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
@@ -175,7 +175,7 @@ const [res,setRes] = useState<any>(null)
                 formValid={formValid}
                 bookingInfo={bookingInfo}
                 ok={ok}
-                id= {res?.id}
+                id={res?.id}
               />
             </div>
           </form>
