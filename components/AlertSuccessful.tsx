@@ -6,11 +6,12 @@ import { clearCart } from "@/redux toolkit/cartSlice";
 import { useDispatch } from "react-redux";
 
 const AlertSuccessful: React.FC<{
+  id: string | number;
   ok: boolean | null;
   bookingInfo: CartState;
   formValid: boolean;
   onClick?: () => void;
-}> = ({ formValid, onClick, bookingInfo, ok }) => {
+}> = ({ formValid, onClick, bookingInfo, ok, id }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -36,12 +37,15 @@ const AlertSuccessful: React.FC<{
                 Booking Successful!
               </AlertDialog.Title>
               <AlertDialog.Description className="text-mauve11 mt-[10px] mb-5 text-[15px] leading-normal">
+                <h2 className="text-lg font-semibold mb-3 mt-3">
+                  Booking Id: {id}
+                </h2>
                 <h2 className="text-xl font-semibold mb-3 mt-3">
                   Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
                 </h2>
-                <p>
+                <div>
                   Please arrive at least 10 minutes before your booking time.
-                </p>
+                </div>
               </AlertDialog.Description>
             </>
           )}
