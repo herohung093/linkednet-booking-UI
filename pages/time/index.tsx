@@ -101,6 +101,8 @@ const TimePage: React.FC = () => {
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
+    setSelectHour(null);
+    dispatch(setSelectedHour(null));
     dispatch(setSelectedDate(date.toLocaleDateString("en-GB")));
     setSelectDay(date.toLocaleDateString("en-GB"));
   };
@@ -141,6 +143,7 @@ const TimePage: React.FC = () => {
   const handleStaffChange = (selectedOption: any) => {
     setSelectStaff(selectedOption);
     setSelectHour(null);
+    dispatch(setSelectedHour(null));
     const selectedStaffMember = staffList.find(
       (staff: any) => staff.id === selectedOption.value
     );
