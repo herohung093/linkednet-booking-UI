@@ -5,6 +5,7 @@
     "reduxjs",
     "swipeable",
     "swiper",
-    "tailwindcss"
+    "tailwindcss",
+    "ulti"
   ]
 }

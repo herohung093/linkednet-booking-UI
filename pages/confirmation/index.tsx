@@ -6,6 +6,7 @@ import AlertDeleteDialog from "@/components/AlertDeleteDialog";
 
 import { useRouter } from "next/router";
 import AlertSuccessful from "@/components/AlertSuccessful";
+import axios from "@/ulti/axios";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -60,12 +61,15 @@ const ConfirmationPage: React.FC = () => {
     setFormValid(isValid);
   }, [formData, contactMethod]);
   const [res, setRes] = useState<any>(null);
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const serviceItems = bookingInfo?.items?.map((service: any) => ({
-      id: service.id,
-    }));
+    const serviceItems = bookingInfo?.items?.map(
+      (service: NailSalonService) => ({
+        id: service.id,
+      })
+    );
 
     const payload = {
       customer: {
@@ -84,24 +88,26 @@ const ConfirmationPage: React.FC = () => {
     };
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         "https://big-umbrella-c5c3450b8837.herokuapp.com/reservation/",
+        payload,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload),
         }
       );
-      const responseData = await response.json();
-      setOk(response.ok);
-      setRes(responseData);
+      setOk(response.status === 201);
+      console.log(response.data);
+      
+      setRes(response.data);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Failed to submit booking.");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error submitting booking:", error);
+    }
   };
 
   return (

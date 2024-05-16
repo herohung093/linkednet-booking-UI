@@ -37,9 +37,9 @@ const AlertSuccessful: React.FC<{
                 Booking Successful!
               </AlertDialog.Title>
               <AlertDialog.Description className="text-mauve11 mt-[10px] mb-5 text-[15px] leading-normal">
-                <h2 className="text-lg font-semibold mb-3 mt-3">
+                <div className="text-lg font-semibold mb-3 mt-3">
                   Booking Id: {id}
-                </h2>
+                </div>
                 <div className="text-xl font-semibold mb-3 mt-3">
                   Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
                 </div>

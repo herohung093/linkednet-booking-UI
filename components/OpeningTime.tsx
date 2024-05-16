@@ -1,6 +1,6 @@
 import React from "react";
 
-const OpeningTime: React.FC<{ businessHours: BusinessHours[] }> = ({
+const OpeningTime: React.FC<{ businessHours: BusinessHours[] | undefined}> = ({
   businessHours,
 }) => {
   const formatTime = (time: string) => {

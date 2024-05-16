@@ -7,31 +7,56 @@ import OpeningTime from "@/components/OpeningTime";
 import { StoreInfo } from "@/components/StoreInfo";
 import { StoreMap } from "@/components/StoreMap";
 import { setSelectedStoreInfo } from "@/redux toolkit/storeInfo";
-import { useEffect } from "react";
+import axios from "@/ulti/axios";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import useSWR from "swr";
+// import useSWR from "swr";
 
-type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
+// type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
-const fetcher: FetcherFunction = (...args) =>
-  fetch(...args).then((res) => res.json());
+// const fetcher: FetcherFunction = (...args) =>
+//   fetch(...args).then((res) => res.json());
 
 export default function Home() {
-  const {
-    data: serviceData,
-    error,
-    isLoading,
-  } = useSWR(
-    "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
-    fetcher
-  );
-  const { data: storeConfig } = useSWR(
-    "https://big-umbrella-c5c3450b8837.herokuapp.com/storeConfig/1",
-    fetcher
-  );
+  // const {
+  //   data: serviceData,
+  //   error,
+  //   isLoading,
+  // } = useSWR(
+  //   "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
+  //   fetcher
+  // );
+  // const { data: storeConfig } = useSWR(
+  //   "https://big-umbrella-c5c3450b8837.herokuapp.com/storeConfig/1",
+  //   fetcher
+  // );
+  // const dispatch = useDispatch();
+  const [serviceData, setServiceData] = useState<NailSalonService[]|null>(null);
+  const [storeConfig, setStoreConfig] = useState<StoreInfo|null>(null);
+  const [error, setError] = useState<unknown|null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const serviceResponse = await axios.get("service/");
+        setServiceData(serviceResponse.data);
 
+        const storeConfigResponse = await axios.get("storeConfig/1");
+        setStoreConfig(storeConfigResponse.data);
+
+        setIsLoading(false);
+      } catch (error:unknown) {
+        setError(error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  
   useEffect(() => {
     dispatch(setSelectedStoreInfo(storeConfig));
     // eslint-disable-next-line react-hooks/exhaustive-deps
