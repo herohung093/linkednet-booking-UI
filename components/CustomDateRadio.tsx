@@ -37,6 +37,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
           value={id}
           name="day-radio"
           className="hidden"
+          disabled={unavailable}
         />
         <div
           className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer  ${

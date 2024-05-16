@@ -107,11 +107,39 @@ const TimePage: React.FC = () => {
     setSelectDay(date.toLocaleDateString("en-GB"));
   };
 
+  // useEffect(() => {
+  //   setSelectedIndex(0);
+  //   dispatch(setSelectedDate(currentDate.toLocaleDateString("en-GB")));
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+  
+    const unavailableDates = useMemo(() => {
+      if (!staff || !staff.workingDays || !availability) return [];
+      const workingDays = staff.workingDays.split(",");
+      const normalizedWorkingDays = workingDays.map((day: any) => parseInt(day));
+      return days.filter((date) => {
+        const dayIndex = date.getDay();
+        return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
+      });
+    }, [staff, availability, days]);
   useEffect(() => {
-    setSelectedIndex(0);
-    dispatch(setSelectedDate(currentDate.toLocaleDateString("en-GB")));
+    // Find the index of the first available date
+    const firstAvailableIndex = days.findIndex(date => {
+      const isUnavailable = unavailableDates.some(
+        unavailableDate => unavailableDate.getTime() === date.getTime()
+      );
+      return !isUnavailable;
+    });
+  
+    if (firstAvailableIndex !== -1) {
+      const firstAvailableDate = days[firstAvailableIndex];
+      setSelectedIndex(firstAvailableIndex);
+      dispatch(setSelectedDate(firstAvailableDate.toLocaleDateString("en-GB")));
+      setSelectDay(firstAvailableDate.toLocaleDateString("en-GB"));
+    }
+  
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [unavailableDates]);
 
   const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
     setSelectHour(hour.time);
@@ -124,16 +152,6 @@ const TimePage: React.FC = () => {
 
     dispatch(setSelectedStaffByHour(selectedRandomStaff));
   };
-
-  const unavailableDates = useMemo(() => {
-    if (!staff || !staff.workingDays || !availability) return [];
-    const workingDays = staff.workingDays.split(",");
-    const normalizedWorkingDays = workingDays.map((day: any) => parseInt(day));
-    return days.filter((date) => {
-      const dayIndex = date.getDay();
-      return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
-    });
-  }, [staff, availability, days]);
 
   const [selectStaff, setSelectStaff] = useState<any>({
     value: staff?.id,
