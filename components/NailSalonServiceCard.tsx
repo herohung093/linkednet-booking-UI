@@ -5,13 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "@/redux toolkit/cartSlice";
 import { CheckIcon } from "@/icons/CheckIcon";
 import "@radix-ui/themes/styles.css";
-import useSWR from "swr";
 import { Spinner } from "@radix-ui/themes";
 
-type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
-const fetcher: FetcherFunction = (...args) =>
-  fetch(...args).then((res) => res.json());
 
 const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   const {
@@ -22,10 +18,7 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
     servicePrice,
     serviceDescription,
   } = service;
-  const { data } = useSWR(
-    "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
-    fetcher
-  );
+
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
 
@@ -59,7 +52,7 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
 
   return (
     <div className="bg-transparent rounded-lg shadow-md p-4  mx-auto flex items-center justify-between my-2 md:w-[350px] lg:w-[450px] xl:w-[550px]">
-      {!data ? (
+      {!service ? (
         <Spinner />
       ) : (
         <>

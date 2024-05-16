@@ -6,48 +6,33 @@ import { NailServices } from "@/components/NailServices";
 import OpeningTime from "@/components/OpeningTime";
 import { StoreInfo } from "@/components/StoreInfo";
 import { StoreMap } from "@/components/StoreMap";
-import { setSelectedStoreInfo } from "@/redux toolkit/storeInfo";
+import {
+  setSelectedStoreInfo,
+  setServiceData,
+} from "@/redux toolkit/storeInfo";
 import axios from "@/ulti/axios";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-// import useSWR from "swr";
-
-// type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
-
-// const fetcher: FetcherFunction = (...args) =>
-//   fetch(...args).then((res) => res.json());
-
 export default function Home() {
-  // const {
-  //   data: serviceData,
-  //   error,
-  //   isLoading,
-  // } = useSWR(
-  //   "https://big-umbrella-c5c3450b8837.herokuapp.com/service/",
-  //   fetcher
-  // );
-  // const { data: storeConfig } = useSWR(
-  //   "https://big-umbrella-c5c3450b8837.herokuapp.com/storeConfig/1",
-  //   fetcher
-  // );
-  // const dispatch = useDispatch();
-  const [serviceData, setServiceData] = useState<NailSalonService[]|null>(null);
-  const [storeConfig, setStoreConfig] = useState<StoreInfo|null>(null);
-  const [error, setError] = useState<unknown|null>(null);
+  const [serviceDataInfo, setServiceDataInfo] = useState<
+    NailSalonService[] | null
+  >(null);
+  const [storeConfig, setStoreConfig] = useState<StoreInfo | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const serviceResponse = await axios.get("service/");
-        setServiceData(serviceResponse.data);
+        setServiceDataInfo(serviceResponse.data);
 
         const storeConfigResponse = await axios.get("storeConfig/1");
         setStoreConfig(storeConfigResponse.data);
 
         setIsLoading(false);
-      } catch (error:unknown) {
+      } catch (error: unknown) {
         setError(error);
         setIsLoading(false);
       }
@@ -56,16 +41,16 @@ export default function Home() {
     fetchData();
   }, []);
 
-  
   useEffect(() => {
     dispatch(setSelectedStoreInfo(storeConfig));
+    dispatch(setServiceData(serviceDataInfo));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeConfig]);
 
-  const sortedData = serviceData?.sort((a: any, b: any) =>
+  const sortedData = (serviceDataInfo ?? []).slice().sort((a: any, b: any) =>
     a.serviceType.type.localeCompare(b.serviceType.type)
   );
-
+  
   const groupedData = sortedData?.reduce((acc: any, service: any) => {
     const { serviceType, ...rest } = service;
     const index = acc.findIndex(
@@ -86,7 +71,9 @@ export default function Home() {
         <div>
           <Logo isLoading={isLoading} />
         </div>
-        <div><StoreInfo storeConfig={storeConfig} /></div>
+        <div>
+          <StoreInfo storeConfig={storeConfig} />
+        </div>
         <div className="md:flex md:gap-20 md:justify-around">
           <div>
             {groupedData &&

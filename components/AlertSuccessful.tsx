@@ -33,19 +33,18 @@ const AlertSuccessful: React.FC<{
           {ok == null && <Loading />}
           {ok == true && (
             <>
-              <AlertDialog.Title className="text-mauve12 m-0 text-[17px] font-medium flex justify-center items-center">
+              <AlertDialog.Title className="text-mauve12 m-0 text-xl font-bold  flex justify-center items-center">
                 Booking Successful!
               </AlertDialog.Title>
-              <AlertDialog.Description className="text-mauve11 mt-[10px] mb-5 text-[15px] leading-normal">
-                <div className="text-lg font-semibold mb-3 mt-3">
-                  Booking Id: {id}
-                </div>
-                <div className="text-xl font-semibold mb-3 mt-3">
-                  Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
-                </div>
-                <div>
-                  Please arrive at least 10 minutes before your booking time.
-                </div>
+              <AlertDialog.Description className="text-lg font-semibold mt-[10px] mb-5 text-[15px] leading-normal">
+                Booking Id: {id}
+              </AlertDialog.Description>
+              <AlertDialog.Description className="text-xl font-semibold mb-3 mt-3">
+                Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
+              </AlertDialog.Description>
+
+              <AlertDialog.Description className="text-xl font-semibold mb-3 mt-3">
+                Please arrive at least 10 minutes before your booking time.
               </AlertDialog.Description>
             </>
           )}
