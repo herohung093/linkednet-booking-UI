@@ -119,7 +119,7 @@ const TimePage: React.FC = () => {
     const selectedRandomStaff = [...staffList]?.find(
       (staff: any) => staff.id == randomStaffId
     );
-    
+
     dispatch(setSelectedStaffByHour(selectedRandomStaff));
   };
 
@@ -133,10 +133,6 @@ const TimePage: React.FC = () => {
     });
   }, [staff, availability, days]);
 
-  // const latestHour =
-  //   hourArray.length > 0 &&
-  //   parseInt(hourArray[hourArray.length - 1].time.split(":")[0]);
-
   const [selectStaff, setSelectStaff] = useState<any>({
     value: staff?.id,
     label: staff?.firstName + " " + staff?.lastName,
@@ -144,7 +140,7 @@ const TimePage: React.FC = () => {
 
   const handleStaffChange = (selectedOption: any) => {
     setSelectStaff(selectedOption);
-    setSelectHour(null)
+    setSelectHour(null);
     const selectedStaffMember = staffList.find(
       (staff: any) => staff.id === selectedOption.value
     );
@@ -152,12 +148,12 @@ const TimePage: React.FC = () => {
     dispatch(setSelectedStaff(selectedStaffMember));
   };
 
-  
   return (
     <div className="mt-10 ">
       <div className="mx-6 ">
         <h1 className="text-lg font-bold mb-3">Select Staff</h1>
         <Select
+          isSearchable={false}
           options={staffList?.map((staff: any) => ({
             value: staff.id,
             label: staff.firstName + " " + staff.lastName,
@@ -182,7 +178,7 @@ const TimePage: React.FC = () => {
                   unavailableDate.getTime() === date.getTime()
               );
               return (
-                <SwiperSlide key={index} >
+                <SwiperSlide key={index}>
                   <CustomRadioDate
                     index={index}
                     id={index}

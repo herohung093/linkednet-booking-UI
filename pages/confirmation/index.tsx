@@ -94,7 +94,7 @@ const ConfirmationPage: React.FC = () => {
         }
       );
       setOk(response.ok);
-      console.log(response);
+      console.log(response.json());
 
       if (!response.ok) {
         throw new Error("Failed to submit booking.");
