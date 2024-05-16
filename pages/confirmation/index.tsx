@@ -59,7 +59,7 @@ const ConfirmationPage: React.FC = () => {
         : formData.email.trim() !== "");
     setFormValid(isValid);
   }, [formData, contactMethod]);
-
+const [res,setRes] = useState<any>(null)
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -93,14 +93,14 @@ const ConfirmationPage: React.FC = () => {
           body: JSON.stringify(payload),
         }
       );
+      const responseData = await response.json();
       setOk(response.ok);
-      console.log(response.json());
+      setRes(responseData);
 
       if (!response.ok) {
         throw new Error("Failed to submit booking.");
       }
     } catch (error) {
-      console.error("Error submitting booking:", error);
     }
   };
 
@@ -175,6 +175,7 @@ const ConfirmationPage: React.FC = () => {
                 formValid={formValid}
                 bookingInfo={bookingInfo}
                 ok={ok}
+                id= {res?.id}
               />
             </div>
           </form>

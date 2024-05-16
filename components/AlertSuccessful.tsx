@@ -40,9 +40,9 @@ const AlertSuccessful: React.FC<{
                 <h2 className="text-lg font-semibold mb-3 mt-3">
                   Booking Id: {id}
                 </h2>
-                <h2 className="text-xl font-semibold mb-3 mt-3">
+                <div className="text-xl font-semibold mb-3 mt-3">
                   Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
-                </h2>
+                </div>
                 <div>
                   Please arrive at least 10 minutes before your booking time.
                 </div>

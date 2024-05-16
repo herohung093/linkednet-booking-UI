@@ -122,24 +122,32 @@ const TimePage: React.FC = () => {
         return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
       });
     }, [staff, availability, days]);
-  useEffect(() => {
-    // Find the index of the first available date
-    const firstAvailableIndex = days.findIndex(date => {
-      const isUnavailable = unavailableDates.some(
-        unavailableDate => unavailableDate.getTime() === date.getTime()
+    useEffect(() => {
+      // Check if the selected date is unavailable
+      const isCurrentDateUnavailable = unavailableDates.some(
+        (unavailableDate) =>
+          unavailableDate.getTime() === selectedDate.getTime()
       );
-      return !isUnavailable;
-    });
-  
-    if (firstAvailableIndex !== -1) {
-      const firstAvailableDate = days[firstAvailableIndex];
-      setSelectedIndex(firstAvailableIndex);
-      dispatch(setSelectedDate(firstAvailableDate.toLocaleDateString("en-GB")));
-      setSelectDay(firstAvailableDate.toLocaleDateString("en-GB"));
-    }
-  
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unavailableDates]);
+    
+      // If the selected date is unavailable, find the index of the first available date
+      if (isCurrentDateUnavailable) {
+        const firstAvailableIndex = days.findIndex((date) => {
+          const isUnavailable = unavailableDates.some(
+            (unavailableDate) =>
+              unavailableDate.getTime() === date.getTime()
+          );
+          return !isUnavailable;
+        });
+    
+        if (firstAvailableIndex !== -1) {
+          const firstAvailableDate = days[firstAvailableIndex];
+          setSelectedIndex(firstAvailableIndex);
+          dispatch(setSelectedDate(firstAvailableDate.toLocaleDateString("en-GB")));
+          setSelectDay(firstAvailableDate.toLocaleDateString("en-GB"));
+        }
+      }
+    }, [unavailableDates, days, selectedDate, dispatch]);
+    
 
   const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
     setSelectHour(hour.time);
