@@ -13,7 +13,7 @@ const fetcher: FetcherFunction = (...args) =>
   fetch(...args).then((res) => res.json());
 
 const ConfirmationPage: React.FC = () => {
-  const [ok,setOk] = useState<boolean | null>(null)
+  const [ok, setOk] = useState<boolean | null>(null);
   const bookingInfo = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -93,7 +93,9 @@ const ConfirmationPage: React.FC = () => {
           body: JSON.stringify(payload),
         }
       );
-      setOk(response.ok)
+      setOk(response.ok);
+      console.log(response);
+
       if (!response.ok) {
         throw new Error("Failed to submit booking.");
       }
@@ -140,7 +142,7 @@ const ConfirmationPage: React.FC = () => {
                 onClick={() => setContactMethod("phone")}
                 className={`${
                   contactMethod === "phone"
-                    ? "bg-pink-500 text-white"
+                    ? "bg-primary-500 text-white"
                     : "bg-white text-gray-700"
                 } rounded-md px-4 py-2 w-[100px]`}
               >
@@ -151,7 +153,7 @@ const ConfirmationPage: React.FC = () => {
                 onClick={() => setContactMethod("email")}
                 className={`${
                   contactMethod === "email"
-                    ? "bg-pink-500 text-white"
+                    ? "bg-primary-500 text-white"
                     : "bg-white text-gray-700"
                 } rounded-md px-4 py-2 w-[100px]`}
               >
@@ -169,8 +171,11 @@ const ConfirmationPage: React.FC = () => {
 
             <div className="flex justify-between items-center mx-10 mt-10">
               <AlertDeleteDialog />
-              <AlertSuccessful formValid={formValid} bookingInfo={bookingInfo} ok={ok}/>
-        
+              <AlertSuccessful
+                formValid={formValid}
+                bookingInfo={bookingInfo}
+                ok={ok}
+              />
             </div>
           </form>
         </div>

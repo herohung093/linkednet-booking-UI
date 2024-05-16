@@ -12,11 +12,11 @@ import "swiper/css/scrollbar";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Theme>
+      {/* <Theme> */}
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </Theme>
+      {/* </Theme> */}
     </Provider>
   );
 }

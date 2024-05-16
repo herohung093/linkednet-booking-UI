@@ -50,7 +50,22 @@ const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
         {slug != "/confirmation" && (
           <div className="mx-4 flex justify-between items-center w-full">
             <CartDialog />
-            <CartIcon onClick={handleRoute} disabled={cart.items.length == 0} />
+
+            <button
+              className={`
+      px-3 py-2 border-2 h-[35px] my-3 rounded-lg font-bold text-xl shadow-green7 inline-flex items-center justify-center leading-none focus:shadow-[0_0_0_2px] 
+      ${
+        cart.items.length == 0
+          ? "opacity-50 border-blue-300 text-slate-500 "
+          : " border-primary-700 text-primary-700"
+      }
+      `}
+              disabled={cart.items.length == 0}
+              onClick={handleRoute}
+            >
+              Continue
+            </button>
+            {/* <CartIcon onClick={handleRoute} disabled={cart.items.length == 0} /> */}
             {showDialog && (
               <div className="fixed top-0 left-0 w-screen h-screen z-[9]">
                 <div className="fixed top-0 left-0 w-screen h-screen bg-slate-600 opacity-55 z-[9]"></div>

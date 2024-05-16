@@ -21,7 +21,7 @@ const AlertSuccessful: React.FC<{
           onClick={onClick}
           type="submit"
           disabled={!formValid}
-          className={`text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[20px] leading-none focus:shadow-[0_0_0_2px] text-xl cursor-pointer  hover:text-pink-700 hover:border-pink-700`}
+          className={`text-primary-700 border-2 border-primary-700 rounded-lg font-bold w-[100px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[20px] leading-none focus:shadow-[0_0_0_2px] text-xl cursor-pointer  hover:text-pink-900 hover:border-pink-900`}
         >
           Confirm
         </button>
@@ -53,7 +53,7 @@ const AlertSuccessful: React.FC<{
                   dispatch(clearCart());
                   router.push("/");
                 }}
-                className="text-blue-900 border-2 mt-3 border-blue-900 rounded-lg font-bold w-[400px] h-[35px] shadow-green7  items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
+                className="text-primary-700 border-2 mt-3 border-primary-700 rounded-lg font-bold w-[400px] h-[35px] shadow-green7  items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
               >
                 Go back to home page
               </div>

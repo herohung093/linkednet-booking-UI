@@ -133,9 +133,9 @@ const TimePage: React.FC = () => {
     });
   }, [staff, availability, days]);
 
-  const latestHour =
-    hourArray.length > 0 &&
-    parseInt(hourArray[hourArray.length - 1].time.split(":")[0]);
+  // const latestHour =
+  //   hourArray.length > 0 &&
+  //   parseInt(hourArray[hourArray.length - 1].time.split(":")[0]);
 
   const [selectStaff, setSelectStaff] = useState<any>({
     value: staff?.id,
@@ -144,6 +144,7 @@ const TimePage: React.FC = () => {
 
   const handleStaffChange = (selectedOption: any) => {
     setSelectStaff(selectedOption);
+    setSelectHour(null)
     const selectedStaffMember = staffList.find(
       (staff: any) => staff.id === selectedOption.value
     );
@@ -151,6 +152,7 @@ const TimePage: React.FC = () => {
     dispatch(setSelectedStaff(selectedStaffMember));
   };
 
+  
   return (
     <div className="mt-10 ">
       <div className="mx-6 ">
@@ -197,7 +199,7 @@ const TimePage: React.FC = () => {
         </Swiper>
       </div>
       {hourArray?.length == 0 && (
-        <div className="mb-5 mx-5 text-red-600 font-bold w-full h-[400px] flex justify-center items-center">
+        <div className="mb-5 text-primary-700 font-bold w-full h-[400px] flex justify-center items-center">
           Fully booked on this date
         </div>
       )}

@@ -19,7 +19,7 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-pink-400 p-4 flex justify-between items-center">
+    <nav className="bg-primary-400 p-4 flex justify-between items-center">
       <div className="text-white  text-lg cursor-pointer" onClick={goBack}>
         <Back />
       </div>

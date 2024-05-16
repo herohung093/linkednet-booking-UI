@@ -32,7 +32,7 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
       />
       <div
         className={` bg-white border-2 rounded-lg shadow-md py-2 mx-5 flex flex-col justify-center items-center cursor-pointer ${
-          selected ? "border-blue-500" : ""
+          selected ? "border-primary-500" : ""
         }`}
       >
         <div className="text-base xs:text-sm font-semibold flex flex-col justify-center gap-2 mb-2 items-center">

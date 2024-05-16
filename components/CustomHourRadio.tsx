@@ -31,7 +31,7 @@ const CustomHourRadio: React.FC<CustomHourRadioProps> = ({
           className={`${
             staffs.length == 0 && `bg-gray-400 text-white line-through`
           } flex justify-between w-full  py-2  p-3 mb-2 cursor-pointer border-2 rounded-md ${
-            selected ? "border-blue-500 " : "border-gray-300"
+            selected ? "border-primary-500 " : "border-gray-300"
           }`}
         >
           <div className="flex justify-between items-center ">
