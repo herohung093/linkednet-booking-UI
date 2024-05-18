@@ -175,13 +175,14 @@ const ConfirmationPage: React.FC = () => {
               className="border-2 rounded-md outline-none px-4 py-2"
             />
 
-            <div className="flex justify-between items-center mx-10 mt-10">
-              <AlertDeleteDialog />
+            <div className="flex justify-center items-center mx-10 mt-10">
+              {/* <AlertDeleteDialog /> */}
               <AlertSuccessful
                 formValid={formValid}
                 bookingInfo={bookingInfo}
                 ok={ok}
                 id={res?.id}
+                status={res?.status}
               />
             </div>
           </form>

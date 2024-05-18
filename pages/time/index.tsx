@@ -13,6 +13,8 @@ import CustomHourRadio from "@/components/CustomHourRadio";
 import { setSelectedStaffByHour } from "@/redux toolkit/staffSlice";
 import { useRouter } from "next/router";
 import Select from "react-select";
+import { RootState } from "@/redux toolkit/store";
+import moment from "moment";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -44,18 +46,21 @@ const TimePage: React.FC = () => {
     "Nov",
     "Dec",
   ];
+
   const dispatch = useDispatch();
   const bookingInfo = useSelector((state: any) => state.cart);
   const router = useRouter();
+
   useEffect(() => {
     if (bookingInfo?.items.length === 0) {
       router.push("/");
     }
   }, [bookingInfo, router]);
+
   const currentDate = new Date();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [selectDay, setSelectDay] = useState<string | null>(
-    currentDate.toLocaleDateString("en-GB")
+    moment(currentDate).format("DD/MM/YYYY")
   );
   const [selectHour, setSelectHour] = useState<string | null>(null);
 
@@ -68,11 +73,14 @@ const TimePage: React.FC = () => {
   const selectedDate =
     selectedIndex !== null ? days[selectedIndex] : currentDate;
   const selectedMonth = monthNames[selectedDate.getMonth()];
-
   const selectedYear = currentDate.getFullYear();
-  const staff = useSelector((state: any) => state.cart.selectedStaff);
-  const staffList = useSelector((state: any) => state.staff.selectedStaffList);
 
+  const staff = useSelector((state: RootState) => state.cart.selectedStaff);
+  const staffList = useSelector(
+    (state: RootState) => state.staff.selectedStaffList
+  );
+
+  
   const {
     data: availability,
     error,
@@ -81,6 +89,7 @@ const TimePage: React.FC = () => {
     `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=${staff?.id}&date=${selectDay}`,
     fetcher
   );
+
 
   const currentHour = currentDate.getHours();
 
@@ -103,76 +112,71 @@ const TimePage: React.FC = () => {
     setSelectedIndex(index);
     setSelectHour(null);
     dispatch(setSelectedHour(null));
-    dispatch(setSelectedDate(date.toLocaleDateString("en-GB")));
-    setSelectDay(date.toLocaleDateString("en-GB"));
+    const formattedDate = moment(date).format("DD/MM/YYYY");
+    dispatch(setSelectedDate(formattedDate));
+    setSelectDay(formattedDate);
   };
 
-  // useEffect(() => {
-  //   setSelectedIndex(0);
-  //   dispatch(setSelectedDate(currentDate.toLocaleDateString("en-GB")));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-  
-    const unavailableDates = useMemo(() => {
-      if (!staff || !staff.workingDays || !availability) return [];
-      const workingDays = staff.workingDays.split(",");
-      const normalizedWorkingDays = workingDays.map((day: any) => parseInt(day));
-      return days.filter((date) => {
-        const dayIndex = date.getDay();
-        return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
+  const unavailableDates = useMemo(() => {
+    if (!staff || !staff.workingDays || !availability) return [];
+    const workingDays = staff.workingDays.split(",");
+    const normalizedWorkingDays = workingDays.map((day: any) =>
+      parseInt(day)
+    );
+    return days.filter((date) => {
+      const dayIndex = date.getDay();
+      return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
+    });
+  }, [staff, availability, days]);
+
+  useEffect(() => {
+    const isCurrentDateUnavailable = unavailableDates.some(
+      (unavailableDate) => unavailableDate.getTime() === selectedDate.getTime()
+    );
+
+    if (isCurrentDateUnavailable) {
+      const firstAvailableIndex = days.findIndex((date) => {
+        const isUnavailable = unavailableDates.some(
+          (unavailableDate) => unavailableDate.getTime() === date.getTime()
+        );
+        return !isUnavailable;
       });
-    }, [staff, availability, days]);
-    useEffect(() => {
-      // Check if the selected date is unavailable
-      const isCurrentDateUnavailable = unavailableDates.some(
-        (unavailableDate) =>
-          unavailableDate.getTime() === selectedDate.getTime()
-      );
-    
-      // If the selected date is unavailable, find the index of the first available date
-      if (isCurrentDateUnavailable) {
-        const firstAvailableIndex = days.findIndex((date) => {
-          const isUnavailable = unavailableDates.some(
-            (unavailableDate) =>
-              unavailableDate.getTime() === date.getTime()
-          );
-          return !isUnavailable;
-        });
-    
-        if (firstAvailableIndex !== -1) {
-          const firstAvailableDate = days[firstAvailableIndex];
-          setSelectedIndex(firstAvailableIndex);
-          dispatch(setSelectedDate(firstAvailableDate.toLocaleDateString("en-GB")));
-          setSelectDay(firstAvailableDate.toLocaleDateString("en-GB"));
-        }
+
+      if (firstAvailableIndex !== -1) {
+        const firstAvailableDate = days[firstAvailableIndex];
+        setSelectedIndex(firstAvailableIndex);
+        const formattedDate = moment(firstAvailableDate).format("DD/MM/YYYY");
+        
+        dispatch(setSelectedDate(formattedDate));
+        setSelectDay(formattedDate);
       }
-    }, [unavailableDates, days, selectedDate, dispatch]);
-    
+    }
+  }, [unavailableDates, days, selectedDate, dispatch]);
 
   const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
     setSelectHour(hour.time);
     dispatch(setSelectedHour(hour.time));
     const randomIndex = Math.floor(Math.random() * hour.staffs?.length);
     const randomStaffId = hour.staffs[randomIndex];
-    const selectedRandomStaff = [...staffList]?.find(
-      (staff: any) => staff.id == randomStaffId
-    );
+    const selectedRandomStaff = staffList?.find(
+      (staff) => staff.id == randomStaffId
+    ) || null;
 
     dispatch(setSelectedStaffByHour(selectedRandomStaff));
   };
 
   const [selectStaff, setSelectStaff] = useState<any>({
     value: staff?.id,
-    label: staff?.firstName + " " + staff?.lastName,
+    label: `${staff?.firstName} ${staff?.lastName}`,
   });
 
   const handleStaffChange = (selectedOption: any) => {
     setSelectStaff(selectedOption);
     setSelectHour(null);
     dispatch(setSelectedHour(null));
-    const selectedStaffMember = staffList.find(
-      (staff: any) => staff.id === selectedOption.value
-    );
+    const selectedStaffMember = staffList?.find(
+      (staff) => staff.id === selectedOption.value
+    ) || null;
 
     dispatch(setSelectedStaff(selectedStaffMember));
   };
@@ -183,9 +187,9 @@ const TimePage: React.FC = () => {
         <h1 className="text-lg font-bold mb-3">Select Staff</h1>
         <Select
           isSearchable={false}
-          options={staffList?.map((staff: any) => ({
+          options={staffList?.map((staff) => ({
             value: staff.id,
-            label: staff.firstName + " " + staff.lastName,
+            label: `${staff.firstName} ${staff.lastName}`,
           }))}
           value={selectStaff}
           onChange={handleStaffChange}

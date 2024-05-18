@@ -48,7 +48,7 @@ declare interface CartState {
   selectedDate: string | null;
   selectedHour: string | null;
   timeZone: string | null;
-  selectedStaff: number | "" | null | Staff;
+  selectedStaff: null | Staff;
   StoreConfig: StoreConfig | null;
 }
 declare interface StoreConfig {
