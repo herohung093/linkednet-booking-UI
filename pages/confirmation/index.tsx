@@ -150,7 +150,7 @@ const ConfirmationPage: React.FC = () => {
                   contactMethod === "phone"
                     ? "bg-primary-500 text-white"
                     : "bg-white text-gray-700"
-                } rounded-md px-4 py-2 w-[100px]`}
+                } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
               >
                 Phone
               </button>
@@ -160,8 +160,8 @@ const ConfirmationPage: React.FC = () => {
                 className={`${
                   contactMethod === "email"
                     ? "bg-primary-500 text-white"
-                    : "bg-white text-gray-700"
-                } rounded-md px-4 py-2 w-[100px]`}
+                    : "bg-white text-gray-700 "
+                } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
               >
                 Email
               </button>

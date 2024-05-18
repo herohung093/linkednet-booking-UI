@@ -28,7 +28,7 @@ const AlertSuccessful: React.FC<{
           onClick={onClick}
           type="submit"
           disabled={!formValid}
-          className={`text-primary-700 border-2 border-primary-700 rounded-lg font-bold w-[100px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl cursor-pointer  hover:text-pink-900 hover:border-pink-900 `}
+          className={`bg-primary-700 text-white border border-primary-700 rounded-full font-bold w-[200px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl cursor-pointer  hover:text-pink-900 hover:border-pink-900 mt-20`}
         >
           Confirm
         </button>
@@ -60,7 +60,13 @@ const AlertSuccessful: React.FC<{
                 Booking ID:
               </AlertDialog.Description>
               <AlertDialog.Description className="flex justify-between text-md font-semibold mb-3 text-gray-500">
-                {id} <ContentCopyIcon sx={{ color: pink[500] }} onClick={() => {navigator.clipboard.writeText(id.toString())}} />
+                {id}{" "}
+                <ContentCopyIcon
+                  sx={{ color: pink[500] }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(id.toString());
+                  }}
+                />
               </AlertDialog.Description>
 
               <AlertDialog.Description className="text-lg  mt-5 font-bold">

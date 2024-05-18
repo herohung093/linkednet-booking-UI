@@ -53,11 +53,11 @@ const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
 
             <button
               className={`
-      px-5 py-2 border-2 h-[35px] my-3 rounded-2xl font-bold text-xl shadow-green7 inline-flex items-center justify-center leading-none focus:outline-none 
+      px-5 py-2 border-2 h-[35px] rounded-full font-bold text-xl shadow-green7 inline-flex items-center justify-center leading-none focus:outline-none 
       ${
         cart.items.length == 0
-          ? "opacity-50 border-blue-300 text-slate-500 "
-          : " border-primary-700 text-primary-700"
+          ? "opacity-50 border-slate-300 text-slate-500 "
+          : " border-primary-700 text-white bg-primary-500"
       }
       `}
               disabled={cart.items.length == 0}

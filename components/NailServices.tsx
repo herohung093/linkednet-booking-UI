@@ -3,7 +3,6 @@ import NailSalonServiceCard from "./NailSalonServiceCard";
 import { TriangleDown } from "@/icons/TriangleDown";
 import { TriangleUp } from "@/icons/TriangleUp";
 import { Horizon } from "@/icons/Horizon";
-import Cart from "./Cart";
 
 export const NailServices: React.FC<{
   data: NailSalonService[];

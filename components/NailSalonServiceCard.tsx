@@ -64,7 +64,7 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
                 Estimated time: {estimatedTime} min
               </p>
               <p>-</p>
-              <p className="text-primary font-bold text-xl">
+              <p className="text-primary-500 font-bold text-xl">
                 ${servicePrice}
               </p>
             </div>
