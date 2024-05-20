@@ -7,7 +7,7 @@ import { Horizon } from "@/icons/Horizon";
 export const NailServices: React.FC<{
   data: NailSalonService[];
   index: number;
-}> = ({ data, index }) => {
+}> = ({ data }) => {
   const [showMap, setShowMap] = useState(true);
 
   return (

@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Cart from "@/components/Cart";
-import { clearCart } from "@/redux toolkit/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import AlertDeleteDialog from "@/components/AlertDeleteDialog";
+import { useSelector } from "react-redux";
 
 import { useRouter } from "next/router";
 import AlertSuccessful from "@/components/AlertSuccessful";
 import axios from "@/ulti/axios";
 
-type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
-
-const fetcher: FetcherFunction = (...args) =>
-  fetch(...args).then((res) => res.json());
-
 const ConfirmationPage: React.FC = () => {
   const [ok, setOk] = useState<boolean | null>(null);
   const bookingInfo = useSelector((state: any) => state.cart);
-  const dispatch = useDispatch();
   const router = useRouter();
   useEffect(() => {
     if (bookingInfo?.items.length === 0) {
@@ -99,7 +91,7 @@ const ConfirmationPage: React.FC = () => {
       );
       setOk(response.status === 201);
       console.log(response.data);
-      
+
       setRes(response.data);
 
       if (response.status !== 200) {
@@ -111,7 +103,7 @@ const ConfirmationPage: React.FC = () => {
   };
 
   return (
-    <div className="w-[90%] mx-auto mt-9">
+    <div className="w-[90%] sm:w-[65%] mx-auto mt-9">
       <div>
         <h1 className="text-2xl font-semibold mb-5">Booking confirmation</h1>
         <Cart />

@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { RootState } from "@/redux toolkit/store";
 import moment from "moment";
+import { CartSide } from "@/components/CartSide";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -80,7 +81,6 @@ const TimePage: React.FC = () => {
     (state: RootState) => state.staff.selectedStaffList
   );
 
-  
   const {
     data: availability,
     error,
@@ -89,7 +89,6 @@ const TimePage: React.FC = () => {
     `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=${staff?.id}&date=${selectDay}`,
     fetcher
   );
-
 
   const currentHour = currentDate.getHours();
 
@@ -120,9 +119,7 @@ const TimePage: React.FC = () => {
   const unavailableDates = useMemo(() => {
     if (!staff || !staff.workingDays || !availability) return [];
     const workingDays = staff.workingDays.split(",");
-    const normalizedWorkingDays = workingDays.map((day: any) =>
-      parseInt(day)
-    );
+    const normalizedWorkingDays = workingDays.map((day: any) => parseInt(day));
     return days.filter((date) => {
       const dayIndex = date.getDay();
       return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
@@ -146,7 +143,7 @@ const TimePage: React.FC = () => {
         const firstAvailableDate = days[firstAvailableIndex];
         setSelectedIndex(firstAvailableIndex);
         const formattedDate = moment(firstAvailableDate).format("DD/MM/YYYY");
-        
+
         dispatch(setSelectedDate(formattedDate));
         setSelectDay(formattedDate);
       }
@@ -158,9 +155,8 @@ const TimePage: React.FC = () => {
     dispatch(setSelectedHour(hour.time));
     const randomIndex = Math.floor(Math.random() * hour.staffs?.length);
     const randomStaffId = hour.staffs[randomIndex];
-    const selectedRandomStaff = staffList?.find(
-      (staff) => staff.id == randomStaffId
-    ) || null;
+    const selectedRandomStaff =
+      staffList?.find((staff) => staff.id == randomStaffId) || null;
 
     dispatch(setSelectedStaffByHour(selectedRandomStaff));
   };
@@ -174,79 +170,82 @@ const TimePage: React.FC = () => {
     setSelectStaff(selectedOption);
     setSelectHour(null);
     dispatch(setSelectedHour(null));
-    const selectedStaffMember = staffList?.find(
-      (staff) => staff.id === selectedOption.value
-    ) || null;
+    const selectedStaffMember =
+      staffList?.find((staff) => staff.id === selectedOption.value) || null;
 
     dispatch(setSelectedStaff(selectedStaffMember));
   };
 
   return (
-    <div className="mt-10 ">
-      <div className="mx-6 ">
-        <h1 className="text-lg font-bold mb-3">Select Staff</h1>
-        <Select
-          isSearchable={false}
-          options={staffList?.map((staff) => ({
-            value: staff.id,
-            label: `${staff.firstName} ${staff.lastName}`,
-          }))}
-          value={selectStaff}
-          onChange={handleStaffChange}
-          className="z-[2]"  
-
-        />
-      </div>
-      <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select time</h1>
-      <div className="flex justify-between mx-5 mb-5">
-        <div>
-          <h2 className="text-xl font-bold">{`${selectedMonth} ${selectedYear}`}</h2>
+    <div className="mt-10 md:w-[80%] mx-auto lg:grid lg:grid-cols-2 ">
+      <div>
+        <div className="mx-auto ">
+          <h1 className="text-lg font-bold mb-3">Select Staff</h1>
+          <Select
+            isSearchable={false}
+            options={staffList?.map((staff) => ({
+              value: staff.id,
+              label: `${staff.firstName} ${staff.lastName}`,
+            }))}
+            value={selectStaff}
+            onChange={handleStaffChange}
+            className="z-[2]"
+          />
         </div>
-      </div>
-      <div className="flex items-center justify-center gap-4 mb-4">
-        <Swiper spaceBetween={0} slidesPerView={5} style={{ zIndex: 1 }}>
-          <div className="flex gap-4 z-[1]">
-            {days.map((date, index) => {
-              const isUnavailable = unavailableDates.some(
-                (unavailableDate) =>
-                  unavailableDate.getTime() === date.getTime()
-              );
-              return (
-                <SwiperSlide key={index}>
-                  <CustomRadioDate
-                    index={index}
-                    id={index}
-                    label={dayLabels[date.getDay()]}
-                    date={date.getDate().toString()}
-                    selected={selectedIndex === index}
-                    onSelect={() => handleSelectedDate(index, date)}
-                    unavailable={isUnavailable}
-                  />
-                </SwiperSlide>
-              );
-            })}
+        <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select time</h1>
+        <div className="flex justify-between mx-5 mb-5">
+          <div>
+            <h2 className="text-xl font-bold">{`${selectedMonth} ${selectedYear}`}</h2>
           </div>
-        </Swiper>
-      </div>
-      {hourArray?.length == 0 && (
-        <div className="mb-5 text-primary-700 font-bold w-full h-[400px] flex justify-center items-center">
-          Fully booked on this date
         </div>
-      )}
-      <div className="mb-24">
-        {hourArray?.map(
-          (hour: { time: string; staffs: number[] }, index: number) => (
-            <CustomHourRadio
-              staffs={hour.staffs}
-              error={error}
-              isLoading={isLoading}
-              hour={hour.time}
-              key={index}
-              onSelect={() => handleSelectedHour(hour)}
-              selected={selectHour === hour.time}
-            />
-          )
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <Swiper spaceBetween={0} slidesPerView={5} style={{ zIndex: 1 }}>
+            <div className="flex gap-4 z-[1]">
+              {days.map((date, index) => {
+                const isUnavailable = unavailableDates.some(
+                  (unavailableDate) =>
+                    unavailableDate.getTime() === date.getTime()
+                );
+                return (
+                  <SwiperSlide key={index}>
+                    <CustomRadioDate
+                      index={index}
+                      id={index}
+                      label={dayLabels[date.getDay()]}
+                      date={date.getDate().toString()}
+                      selected={selectedIndex === index}
+                      onSelect={() => handleSelectedDate(index, date)}
+                      unavailable={isUnavailable}
+                    />
+                  </SwiperSlide>
+                );
+              })}
+            </div>
+          </Swiper>
+        </div>
+        {hourArray?.length == 0 && (
+          <div className="mb-5 text-primary-700 font-bold w-full h-[400px] flex justify-center items-center">
+            Fully booked on this date
+          </div>
         )}
+        <div className="mb-24">
+          {hourArray?.map(
+            (hour: { time: string; staffs: number[] }, index: number) => (
+              <CustomHourRadio
+                staffs={hour.staffs}
+                error={error}
+                isLoading={isLoading}
+                hour={hour.time}
+                key={index}
+                onSelect={() => handleSelectedHour(hour)}
+                selected={selectHour === hour.time}
+              />
+            )
+          )}
+        </div>
+      </div>
+      <div className="sticky top-20 self-start ml-auto mt-28">
+        <CartSide />
       </div>
     </div>
   );

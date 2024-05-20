@@ -23,9 +23,9 @@ export const StoreMap: React.FC<any> = ({ storeConfig }) => {
   };
 
   return (
-    <div className="p-6 cursor-pointer" onClick={getDirection}>
-      <img src="/map.png" alt="map" className="mb-5" />
-      <h1>{storeConfig?.storeAddress}</h1>
+    <div className="p-6 cursor-pointer mx-auto" onClick={getDirection}>
+      <img src="/map.png" alt="map" className="mb-5 mx-auto" />
+      <h1 >{storeConfig?.storeAddress}</h1>
       <h3 className="font-bold text-blue-950">Get directions</h3>
     </div>
   );

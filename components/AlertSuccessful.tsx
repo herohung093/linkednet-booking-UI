@@ -28,7 +28,11 @@ const AlertSuccessful: React.FC<{
           onClick={onClick}
           type="submit"
           disabled={!formValid}
-          className={`bg-primary-700 text-white border border-primary-700 rounded-full font-bold w-[200px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl cursor-pointer  hover:text-pink-900 hover:border-pink-900 mt-20`}
+          className={`${
+            formValid
+              ? "bg-primary-700 cursor-pointer  border-primary-700 hover:text-pink-900 hover:border-pink-900 "
+              : "bg-gray-700 opacity-50 "
+          }  text-white border rounded-full font-bold w-[200px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl   mt-20`}
         >
           Confirm
         </button>
@@ -88,7 +92,7 @@ const AlertSuccessful: React.FC<{
                   dispatch(clearCart());
                   router.push("/");
                 }}
-                className="text-primary-700 border-2 mt-3 border-primary-700 rounded-2xl font-bold w-[400px] h-[35px] shadow-green7  items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
+                className="bg-primary-700 text-white border-2 mt-6 border-primary-700 rounded-2xl font-bold w-full lg:mx-20 h-[35px] shadow-green7  items-center justify-center leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
               >
                 Done
               </div>

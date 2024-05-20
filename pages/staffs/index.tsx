@@ -69,12 +69,12 @@ const StaffsPage: React.FC = () => {
   if (error) return <Error />;
   if (isLoading) return <Loading />;
   return (
-    <div className="md:flex md:gap-20 md:justify-around">
+    <div className="lg:flex gap-20 md:gap-0 md:justify-around lg:mx-auto mx-10">
       <div>
         <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">
           Select professional
         </h1>
-        <div className="grid grid-cols-2 md:grid-cols-3  gap-x-1 gap-y-4 ">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4  gap-x-1 gap-y-4 ">
           {newStaffsArray?.map((staff: Staff) => (
             <CustomStaffRadio
               error={error}
@@ -87,7 +87,7 @@ const StaffsPage: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className="mt-20">
+      <div className="sticky top-20 self-start mt-20">
         <CartSide />
       </div>
     </div>

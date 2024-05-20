@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import CartDialog from "./CartDialog";
-import { CartIcon } from "@/icons/CartIcon";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
-const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
+const BookingCart: React.FC = () => {
   const router = useRouter();
   const slug = router.route;
   const cart = useSelector((state: any) => state.cart);
@@ -45,7 +44,7 @@ const BookingCart: React.FC<{ bookingInfo: CartState }> = ({ bookingInfo }) => {
   return (
     <>
       <div
-        className={`fixed bottom-0 w-full flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out z-[10] `}
+        className={`lg:hidden fixed bottom-0 w-full flex mx-auto bg-white p-[4px] rounded-md shadow-[0_2px_10px] shadow-blackA4 transition-transform duration-300 ease-in-out z-[10] `}
       >
         {slug != "/confirmation" && (
           <div className="mx-4 flex justify-between items-center w-full">

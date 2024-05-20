@@ -51,12 +51,12 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   };
 
   return (
-    <div className="bg-transparent rounded-lg shadow-md p-4  mx-auto flex items-center justify-between my-2 md:w-[350px] lg:w-[450px] xl:w-[550px]">
+    <div className="bg-transparent rounded-lg shadow-md p-4  mx-auto flex items-center justify-between my-2 w-full ">
       {!service ? (
         <Spinner />
       ) : (
         <>
-          <div>
+          <div className="w-full">
             <h2 className="text-lg font-semibold">{serviceName}</h2>
             <p className="text-gray-600 ">{serviceDescription}</p>
             <div className="flex items-center justify-start gap-3">

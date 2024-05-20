@@ -19,11 +19,11 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <nav className="p-4 flex justify-between items-center">
+    <nav className="p-4 flex justify-between items-center mx-auto xl:w-[70%]">
       <div className="text-primary-700  text-lg cursor-pointer" onClick={goBack}>
        {slug !== "/" && <Back />}
       </div>
-      <h1 className="text-primary-700 text-lg font-semibold">{store}</h1>
+      {/* <h1 className="text-primary-700 text-lg font-semibold">{store}</h1> */}
       <Home />
     </nav>
   );

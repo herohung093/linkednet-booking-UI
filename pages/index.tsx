@@ -47,10 +47,12 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeConfig]);
 
-  const sortedData = (serviceDataInfo ?? []).slice().sort((a: any, b: any) =>
-    a.serviceType.type.localeCompare(b.serviceType.type)
-  );
-  
+  const sortedData = (serviceDataInfo ?? [])
+    .slice()
+    .sort((a: any, b: any) =>
+      a.serviceType.type.localeCompare(b.serviceType.type)
+    );
+
   const groupedData = sortedData?.reduce((acc: any, service: any) => {
     const { serviceType, ...rest } = service;
     const index = acc.findIndex(
@@ -67,25 +69,30 @@ export default function Home() {
   if (error) return <Error />;
   return (
     <main className="mb-20">
-      <div>
-        <div>
-          <Logo isLoading={isLoading} />
-        </div>
-        <div>
-          <StoreInfo storeConfig={storeConfig} />
-        </div>
-        <div className="md:flex md:gap-20 md:justify-around">
+      <div className="flex justify-center mx-auto mb-8">
+        <Logo isLoading={isLoading} />
+      </div>
+
+      <div className="flex justify-around gap-10 mx-auto">
+        <div className="mx-auto">
           <div>
-            {groupedData &&
-              groupedData.map((item: any, index: number) => (
-                <NailServices key={index} data={item} index={index} />
-              ))}
+            <StoreInfo storeConfig={storeConfig} />
           </div>
-          <OpeningTime
-            key={storeConfig?.id}
-            businessHours={storeConfig?.businessHoursList}
-          ></OpeningTime>
-          <StoreMap storeConfig={storeConfig} />
+          <div className="flex flex-col gap-8 mx-auto">
+            <div>
+              {groupedData &&
+                groupedData.map((item: any, index: number) => (
+                  <NailServices key={index} data={item} index={index} />
+                ))}
+            </div>
+            <OpeningTime
+              key={storeConfig?.id}
+              businessHours={storeConfig?.businessHoursList}
+            />
+            <StoreMap storeConfig={storeConfig} />
+          </div>
+        </div>
+        <div className="sticky top-20 self-start mx-auto mt-20 ">
           <CartSide />
         </div>
       </div>

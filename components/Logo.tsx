@@ -17,7 +17,7 @@ export const Logo: React.FC<PropsInterface> = ({ isLoading }) => {
           alt="logo"
           width={1200}
           height={1000}
-          className="mb-5 lg:mb-10 mx-auto"
+          className="mb-5 lg:mb-10 mx-auto lg:hidden"
         />
       )}
     </div>
