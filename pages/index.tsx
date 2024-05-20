@@ -6,6 +6,7 @@ import { NailServices } from "@/components/NailServices";
 import OpeningTime from "@/components/OpeningTime";
 import { StoreInfo } from "@/components/StoreInfo";
 import { StoreMap } from "@/components/StoreMap";
+import { Horizon } from "@/icons/Horizon";
 import {
   setSelectedStoreInfo,
   setServiceData,
@@ -72,13 +73,14 @@ export default function Home() {
       <div className="flex justify-center mx-auto mb-8">
         <Logo isLoading={isLoading} />
       </div>
-
-      <div className="flex justify-around gap-10 mx-auto">
+      <div className="flex justify-around lg:gap-10 mx-auto">
         <div className="mx-auto">
           <div>
             <StoreInfo storeConfig={storeConfig} />
           </div>
-          <div className="flex flex-col gap-8 mx-auto">
+          <div className="mx-5 font-bold text-2xl">Services</div>
+
+          <div className="flex flex-col">
             <div>
               {groupedData &&
                 groupedData.map((item: any, index: number) => (
@@ -89,6 +91,7 @@ export default function Home() {
               key={storeConfig?.id}
               businessHours={storeConfig?.businessHoursList}
             />
+            <Horizon />
             <StoreMap storeConfig={storeConfig} />
           </div>
         </div>

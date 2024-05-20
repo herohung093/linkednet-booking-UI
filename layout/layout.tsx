@@ -13,12 +13,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [cartItems]);
 
   return (
-    <div  className="lg:w-[80%] mx-auto mb-20">
-      <NavBar/>
-      <main>
-        {children}
-        </main>   
-      <BookingCart />  
+    <div className="lg:w-[80%] mx-auto mb-20">
+      <NavBar />
+      <main>{children}</main>
+      {cartHasItem && <BookingCart />}
     </div>
   );
 };

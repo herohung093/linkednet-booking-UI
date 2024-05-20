@@ -1,6 +1,22 @@
 import { StarIcon } from "@radix-ui/react-icons";
 import React from "react";
 
+const Skeleton = () => (
+  <div className="animate-pulse mb-10">
+    <div className="h-8 bg-gray-300 rounded w-3/4 mx-6 mb-4"></div>
+    <div className="flex items-center gap-x-2 mx-6 mb-4">
+      <div className="h-6 bg-gray-300 rounded w-6"></div>
+      <div className="h-6 bg-gray-300 rounded w-4"></div>
+      <div className="h-6 bg-gray-300 rounded w-4"></div>
+      <div className="h-6 bg-gray-300 rounded w-4"></div>
+      <div className="h-6 bg-gray-300 rounded w-4"></div>
+      <div className="h-6 bg-gray-300 rounded w-4"></div>
+    </div>
+    <div className="h-6 bg-gray-300 rounded w-1/2 mx-6 mb-4"></div>
+    <div className="h-6 bg-gray-300 rounded w-1/2 mx-6"></div>
+  </div>
+);
+
 export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
   const checkBusinessStatus = () => {
     const currentDateTime = new Date();
@@ -43,6 +59,10 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
     }
   };
 
+  if (!storeConfig) {
+    return <Skeleton />;
+  }
+
   const stars = Array.from({ length: 5 }, (_, index) => (
     <StarIcon key={index} />
   ));
@@ -51,7 +71,8 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
     <div className="mb-10">
       <h1 className="text-3xl font-bold mx-6">{storeConfig?.storeName}</h1>
       <h2 className="flex justify-start items-center gap-x-2 mx-6 font-bold text-lg">
-        <p>5.0</p>{stars}{" "}
+        <p>5.0</p>
+        {stars}
       </h2>
       <h3 className="mx-6 text-gray-500 font-medium">
         {storeConfig?.storeAddress}

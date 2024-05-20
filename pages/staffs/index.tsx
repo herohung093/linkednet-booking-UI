@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 import { setSelectedStaff } from "@/redux toolkit/cartSlice";
 import Error from "@/components/Error";
-import Loading from "@/components/Loading";
 
 import { CartSide } from "@/components/CartSide";
 import { setSelectedStaffList } from "@/redux toolkit/staffSlice";
@@ -67,14 +66,29 @@ const StaffsPage: React.FC = () => {
   };
 
   if (error) return <Error />;
-  if (isLoading) return <Loading />;
+  if (isLoading) {
+    return (
+      <div className="lg:flex gap-20 md:gap-0 md:justify-around lg:mx-auto mx-10">
+        <div>
+          <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select professional</h1>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-1 gap-y-4 ">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
+              <div key={index} className="animate-pulse bg-gray-200 rounded-lg h-24"></div>
+            ))}
+          </div>
+        </div>
+        <div className="sticky top-20 self-start mt-20">
+          <CartSide />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="lg:flex gap-20 md:gap-0 md:justify-around lg:mx-auto mx-10">
       <div>
-        <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">
-          Select professional
-        </h1>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4  gap-x-1 gap-y-4 ">
+        <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select professional</h1>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-1 gap-y-4 ">
           {newStaffsArray?.map((staff: Staff) => (
             <CustomStaffRadio
               error={error}

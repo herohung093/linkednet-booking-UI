@@ -9,6 +9,7 @@ import axios from "@/ulti/axios";
 const ConfirmationPage: React.FC = () => {
   const [ok, setOk] = useState<boolean | null>(null);
   const bookingInfo = useSelector((state: any) => state.cart);
+  const [isLoading,setIsLoading] = useState<boolean>(false)
   const router = useRouter();
   useEffect(() => {
     if (bookingInfo?.items.length === 0) {
@@ -56,6 +57,7 @@ const ConfirmationPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true)
 
     const serviceItems = bookingInfo?.items?.map(
       (service: NailSalonService) => ({
@@ -91,16 +93,48 @@ const ConfirmationPage: React.FC = () => {
       );
       setOk(response.status === 201);
       console.log(response.data);
-
+      setIsLoading(false)
       setRes(response.data);
 
       if (response.status !== 200) {
         throw new Error("Failed to submit booking.");
+        setIsLoading(false)
       }
     } catch (error) {
       console.error("Error submitting booking:", error);
+      setIsLoading(false)
+
     }
   };
+
+  const FormFieldSkeleton = () => (
+    <div className="w-full h-10 bg-gray-200 rounded-md"></div>
+  );
+
+  const ConfirmationMessageSkeleton = () => (
+    <div className="w-full h-10 bg-gray-200 rounded-md"></div>
+  );
+
+  if (!bookingInfo) {
+    return (
+      <div className="w-[90%] sm:w-[65%] mx-auto mt-9">
+        <div>
+          <h1 className="text-2xl font-semibold mb-5">Booking confirmation</h1>
+          <div className="w-full h-40 bg-gray-200 rounded-md"></div>
+          <div className="w-full h-10 bg-gray-200 rounded-md mb-3 mt-3"></div>
+          <div className="w-full h-10 bg-gray-200 rounded-md mb-3"></div>
+          <div className="max-w-[500px] mx-auto mt-10">
+            <form className="flex flex-col gap-y-5 justify-center">
+              {[1, 2, 3, 4, 5].map((_, index) => (
+                <FormFieldSkeleton key={index} />
+              ))}
+              <ConfirmationMessageSkeleton />
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-[90%] sm:w-[65%] mx-auto mt-9">
@@ -175,6 +209,7 @@ const ConfirmationPage: React.FC = () => {
                 ok={ok}
                 id={res?.id}
                 status={res?.status}
+                isLoading={isLoading}
               />
             </div>
           </form>

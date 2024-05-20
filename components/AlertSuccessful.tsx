@@ -9,6 +9,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CheckIcon from "@mui/icons-material/Check";
 import { pink } from "@mui/material/colors";
+import CustomLoading from "./Loading";
 
 const AlertSuccessful: React.FC<{
   id: string | number;
@@ -16,8 +17,9 @@ const AlertSuccessful: React.FC<{
   bookingInfo: CartState;
   formValid: boolean;
   status: string;
+  isLoading: boolean
   onClick?: () => void;
-}> = ({ formValid, onClick, bookingInfo, ok, id, status }) => {
+}> = ({ formValid, onClick, bookingInfo, ok, id, status ,isLoading}) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -34,14 +36,13 @@ const AlertSuccessful: React.FC<{
               : "bg-gray-700 opacity-50 "
           }  text-white border rounded-full font-bold w-[200px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl   mt-20`}
         >
-          Confirm
+          {isLoading ? <CustomLoading/>: "Confirm"}         
         </button>
       </AlertDialog.Trigger>
-      <AlertDialog.Portal>
-        <AlertDialog.Overlay className="bg-slate-700 bg-opacity-70 data-[state=open]:animate-overlayShow fixed inset-0" />
-        <AlertDialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[80vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[10px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
-          {ok == null && <Loading />}
-          {ok == true && (
+      {ok == true && (
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay className="bg-slate-700 bg-opacity-70 data-[state=open]:animate-overlayShow fixed inset-0" />
+          <AlertDialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[80vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[10px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
             <>
               <AlertDialog.Title className="text-mauve12 m-0 text-md font-bold  flex justify-center items-center">
                 Confirmation
@@ -83,23 +84,23 @@ const AlertSuccessful: React.FC<{
                 )}
               </AlertDialog.Description>
             </>
-          )}
 
-          <div className="flex justify-end gap-[25px]">
-            <AlertDialog.Action asChild>
-              <div
-                onClick={() => {
-                  dispatch(clearCart());
-                  router.push("/");
-                }}
-                className="bg-primary-700 text-white border-2 mt-6 border-primary-700 rounded-2xl font-bold w-full lg:mx-20 h-[35px] shadow-green7  items-center justify-center leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
-              >
-                Done
-              </div>
-            </AlertDialog.Action>
-          </div>
-        </AlertDialog.Content>
-      </AlertDialog.Portal>
+            <div className="flex justify-end gap-[25px]">
+              <AlertDialog.Action asChild>
+                <div
+                  onClick={() => {
+                    dispatch(clearCart());
+                    router.push("/");
+                  }}
+                  className="bg-primary-700 text-white border-2 mt-6 border-primary-700 rounded-2xl font-bold w-full lg:mx-20 h-[35px] shadow-green7  items-center justify-center leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
+                >
+                  Done
+                </div>
+              </AlertDialog.Action>
+            </div>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      )}
     </AlertDialog.Root>
   );
 };

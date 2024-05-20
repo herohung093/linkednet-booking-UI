@@ -16,6 +16,7 @@ import Select from "react-select";
 import { RootState } from "@/redux toolkit/store";
 import moment from "moment";
 import { CartSide } from "@/components/CartSide";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
@@ -175,11 +176,18 @@ const TimePage: React.FC = () => {
 
     dispatch(setSelectedStaff(selectedStaffMember));
   };
+  const CustomRadioDateSkeleton = () => (
+    <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+  );
+
+  const CustomHourRadioSkeleton = () => (
+    <div className="w-90 h-12 bg-gray-200 rounded-lg mb-3 mx-4"></div>
+  );
 
   return (
     <div className="mt-10 md:w-[80%] mx-auto lg:grid lg:grid-cols-2 ">
       <div>
-        <div className="mx-auto ">
+        <div className="w-[90%] mx-auto ">
           <h1 className="text-lg font-bold mb-3">Select Staff</h1>
           <Select
             isSearchable={false}
@@ -223,9 +231,21 @@ const TimePage: React.FC = () => {
             </div>
           </Swiper>
         </div>
+        {isLoading && (
+          <div className="mb-24">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((_, index) => (
+              <div key={index}>
+                <CustomHourRadioSkeleton />
+              </div>
+            ))}
+          </div>
+        )}
         {hourArray?.length == 0 && (
-          <div className="mb-5 text-primary-700 font-bold w-full h-[400px] flex justify-center items-center">
-            Fully booked on this date
+          <div className="mb-5 flex-col text-primary-700 font-bold w-full h-[400px] flex justify-center items-center">
+            <div className="text-[50px]">
+              <CalendarMonthIcon fontSize="inherit" />
+            </div>
+            <div>Fully booked on this date</div>
           </div>
         )}
         <div className="mb-24">
