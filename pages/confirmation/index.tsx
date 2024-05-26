@@ -96,9 +96,8 @@ const ConfirmationPage: React.FC = () => {
       setIsLoading(false)
       setRes(response.data);
 
-      if (response.status !== 200) {
-        throw new Error("Failed to submit booking.");
-        setIsLoading(false)
+      if (response.status !== 201 ) {
+        throw new Error("Failed to submit booking.");        
       }
     } catch (error) {
       console.error("Error submitting booking:", error);

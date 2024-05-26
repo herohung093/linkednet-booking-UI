@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useRouter } from "next/navigation";
-import Loading from "./Loading";
 import { clearCart } from "@/redux toolkit/cartSlice";
 import { useDispatch } from "react-redux";
 import moment from "moment";
@@ -10,6 +9,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CheckIcon from "@mui/icons-material/Check";
 import { pink } from "@mui/material/colors";
 import CustomLoading from "./Loading";
+import { Snackbar, Alert } from "@mui/material";
 
 const AlertSuccessful: React.FC<{
   id: string | number;
@@ -17,12 +17,19 @@ const AlertSuccessful: React.FC<{
   bookingInfo: CartState;
   formValid: boolean;
   status: string;
-  isLoading: boolean
+  isLoading: boolean;
   onClick?: () => void;
-}> = ({ formValid, onClick, bookingInfo, ok, id, status ,isLoading}) => {
+}> = ({ formValid, onClick, bookingInfo, ok, id, status, isLoading }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-
+  const [open, setOpen] = useState<boolean>(false);
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(id.toString());
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000); 
+  };
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
@@ -36,7 +43,7 @@ const AlertSuccessful: React.FC<{
               : "bg-gray-700 opacity-50 "
           }  text-white border rounded-full font-bold w-[200px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl   mt-20`}
         >
-          {isLoading ? <CustomLoading/>: "Confirm"}         
+          {isLoading ? <CustomLoading /> : "Confirm"}
         </button>
       </AlertDialog.Trigger>
       {ok == true && (
@@ -67,11 +74,19 @@ const AlertSuccessful: React.FC<{
               <AlertDialog.Description className="flex justify-between text-md font-semibold mb-3 text-gray-500">
                 {id}{" "}
                 <ContentCopyIcon
-                  sx={{ color: pink[500] }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(id.toString());
-                  }}
+                  sx={{ color: pink[500], cursor: "pointer" }}
+                  onClick={handleCopyClick}
                 />
+                <Snackbar
+                  open={open}
+                  autoHideDuration={2000}
+                  onClose={() => setOpen(false)}
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                >
+                  <Alert onClose={() => setOpen(false)} severity="success">
+                    Copied to clipboard!
+                  </Alert>
+                </Snackbar>
               </AlertDialog.Description>
 
               <AlertDialog.Description className="text-lg  mt-5 font-bold">

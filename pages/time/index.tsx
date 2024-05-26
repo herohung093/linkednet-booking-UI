@@ -126,7 +126,9 @@ const TimePage: React.FC = () => {
       return !normalizedWorkingDays.includes(dayIndex === 0 ? 7 : dayIndex);
     });
   }, [staff, availability, days]);
+  const [swiper, setSwiper] = useState<any>(null);
 
+  const slideTo = (index: any) => swiper.slideTo(index);
   useEffect(() => {
     const isCurrentDateUnavailable = unavailableDates.some(
       (unavailableDate) => unavailableDate.getTime() === selectedDate.getTime()
@@ -144,12 +146,12 @@ const TimePage: React.FC = () => {
         const firstAvailableDate = days[firstAvailableIndex];
         setSelectedIndex(firstAvailableIndex);
         const formattedDate = moment(firstAvailableDate).format("DD/MM/YYYY");
-
+        slideTo(firstAvailableIndex);
         dispatch(setSelectedDate(formattedDate));
         setSelectDay(formattedDate);
       }
     }
-  }, [unavailableDates, days, selectedDate, dispatch]);
+  }, [unavailableDates, days, selectedDate, dispatch, slideTo]);
 
   const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
     setSelectHour(hour.time);
@@ -207,7 +209,12 @@ const TimePage: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center justify-center gap-4 mb-4">
-          <Swiper spaceBetween={0} slidesPerView={5} style={{ zIndex: 1 }}>
+          <Swiper
+            spaceBetween={0}
+            slidesPerView={5}
+            style={{ zIndex: 1 }}
+            onSwiper={setSwiper}
+          >
             <div className="flex gap-4 z-[1]">
               {days.map((date, index) => {
                 const isUnavailable = unavailableDates.some(
