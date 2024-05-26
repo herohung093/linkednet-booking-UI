@@ -128,8 +128,8 @@ const TimePage: React.FC = () => {
   }, [staff, availability, days]);
   const [swiper, setSwiper] = useState<any>(null);
 
-  const slideTo = (index: any) => swiper.slideTo(index);
   useEffect(() => {
+    const slideTo = (index: any) => swiper.slideTo(index);
     const isCurrentDateUnavailable = unavailableDates.some(
       (unavailableDate) => unavailableDate.getTime() === selectedDate.getTime()
     );
@@ -151,7 +151,7 @@ const TimePage: React.FC = () => {
         setSelectDay(formattedDate);
       }
     }
-  }, [unavailableDates, days, selectedDate, dispatch, slideTo]);
+  }, [unavailableDates, days, selectedDate, dispatch,swiper]);
 
   const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
     setSelectHour(hour.time);

@@ -42,7 +42,7 @@ const AlertSuccessful: React.FC<{
             formValid
               ? "bg-primary-700 cursor-pointer  border-primary-700 hover:text-pink-900 hover:border-pink-900 "
               : "bg-gray-700 opacity-50 "
-          }  text-white border rounded-full font-bold w-[200px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl   mt-20`}
+          }  text-white border rounded-lg font-bold w-[200px] h-[45px] shadow-green7 inline-flex items-center justify-center px-[30px] leading-none focus:shadow-[0_0_0_2px] text-xl   mt-20`}
         >
           {isLoading ? <CustomLoading /> : "Confirm"}
         </button>
@@ -111,7 +111,7 @@ const AlertSuccessful: React.FC<{
                     dispatch(clearCart());
                     router.push("/");
                   }}
-                  className="bg-primary-700 text-white border-2 mt-6 border-primary-700 rounded-2xl font-bold w-full lg:mx-20 h-[35px] shadow-green7  items-center justify-center leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
+                  className="bg-primary-700 text-white border-2 mt-6 border-primary-700 rounded-lg font-bold w-full lg:mx-20 h-[35px] shadow-green7  items-center justify-center leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
                 >
                   Done
                 </div>
