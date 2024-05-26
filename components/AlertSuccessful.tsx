@@ -10,6 +10,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import { pink } from "@mui/material/colors";
 import CustomLoading from "./Loading";
 import { Snackbar, Alert } from "@mui/material";
+import PendingIcon from "@mui/icons-material/Pending";
 
 const AlertSuccessful: React.FC<{
   id: string | number;
@@ -28,7 +29,7 @@ const AlertSuccessful: React.FC<{
     setOpen(true);
     setTimeout(() => {
       setOpen(false);
-    }, 2000); 
+    }, 2000);
   };
   return (
     <AlertDialog.Root>
@@ -96,6 +97,9 @@ const AlertSuccessful: React.FC<{
                 {status}
                 {status == "APPROVED" && (
                   <CheckIcon sx={{ color: pink[500] }} />
+                )}
+                {status == "PENDING" && (
+                  <PendingIcon sx={{ color: pink[500] }} />
                 )}
               </AlertDialog.Description>
             </>
