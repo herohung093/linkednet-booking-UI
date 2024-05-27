@@ -70,7 +70,7 @@ export default function Home() {
   if (error) return <Error />;
   return (
     <main className="mb-20">
-      <div className="flex justify-center mx-auto mb-8">
+      <div className="mb-8">
         <Logo isLoading={isLoading} />
       </div>
       <div className="flex justify-around lg:gap-10 mx-auto">

@@ -16,9 +16,9 @@ const CartDialog = () => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <div className="mx-4">
+        <div className="xs:mx-4">
           <div className="text-xl">from A ${bookingInfo.total}</div>
-          <div className="text-lg text-slate-600">
+          <div className="xs:text-lg text-slate-600">
             {bookingInfo.items.length} services -{" "}
             {bookingInfo.totalEstimatedTime} minutes
           </div>

@@ -19,11 +19,23 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <nav className="p-6 flex justify-between items-center mx-auto xl:w-[70%]">
-      <div className="text-primary-700  text-lg cursor-pointer" onClick={goBack}>
-       {slug !== "/" && <Back />}
+    <nav
+      className={`${slug == "/" ? "relative" : "mb-20"}  flex justify-between items-center mx-auto xl:w-[70%] `}
+    >
+      <div
+        className="text-primary-700  text-lg cursor-pointer"
+        onClick={goBack}
+      >
+        {slug !== "/" && (
+          <div className="absolute top-0 z-10  m-2 w-10 h-10 flex items-center justify-center bg-white rounded-full">
+            <Back />
+          </div>
+        )}
       </div>
-      <Home />
+
+      <div className="absolute top-0 right-0 z-10  m-2 w-10 h-10 flex items-center justify-center bg-white rounded-full">
+        <Home />
+      </div>
     </nav>
   );
 };

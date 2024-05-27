@@ -55,7 +55,7 @@ const AlertSuccessful: React.FC<{
               <AlertDialog.Title className="text-mauve12 m-0 text-md font-bold  flex justify-center items-center">
                 Confirmation
               </AlertDialog.Title>
-              <AlertDialog.Description className="flex justify-center text-xl  mb-3 mt-3 font-bold">
+              <AlertDialog.Description className="flex justify-center  xs:text-xl  mb-3 mt-3 font-bold">
                 Your reservation is confirmed
               </AlertDialog.Description>
               <AlertDialog.Description className="text-lg font-semibold mt-5">

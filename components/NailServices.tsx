@@ -37,10 +37,10 @@ export const NailServices: React.FC<{
               onClick={() => setShowMap((prevShowMap) => !prevShowMap)}
               className="text-blue-500 hover:text-blue-700 focus:outline-none"
             >
-              {showMap ? <TriangleUp /> : <TriangleDown />}
+              {!showMap ? <TriangleUp /> : <TriangleDown />}
             </button>
           </div>
-          {showMap && (
+          {!showMap && (
             <div>
               {data?.map((service) => (
                 <NailSalonServiceCard key={service.id} service={service} />
