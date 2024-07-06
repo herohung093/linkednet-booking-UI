@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import CartDialog from "./CartDialog";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import { RootState } from "@/redux toolkit/store";
 
 const BookingCart: React.FC = () => {
   const router = useRouter();
   const slug = router.route;
+  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const cart = useSelector((state: any) => state.cart);
   const selectedHour = useSelector((state: any) => state.cart.selectedHour);
   const [showDialog, setShowDialog] = useState(false);
@@ -15,25 +17,25 @@ const BookingCart: React.FC = () => {
     switch (slug) {
       case "/":
         if (cart.items.length > 0) {
-          router.push("/staffs");
+          router.push("/staffs/?storeUuid=" + storeUuid);
         } else {
           setDialogMessage("Please select a service");
           setShowDialog(true);
         }
         break;
       case "/staffs":
-        router.push("/time");
+        router.push("/time/?storeUuid=" + storeUuid);
         break;
       case "/time":
         if (selectedHour) {
-          router.push("/confirmation");
+          router.push("/confirmation/?storeUuid=" + storeUuid);
         } else {
           setDialogMessage("Please select a time");
           setShowDialog(true);
         }
         break;
       default:
-        router.push("/");
+        router.push("/?storeUuid=" + storeUuid);
     }
   };
 
