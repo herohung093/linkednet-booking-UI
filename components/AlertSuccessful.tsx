@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useRouter } from "next/navigation";
 import { clearCart } from "@/redux toolkit/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -11,6 +11,7 @@ import { pink } from "@mui/material/colors";
 import CustomLoading from "./Loading";
 import { Snackbar, Alert } from "@mui/material";
 import PendingIcon from "@mui/icons-material/Pending";
+import { RootState } from "@/redux toolkit/store";
 
 const AlertSuccessful: React.FC<{
   id: string | number;
@@ -24,6 +25,8 @@ const AlertSuccessful: React.FC<{
   const router = useRouter();
   const dispatch = useDispatch();
   const [open, setOpen] = useState<boolean>(false);
+  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
+
   const handleCopyClick = () => {
     navigator.clipboard.writeText(id.toString());
     setOpen(true);
@@ -31,6 +34,7 @@ const AlertSuccessful: React.FC<{
       setOpen(false);
     }, 2000);
   };
+
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
@@ -109,7 +113,8 @@ const AlertSuccessful: React.FC<{
                 <div
                   onClick={() => {
                     dispatch(clearCart());
-                    router.push("/");
+                    
+                    router.push("/?storeUuid=" + storeUuid);
                   }}
                   className="bg-primary-700 text-white border-2 mt-6 border-primary-700 rounded-lg font-bold w-full lg:mx-20 h-[35px] shadow-green7  items-center justify-center leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
                 >

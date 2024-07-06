@@ -17,11 +17,9 @@ import { RootState } from "@/redux toolkit/store";
 import moment from "moment";
 import { CartSide } from "@/components/CartSide";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import axios from "@/ulti/axios";
 
-type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
-
-const fetcher: FetcherFunction = (...args) =>
-  fetch(...args).then((res) => res.json());
+type FetcherFunction = (url: string) => Promise<any>;
 
 const TimePage: React.FC = () => {
   const dayLabels: { [key: number]: string } = {
@@ -51,11 +49,19 @@ const TimePage: React.FC = () => {
 
   const dispatch = useDispatch();
   const bookingInfo = useSelector((state: any) => state.cart);
+  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const router = useRouter();
+
+  const fetcher: FetcherFunction = (url) =>
+    axios.get(url, {
+      headers: {
+        'X-StoreID': storeUuid,
+      }
+    }).then(res => res.data);
 
   useEffect(() => {
     if (bookingInfo?.items.length === 0) {
-      router.push("/");
+      router.push("/?storeUuid=" + storeUuid);
     }
   }, [bookingInfo, router]);
 
@@ -87,7 +93,7 @@ const TimePage: React.FC = () => {
     error,
     isLoading,
   } = useSWR(
-    `https://big-umbrella-c5c3450b8837.herokuapp.com/staff/allStaffAvailability?staffId=${staff?.id}&date=${selectDay}`,
+    `/staff/allStaffAvailability?staffId=${staff?.id}&date=${selectDay}`,
     fetcher
   );
 

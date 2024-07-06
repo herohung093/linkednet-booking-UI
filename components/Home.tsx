@@ -1,16 +1,18 @@
 import React from "react";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "@/redux toolkit/cartSlice";
 import { HomeIcon } from "@/icons/HomeIcon";
+import { RootState } from "@/redux toolkit/store";
 
 const Home = () => {
   const router = useRouter();
+  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const dispatch = useDispatch();
   const handleDelete = () => {
     dispatch(clearCart());
-    router.push("/");
+    router.push("/?storeUuid=" + storeUuid);
   };
   return (
     <AlertDialog.Root>

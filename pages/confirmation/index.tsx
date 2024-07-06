@@ -5,18 +5,21 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import AlertSuccessful from "@/components/AlertSuccessful";
 import axios from "@/ulti/axios";
+import { RootState } from "@/redux toolkit/store";
 
 const ConfirmationPage: React.FC = () => {
   const [ok, setOk] = useState<boolean | null>(null);
   const bookingInfo = useSelector((state: any) => state.cart);
   const [isLoading,setIsLoading] = useState<boolean>(false)
+  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const router = useRouter();
+  const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
+
   useEffect(() => {
     if (bookingInfo?.items.length === 0) {
-      router.push("/");
+      router.push("/?storeUuid=" + storeUuid);
     }
   }, [bookingInfo, router]);
-  const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -53,6 +56,7 @@ const ConfirmationPage: React.FC = () => {
         : formData.email.trim() !== "");
     setFormValid(isValid);
   }, [formData, contactMethod]);
+
   const [res, setRes] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -83,11 +87,12 @@ const ConfirmationPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "https://big-umbrella-c5c3450b8837.herokuapp.com/reservation/",
+        "/reservation/",
         payload,
         {
           headers: {
             "Content-Type": "application/json",
+            'X-StoreID': storeUuid,
           },
         }
       );
