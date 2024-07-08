@@ -46,7 +46,7 @@ const StaffsPage: React.FC = () => {
       id: 0,
       firstName: "Any",
       lastName: "Professional",
-      nickName: "Any",
+      nickname: "Any",
       phone: "",
       skillLevel: 1,
       dateOfBirth: "",
