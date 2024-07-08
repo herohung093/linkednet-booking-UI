@@ -19,6 +19,7 @@ type FetcherFunction = (url: string) => Promise<any>;
 const StaffsPage: React.FC = () => {
   const router = useRouter();
   const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
+  const preSelectedStaff = useSelector((state: RootState) => state.cart.selectedStaff?.id);
   const dispatch = useDispatch();
   const [selectStaff, setSelectStaff] = useState<number | null>(null);
 
@@ -64,14 +65,10 @@ const StaffsPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(setSelectedStaffList(newStaffsArray));
-  });
 
-  // useEffect(() => {
-  //   if (newStaffsArray?.length > 0 && selectStaff === null) {
-  //     setSelectStaff(newStaffsArray[0].id);
-  //     dispatch(setSelectedStaff(newStaffsArray[0]));
-  //   }
-  // }, [newStaffsArray, selectStaff, dispatch, data]);
+    // preselect staff when navigate back to the page
+    setSelectStaff(preSelectedStaff ?? null)
+  });
 
   const handleSelectStaff = (staff: Staff) => {
     setSelectStaff(staff.id);
