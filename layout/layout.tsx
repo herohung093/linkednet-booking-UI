@@ -16,7 +16,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className="lg:w-[80%] mx-auto mb-20">
       <NavBar />
       <main>{children}</main>
-      {cartHasItem && <BookingCart />}
+      {/* {cartHasItem && <BookingCart />} */}
     </div>
   );
 };

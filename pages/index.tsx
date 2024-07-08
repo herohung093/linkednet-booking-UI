@@ -10,10 +10,15 @@ import { Horizon } from "@/icons/Horizon";
 import {
   setSelectedStoreInfo,
   setServiceData,
+  setStoreUuid
 } from "@/redux toolkit/storeInfo";
+
 import axios from "@/ulti/axios";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux toolkit/store";
+import { Router, useRouter } from "next/router";
+import BookingCart from "@/components/BookingCart";
 
 export default function Home() {
   const [serviceDataInfo, setServiceDataInfo] = useState<
@@ -22,14 +27,35 @@ export default function Home() {
   const [storeConfig, setStoreConfig] = useState<StoreInfo | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  var storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
+  const router = useRouter();
   const dispatch = useDispatch();
+  const urlStoreUuid = router.query;
+
+  const [cartHasItem, setCartHasItem] = useState<boolean>(true);
+
+  const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
+  const cartItems = bookingInfo.items.length;
+  useEffect(() => {
+    setCartHasItem(cartItems !== 0);
+  }, [cartItems]);
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const serviceResponse = await axios.get("service/");
+        const serviceResponse = await axios.get("service/", {
+          headers: {
+            'X-StoreID': urlStoreUuid.storeUuid,
+          }
+        });
         setServiceDataInfo(serviceResponse.data);
 
-        const storeConfigResponse = await axios.get("storeConfig/1");
+        const storeConfigResponse = await axios.get("storeConfig/" + urlStoreUuid.storeUuid, {
+          headers: {
+            'X-StoreID': urlStoreUuid.storeUuid,
+          }
+        });
         setStoreConfig(storeConfigResponse.data);
 
         setIsLoading(false);
@@ -39,8 +65,11 @@ export default function Home() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (urlStoreUuid.storeUuid) {
+      dispatch(setStoreUuid(urlStoreUuid.storeUuid as string));
+      fetchData();
+    }
+  }, [urlStoreUuid]);
 
   useEffect(() => {
     dispatch(setSelectedStoreInfo(storeConfig));
@@ -99,6 +128,7 @@ export default function Home() {
           <CartSide />
         </div>
       </div>
+       {cartHasItem && <BookingCart />}
     </main>
   );
 }

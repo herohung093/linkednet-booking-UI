@@ -9,45 +9,35 @@ import Error from "@/components/Error";
 import { CartSide } from "@/components/CartSide";
 import { setSelectedStaffList } from "@/redux toolkit/staffSlice";
 import { useRouter } from "next/router";
-import axios from "@/ulti/axios";
-import { RootState } from "@/redux toolkit/store";
 import BookingCart from "@/components/BookingCart";
 
-type FetcherFunction = (url: string) => Promise<any>;
+type FetcherFunction = (...args: Parameters<typeof fetch>) => Promise<any>;
 
+const fetcher: FetcherFunction = (...args) =>
+  fetch(...args).then((res) => res.json());
 
 const StaffsPage: React.FC = () => {
-  const router = useRouter();
-  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
-  const dispatch = useDispatch();
-  const [selectStaff, setSelectStaff] = useState<number | null>(null);
-
-  const fetcher: FetcherFunction = (url) =>
-    axios.get(url, {
-      headers: {
-        'X-StoreID': storeUuid,
-      }
-    }).then(res => res.data);
-  
   const { data, error, isLoading } = useSWR(
-    "/staff/?isOnlyActive=true",
+    "https://big-umbrella-c5c3450b8837.herokuapp.com/staff/?isOnlyActive=true",
     fetcher
   );
-
   const bookingInfo = useSelector((state: any) => state.cart);
+  const router = useRouter();
   useEffect(() => {
     if (bookingInfo?.items.length === 0) {
-      router.push("/?storeUuid=" + storeUuid);
+      router.push("/");
     }
-  }, [bookingInfo, router, storeUuid]);
+  }, [bookingInfo, router]);
 
+  const dispatch = useDispatch();
+  const [selectStaff, setSelectStaff] = useState<number | null>(null);
 
   const anyStaff: Staff = useMemo(
     () => ({
       id: 0,
       firstName: "Any",
       lastName: "Professional",
-      nickname: "Any",
+      nickName: "Any",
       phone: "",
       skillLevel: 1,
       dateOfBirth: "",

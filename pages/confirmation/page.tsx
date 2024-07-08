@@ -1,28 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cart from "@/components/Cart";
 import { useSelector } from "react-redux";
 
 import { useRouter } from "next/router";
 import AlertSuccessful from "@/components/AlertSuccessful";
 import axios from "@/ulti/axios";
-import { RootState } from "@/redux toolkit/store";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import BookingCart from "@/components/BookingCart";
 
 const ConfirmationPage: React.FC = () => {
   const [ok, setOk] = useState<boolean | null>(null);
   const bookingInfo = useSelector((state: any) => state.cart);
   const [isLoading,setIsLoading] = useState<boolean>(false)
-  const { executeRecaptcha } = useGoogleReCaptcha();
-  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const router = useRouter();
-  const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
-  const [captchaToken, setCaptchaToken] = useState('');
-
   useEffect(() => {
     if (bookingInfo?.items.length === 0) {
-      router.push("/?storeUuid=" + storeUuid);
+      router.push("/");
     }
   }, [bookingInfo, router]);
+  const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -50,17 +45,6 @@ const ConfirmationPage: React.FC = () => {
     });
   };
 
-    // Create an event handler so you can call the verification on button click event or form submit
-    const handleReCaptchaVerify = useCallback(async () => {
-      if (!executeRecaptcha) {
-        console.log('Execute recaptcha not yet available');
-        return;
-      }
-  
-      const captchaTokenResponse = await executeRecaptcha('booking');
-      setCaptchaToken(captchaTokenResponse);
-    }, [executeRecaptcha]);
-
   useEffect(() => {
     const isValid =
       formData.firstName.trim() !== "" &&
@@ -69,17 +53,12 @@ const ConfirmationPage: React.FC = () => {
         ? formData.phone.trim() !== ""
         : formData.email.trim() !== "");
     setFormValid(isValid);
-
-    handleReCaptchaVerify();
-  }, [formData, contactMethod, handleReCaptchaVerify]);
-
+  }, [formData, contactMethod]);
   const [res, setRes] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true)
-
-    handleReCaptchaVerify();
 
     const serviceItems = bookingInfo?.items?.map(
       (service: NailSalonService) => ({
@@ -105,17 +84,16 @@ const ConfirmationPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "/reservation/",
+        "https://big-umbrella-c5c3450b8837.herokuapp.com/reservation/",
         payload,
         {
           headers: {
             "Content-Type": "application/json",
-            'X-StoreID': storeUuid,
-            "Captcha-Token": captchaToken,
           },
         }
       );
       setOk(response.status === 201);
+      console.log(response.data);
       setIsLoading(false)
       setRes(response.data);
 
@@ -237,6 +215,7 @@ const ConfirmationPage: React.FC = () => {
           </form>
         </div>
       </div>
+      <BookingCart />
     </div>
   );
 };
