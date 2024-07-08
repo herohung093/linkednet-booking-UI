@@ -18,7 +18,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux toolkit/store";
 import { Router, useRouter } from "next/router";
+<<<<<<< HEAD
 import BookingCart from "@/components/BookingCart";
+=======
+>>>>>>> 6a71ad5431d92425c915b3d00f734ccb4b5e150e
 
 export default function Home() {
   const [serviceDataInfo, setServiceDataInfo] = useState<
@@ -32,6 +35,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const urlStoreUuid = router.query;
 
+<<<<<<< HEAD
   const [cartHasItem, setCartHasItem] = useState<boolean>(true);
 
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
@@ -41,6 +45,8 @@ export default function Home() {
   }, [cartItems]);
 
 
+=======
+>>>>>>> 6a71ad5431d92425c915b3d00f734ccb4b5e150e
   useEffect(() => {
     const fetchData = async () => {
       try {
