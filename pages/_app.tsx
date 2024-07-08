@@ -8,13 +8,16 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       {/* <Theme> */}
         <Layout>
+        <GoogleReCaptchaProvider reCaptchaKey="6LeYggQqAAAAAPJ9aKFdqTOKj_Yr77myhhCS2sg-">
           <Component {...pageProps} />
+          </GoogleReCaptchaProvider>
         </Layout>
       {/* </Theme> */}
     </Provider>
