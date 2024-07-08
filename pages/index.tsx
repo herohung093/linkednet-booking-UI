@@ -125,10 +125,10 @@ export default function Home() {
           </div>
         </div>
         <div className="sticky top-20 self-start mx-auto mt-20 ">
-          <CartSide />
+          <CartSide disableContinueButton={!cartHasItem}/>
         </div>
       </div>
-       {cartHasItem && <BookingCart />}
+       {cartHasItem && <BookingCart disableContinueButton={!cartHasItem}/>}
     </main>
   );
 }

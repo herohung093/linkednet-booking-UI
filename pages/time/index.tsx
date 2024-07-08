@@ -279,9 +279,9 @@ const TimePage: React.FC = () => {
         </div>
       </div>
       <div className="sticky top-20 self-start ml-auto mt-28">
-        <CartSide />
+        <CartSide disableContinueButton={!bookingInfo.selectedHour}/>
       </div>
-      <BookingCart />
+      <BookingCart disableContinueButton={!bookingInfo.selectedHour}/>
     </div>
   );
 };

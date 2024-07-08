@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux toolkit/store";
 
-export const CartSide = () => {
+interface CartSideProps {
+  disableContinueButton: boolean;
+}
+
+export const CartSide:  React.FC<CartSideProps> = ({ disableContinueButton }) => {
   const router = useRouter();
   const slug = router.route;
   const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
@@ -51,11 +55,11 @@ export const CartSide = () => {
         <div className="mt-auto">
           <button
             className={`-mb-5 w-full px-5 py-5 border-2 h-[35px] rounded-xl font-bold text-xl shadow-green7 inline-flex items-center justify-center leading-none focus:outline-none ${
-              cart.items.length === 0
+              disableContinueButton
                 ? "opacity-50 border-slate-300 text-slate-500"
                 : "border-primary-700 text-white bg-primary-500"
             }`}
-            disabled={cart.items.length === 0}
+            disabled={disableContinueButton}
             onClick={handleRoute}
           >
             Continue

@@ -59,17 +59,19 @@ const StaffsPage: React.FC = () => {
   );
 
   const newStaffsArray = useMemo(() => {
-    return data ? [anyStaff, ...data] : [anyStaff];
-  }, [data, anyStaff]);
+    return data && data.length != 0 ? [anyStaff, ...data] : [];
+  }, [data]);
+
   useEffect(() => {
     dispatch(setSelectedStaffList(newStaffsArray));
   });
-  useEffect(() => {
-    if (newStaffsArray?.length > 0 && selectStaff === null) {
-      setSelectStaff(newStaffsArray[0].id);
-      dispatch(setSelectedStaff(newStaffsArray[0]));
-    }
-  }, [newStaffsArray, selectStaff, dispatch, data]);
+
+  // useEffect(() => {
+  //   if (newStaffsArray?.length > 0 && selectStaff === null) {
+  //     setSelectStaff(newStaffsArray[0].id);
+  //     dispatch(setSelectedStaff(newStaffsArray[0]));
+  //   }
+  // }, [newStaffsArray, selectStaff, dispatch, data]);
 
   const handleSelectStaff = (staff: Staff) => {
     setSelectStaff(staff.id);
@@ -89,7 +91,7 @@ const StaffsPage: React.FC = () => {
           </div>
         </div>
         <div className="sticky top-20 self-start mt-20">
-          <CartSide />
+          <CartSide disableContinueButton={!selectStaff}/>
         </div>
       </div>
     );
@@ -113,9 +115,9 @@ const StaffsPage: React.FC = () => {
         </div>
       </div>
       <div className="sticky top-20 self-start mt-20">
-        <CartSide />
+        <CartSide disableContinueButton={selectStaff == null || selectStaff == undefined}/>
       </div>
-      <BookingCart />
+      <BookingCart disableContinueButton={!selectStaff == null || selectStaff == undefined}/>
     </div>
   );
 };
