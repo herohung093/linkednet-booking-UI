@@ -41,7 +41,7 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
         </div>
         <div className="text-gray-600 mb-4 text-base flex justify-center flex-col-1 gap-x-2">
           <div>Nickname: </div>
-          <div> {staff.nickName} </div>
+          <div> {staff.nickname} </div>
         </div>
       </div>
     </label>
