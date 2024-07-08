@@ -18,10 +18,7 @@ import moment from "moment";
 import { CartSide } from "@/components/CartSide";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import axios from "@/ulti/axios";
-<<<<<<< HEAD
 import BookingCart from "@/components/BookingCart";
-=======
->>>>>>> 6a71ad5431d92425c915b3d00f734ccb4b5e150e
 
 type FetcherFunction = (url: string) => Promise<any>;
 

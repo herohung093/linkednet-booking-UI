@@ -11,10 +11,7 @@ import { setSelectedStaffList } from "@/redux toolkit/staffSlice";
 import { useRouter } from "next/router";
 import axios from "@/ulti/axios";
 import { RootState } from "@/redux toolkit/store";
-<<<<<<< HEAD
 import BookingCart from "@/components/BookingCart";
-=======
->>>>>>> 6a71ad5431d92425c915b3d00f734ccb4b5e150e
 
 type FetcherFunction = (url: string) => Promise<any>;
 
