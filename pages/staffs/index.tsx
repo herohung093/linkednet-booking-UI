@@ -2,7 +2,6 @@
 import CustomStaffRadio from "@/components/CustomStaffRadio";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useSWR from "swr";
 import { setSelectedStaff } from "@/redux toolkit/cartSlice";
 import Error from "@/components/Error";
 
@@ -13,34 +12,49 @@ import axios from "@/ulti/axios";
 import { RootState } from "@/redux toolkit/store";
 import BookingCart from "@/components/BookingCart";
 
-type FetcherFunction = (url: string) => Promise<any>;
 
 
 const StaffsPage: React.FC = () => {
   const router = useRouter();
-  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const preSelectedStaff = useSelector((state: RootState) => state.cart.selectedStaff?.id);
   const dispatch = useDispatch();
   const [selectStaff, setSelectStaff] = useState<number | null>(null);
+  const urlStoreUuid = router.query;
 
-  const fetcher: FetcherFunction = (url) =>
-    axios.get(url, {
-      headers: {
-        'X-StoreID': storeUuid,
-      }
-    }).then(res => res.data);
+  const [data, setData] = useState<any[]>([]);
+  const [error, setError] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  const { data, error, isLoading } = useSWR(
-    "/staff/?isOnlyActive=true",
-    fetcher
-  );
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const result = await axios.get("/staff/?isOnlyActive=true", {
+          headers: {
+            'X-StoreID': urlStoreUuid.storeUuid,
+          }
+        }).then(res => res.data);
+
+        setData(result);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (urlStoreUuid.storeUuid) {
+      fetchData();
+    }
+  }, [urlStoreUuid]);
 
   const bookingInfo = useSelector((state: any) => state.cart);
   useEffect(() => {
-    if (bookingInfo?.items.length === 0) {
-      router.push("/?storeUuid=" + storeUuid);
+
+    if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
+      router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
-  }, [bookingInfo, router, storeUuid]);
+  }, [bookingInfo, router, urlStoreUuid.storeUuid]);
 
 
   const anyStaff: Staff = useMemo(

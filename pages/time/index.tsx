@@ -50,19 +50,19 @@ const TimePage: React.FC = () => {
 
   const dispatch = useDispatch();
   const bookingInfo = useSelector((state: any) => state.cart);
-  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const router = useRouter();
+  const urlStoreUuid = router.query;
 
   const fetcher: FetcherFunction = (url) =>
     axios.get(url, {
       headers: {
-        'X-StoreID': storeUuid,
+        'X-StoreID': urlStoreUuid.storeUuid,
       }
     }).then(res => res.data);
 
   useEffect(() => {
-    if (bookingInfo?.items.length === 0) {
-      router.push("/?storeUuid=" + storeUuid);
+    if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
+      router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
   }, [bookingInfo, router]);
 

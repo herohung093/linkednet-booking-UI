@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import AlertSuccessful from "@/components/AlertSuccessful";
 import axios from "@/ulti/axios";
-import { RootState } from "@/redux toolkit/store";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const ConfirmationPage: React.FC = () => {
@@ -13,14 +12,14 @@ const ConfirmationPage: React.FC = () => {
   const bookingInfo = useSelector((state: any) => state.cart);
   const [isLoading,setIsLoading] = useState<boolean>(false)
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const router = useRouter();
+  const urlStoreUuid = router.query;
   const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
   const [captchaToken, setCaptchaToken] = useState('');
 
   useEffect(() => {
-    if (bookingInfo?.items.length === 0) {
-      router.push("/?storeUuid=" + storeUuid);
+    if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
+      router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
   }, [bookingInfo, router]);
 
@@ -110,7 +109,7 @@ const ConfirmationPage: React.FC = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            'X-StoreID': storeUuid,
+            'X-StoreID': urlStoreUuid.storeUuid,
             "Captcha-Token": captchaToken,
           },
         }

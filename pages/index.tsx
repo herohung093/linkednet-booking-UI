@@ -16,8 +16,7 @@ import {
 import axios from "@/ulti/axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux toolkit/store";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import BookingCart from "@/components/BookingCart";
 
 export default function Home() {
@@ -27,7 +26,6 @@ export default function Home() {
   const [storeConfig, setStoreConfig] = useState<StoreInfo | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  var storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
   const router = useRouter();
   const dispatch = useDispatch();
   const urlStoreUuid = router.query;
