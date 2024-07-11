@@ -21,7 +21,7 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
   if (error) return <Error />;
   if (isLoading) return <Loading />;
   return (
-    <label>
+    <div className="mx-1">
       <input
         type="radio"
         checked={selected}
@@ -31,7 +31,7 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
         className="hidden"
       />
       <div
-        className={`lg:p-4 bg-white border-2 rounded-lg shadow-md py-2 mx-5 flex flex-col justify-center items-center cursor-pointer ${
+        className={`lg:p-4 bg-white border-2 rounded-lg shadow-md py-2 flex flex-col justify-center items-center cursor-pointer w-full${
           selected ? "border-primary-500" : ""
         }`}
       >
@@ -39,12 +39,12 @@ const CustomStaffRadio: React.FC<CustomStaffRadio> = ({
           <AccountCircleIcon />
           {staff.firstName} {staff.lastName}
         </div>
-        <div className="text-gray-600 mb-4 text-base flex justify-center flex-col-1 gap-x-2">
+        <div className="text-gray-600 mb-4 text-base flex justify-center flex-col-1 gap-x-2 break-words">
           <div>Nickname: </div>
           <div> {staff.nickname} </div>
         </div>
       </div>
-    </label>
+    </div>
   );
 };
 
