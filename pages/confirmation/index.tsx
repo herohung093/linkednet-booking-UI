@@ -107,7 +107,6 @@ const ConfirmationPage: React.FC = () => {
       staff: {
         id: staff.id,
       },
-      status: "PENDING",
       serviceItems: serviceItems,
     };
 
