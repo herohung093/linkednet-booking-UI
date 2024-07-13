@@ -235,7 +235,7 @@ const ConfirmationPage: React.FC = () => {
                 maxLength={noteInputMaxLength}
                 className="border-2 rounded-md outline-none px-4 py-2 h-16 resize-none w-full"
               />
-              <div className="text-gray-600 text-sm mt-1">
+              <div className="text-gray-400 text-sm mt-1">
                 {noteInputRemainingChars} characters remaining
               </div>
             </div>
