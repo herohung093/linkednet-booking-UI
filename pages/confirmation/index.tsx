@@ -10,7 +10,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 const ConfirmationPage: React.FC = () => {
   const [ok, setOk] = useState<boolean | null>(null);
   const bookingInfo = useSelector((state: any) => state.cart);
-  const [isLoading,setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { executeRecaptcha } = useGoogleReCaptcha();
   const router = useRouter();
   const urlStoreUuid = router.query;
@@ -28,7 +28,10 @@ const ConfirmationPage: React.FC = () => {
     lastName: "",
     phone: "",
     email: "",
+    note: "",
   });
+  const noteInputMaxLength = 100;
+  const [noteInputRemainingChars, setNoteInputRemainingChars] = useState(noteInputMaxLength);
 
   const [formValid, setFormValid] = useState<boolean>(false);
   const [contactMethod, setContactMethod] = useState<"phone" | "email">(
@@ -41,6 +44,11 @@ const ConfirmationPage: React.FC = () => {
 
     if (name === "phone" && !/^\d*$/.test(value)) {
       return;
+    } else if (name === "note") {
+      if (value.length > noteInputMaxLength) {
+        return;
+      }
+      setNoteInputRemainingChars(noteInputMaxLength - value.length);
     }
 
     setFormData({
@@ -49,21 +57,22 @@ const ConfirmationPage: React.FC = () => {
     });
   };
 
-    // Create an event handler so you can call the verification on button click event or form submit
-    const handleReCaptchaVerify = useCallback(async () => {
-      if (!executeRecaptcha) {
-        console.log('Execute recaptcha not yet available');
-        return;
-      }
-  
-      const captchaTokenResponse = await executeRecaptcha('booking');
-      setCaptchaToken(captchaTokenResponse);
-    }, [executeRecaptcha]);
+  // Create an event handler so you can call the verification on button click event or form submit
+  const handleReCaptchaVerify = useCallback(async () => {
+    if (!executeRecaptcha) {
+      console.log('Execute recaptcha not yet available');
+      return;
+    }
+
+    const captchaTokenResponse = await executeRecaptcha('booking');
+    setCaptchaToken(captchaTokenResponse);
+  }, [executeRecaptcha]);
 
   useEffect(() => {
     const isValid =
       formData.firstName.trim() !== "" &&
       formData.lastName.trim() !== "" &&
+      formData.note.trim() !== "" &&
       (contactMethod === "phone"
         ? formData.phone.trim() !== ""
         : formData.email.trim() !== "");
@@ -93,7 +102,7 @@ const ConfirmationPage: React.FC = () => {
         phone: formData.phone,
         email: formData.email,
       },
-      note: `{I want ${staff.firstName} ${staff.lastName}}`,
+      note: formData.note,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
       staff: {
         id: staff.id,
@@ -118,8 +127,8 @@ const ConfirmationPage: React.FC = () => {
       setIsLoading(false)
       setRes(response.data);
 
-      if (response.status !== 201 ) {
-        throw new Error("Failed to submit booking.");        
+      if (response.status !== 201) {
+        throw new Error("Failed to submit booking.");
       }
     } catch (error) {
       console.error("Error submitting booking:", error);
@@ -193,22 +202,20 @@ const ConfirmationPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setContactMethod("phone")}
-                className={`${
-                  contactMethod === "phone"
+                className={`${contactMethod === "phone"
                     ? "bg-primary-500 text-white"
                     : "bg-white text-gray-700"
-                } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
+                  } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
               >
                 Phone
               </button>
               <button
                 type="button"
                 onClick={() => setContactMethod("email")}
-                className={`${
-                  contactMethod === "email"
+                className={`${contactMethod === "email"
                     ? "bg-primary-500 text-white"
                     : "bg-white text-gray-700 "
-                } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
+                  } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
               >
                 Email
               </button>
@@ -221,6 +228,19 @@ const ConfirmationPage: React.FC = () => {
               placeholder={contactMethod === "phone" ? "Phone Number" : "Email"}
               className="border-2 rounded-md outline-none px-4 py-2"
             />
+            <div>
+              <textarea
+                name="note"
+                value={formData.note}
+                onChange={handleChange}
+                placeholder="Note for shop"
+                maxLength={noteInputMaxLength}
+                className="border-2 rounded-md outline-none px-4 py-2 h-16 resize-none w-full"
+              />
+              <div className="text-gray-600 text-sm mt-1">
+                {noteInputRemainingChars} characters remaining
+              </div>
+            </div>
 
             <div className="flex justify-center items-center mx-10 mt-10">
               {/* <AlertDeleteDialog /> */}
