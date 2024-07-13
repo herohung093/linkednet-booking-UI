@@ -72,7 +72,6 @@ const ConfirmationPage: React.FC = () => {
     const isValid =
       formData.firstName.trim() !== "" &&
       formData.lastName.trim() !== "" &&
-      formData.note.trim() !== "" &&
       (contactMethod === "phone"
         ? formData.phone.trim() !== ""
         : formData.email.trim() !== "");
