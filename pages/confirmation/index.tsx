@@ -168,13 +168,15 @@ const ConfirmationPage: React.FC = () => {
     <div className="w-[90%] sm:w-[65%] mx-auto mt-9">
       <div>
         <h1 className="text-2xl font-semibold mb-5">Booking confirmation</h1>
+        <div className=" bg-zinc-100 bg-bg-opacity-50 p-2 ">
         <Cart />
-        <h2 className="text-xl font-semibold mb-3 mt-3">
-          Date: {bookingInfo.selectedDate} at {bookingInfo.selectedHour}
-        </h2>
-        <h2 className="text-xl font-semibold mb-3">
+        <h2 className="text-xl font-semibold mb-3 mt-3 text-sky-800 font-sans">
+  Date: <span className="text-rose-500 text-lg font-bold tracking-wide">{bookingInfo.selectedDate}</span> at <span className="text-rose-500 text-lg font-bold tracking-wide">{bookingInfo.selectedHour}</span>
+</h2>
+        <h2 className="text-xl font-semibold mb-3 text-sky-800 font-sans">
           Staff: {staff ? staff?.firstName + " " + staff?.lastName : "N/A"}
         </h2>
+        </div>
         <div className="max-w-[500px] mx-auto mt-10">
           <form
             onSubmit={handleSubmit}
