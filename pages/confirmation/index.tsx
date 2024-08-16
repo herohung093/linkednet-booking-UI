@@ -27,16 +27,12 @@ const ConfirmationPage: React.FC = () => {
     firstName: "",
     lastName: "",
     phone: "",
-    email: "",
     note: "",
   });
   const noteInputMaxLength = 100;
   const [noteInputRemainingChars, setNoteInputRemainingChars] = useState(noteInputMaxLength);
 
   const [formValid, setFormValid] = useState<boolean>(false);
-  const [contactMethod, setContactMethod] = useState<"phone" | "email">(
-    "phone"
-  );
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -72,13 +68,11 @@ const ConfirmationPage: React.FC = () => {
     const isValid =
       formData.firstName.trim() !== "" &&
       formData.lastName.trim() !== "" &&
-      (contactMethod === "phone"
-        ? formData.phone.trim() !== ""
-        : formData.email.trim() !== "");
+      formData.phone.trim() !== "";
     setFormValid(isValid);
 
     handleReCaptchaVerify();
-  }, [formData, contactMethod, handleReCaptchaVerify]);
+  }, [formData, handleReCaptchaVerify]);
 
   const [res, setRes] = useState<any>(null);
 
@@ -99,7 +93,6 @@ const ConfirmationPage: React.FC = () => {
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
-        email: formData.email,
       },
       note: formData.note,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
@@ -198,34 +191,12 @@ const ConfirmationPage: React.FC = () => {
               placeholder="Last Name"
               className="border-2 rounded-md outline-none px-4 py-2 "
             />
-            <div className="flex justify-evenly">
-              <button
-                type="button"
-                onClick={() => setContactMethod("phone")}
-                className={`${contactMethod === "phone"
-                    ? "bg-primary-500 text-white"
-                    : "bg-white text-gray-700"
-                  } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
-              >
-                Phone
-              </button>
-              <button
-                type="button"
-                onClick={() => setContactMethod("email")}
-                className={`${contactMethod === "email"
-                    ? "bg-primary-500 text-white"
-                    : "bg-white text-gray-700 "
-                  } rounded-full px-4 py-2 w-[100px] border border-primary-500`}
-              >
-                Email
-              </button>
-            </div>
             <input
-              type={contactMethod === "phone" ? "tel" : "email"}
-              name={contactMethod}
-              value={formData[contactMethod]}
+              type="tel"
+              name="phone"
+              value={formData.phone}
               onChange={handleChange}
-              placeholder={contactMethod === "phone" ? "Phone Number" : "Email"}
+              placeholder="Phone Number"
               className="border-2 rounded-md outline-none px-4 py-2"
             />
             <div>
