@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Cart from "@/components/Cart";
 import { useSelector } from "react-redux";
-
+import { IMaskInput } from 'react-imask';
 import { useRouter } from "next/router";
 import AlertSuccessful from "@/components/AlertSuccessful";
 import axios from "@/ulti/axios";
@@ -38,9 +38,7 @@ const ConfirmationPage: React.FC = () => {
     const { name, value } = e.target;
     let newValue = value;
 
-    if (name === "phone" && !/^\d*$/.test(value)) {
-      return;
-    } else if (name === "note") {
+    if (name === "note") {
       if (value.length > noteInputMaxLength) {
         return;
       }
@@ -68,7 +66,7 @@ const ConfirmationPage: React.FC = () => {
     const isValid =
       formData.firstName.trim() !== "" &&
       formData.lastName.trim() !== "" &&
-      formData.phone.trim() !== "";
+      !formData.phone.trim().includes('#');
     setFormValid(isValid);
 
     handleReCaptchaVerify();
@@ -78,7 +76,7 @@ const ConfirmationPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
 
     handleReCaptchaVerify();
 
@@ -92,7 +90,7 @@ const ConfirmationPage: React.FC = () => {
       customer: {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        phone: formData.phone,
+        phone: formData.phone.replace(/\s+/g, ''),
       },
       note: formData.note,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
@@ -162,13 +160,13 @@ const ConfirmationPage: React.FC = () => {
       <div>
         <h1 className="text-2xl font-semibold mb-5">Booking confirmation</h1>
         <div className=" bg-zinc-100 bg-bg-opacity-50 p-2 ">
-        <Cart />
-        <h2 className="text-xl font-semibold mb-3 mt-3 text-sky-800 font-sans">
-  Date: <span className="text-rose-500 text-lg font-bold tracking-wide">{bookingInfo.selectedDate}</span> at <span className="text-rose-500 text-lg font-bold tracking-wide">{bookingInfo.selectedHour}</span>
-</h2>
-        <h2 className="text-xl font-semibold mb-3 text-sky-800 font-sans">
-          Staff: {staff ? staff?.firstName + " " + staff?.lastName : "N/A"}
-        </h2>
+          <Cart />
+          <h2 className="text-xl font-semibold mb-3 mt-3 text-sky-800 font-sans">
+            Date: <span className="text-rose-500 text-lg font-bold tracking-wide">{bookingInfo.selectedDate}</span> at <span className="text-rose-500 text-lg font-bold tracking-wide">{bookingInfo.selectedHour}</span>
+          </h2>
+          <h2 className="text-xl font-semibold mb-3 text-sky-800 font-sans">
+            Staff: {staff ? staff?.firstName + " " + staff?.lastName : "N/A"}
+          </h2>
         </div>
         <div className="max-w-[500px] mx-auto mt-10">
           <form
@@ -191,12 +189,15 @@ const ConfirmationPage: React.FC = () => {
               placeholder="Last Name"
               className="border-2 rounded-md outline-none px-4 py-2 "
             />
-            <input
+            <IMaskInput
+              mask='+61 400 000 000'
+              placeholderChar='#'
               type="tel"
               name="phone"
               value={formData.phone}
-              onChange={handleChange}
+              onAccept={(value) => handleChange({ target: { name: 'phone', value } })}
               placeholder="Phone Number"
+              lazy={false}
               className="border-2 rounded-md outline-none px-4 py-2"
             />
             <div>
