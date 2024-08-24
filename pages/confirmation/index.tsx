@@ -1,14 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Cart from "@/components/Cart";
 import { useSelector } from "react-redux";
-import { IMaskInput } from 'react-imask';
 import { useRouter } from "next/router";
 import AlertSuccessful from "@/components/AlertSuccessful";
 import axios from "@/ulti/axios";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useForm, SubmitHandler, Controller } from "react-hook-form"
+import { TextField } from "@mui/material";
+import LoadingButton from '@mui/lab/LoadingButton';
+
+interface BookingSubmitForm {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  note: string;
+}
 
 const ConfirmationPage: React.FC = () => {
-  const [ok, setOk] = useState<boolean | null>(null);
+  const [ok, setOk] = useState<boolean>(false);
   const bookingInfo = useSelector((state: any) => state.cart);
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -16,40 +25,13 @@ const ConfirmationPage: React.FC = () => {
   const urlStoreUuid = router.query;
   const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
   const [captchaToken, setCaptchaToken] = useState('');
+  const { control, register, formState: { errors }, handleSubmit } = useForm<BookingSubmitForm>()
 
   useEffect(() => {
     if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
       router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
   }, [bookingInfo, router]);
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    note: "",
-  });
-  const noteInputMaxLength = 100;
-  const [noteInputRemainingChars, setNoteInputRemainingChars] = useState(noteInputMaxLength);
-
-  const [formValid, setFormValid] = useState<boolean>(false);
-
-  const handleChange = (e: { target: { name: any; value: any } }) => {
-    const { name, value } = e.target;
-    let newValue = value;
-
-    if (name === "note") {
-      if (value.length > noteInputMaxLength) {
-        return;
-      }
-      setNoteInputRemainingChars(noteInputMaxLength - value.length);
-    }
-
-    setFormData({
-      ...formData,
-      [name]: newValue,
-    });
-  };
 
   // Create an event handler so you can call the verification on button click event or form submit
   const handleReCaptchaVerify = useCallback(async () => {
@@ -62,22 +44,10 @@ const ConfirmationPage: React.FC = () => {
     setCaptchaToken(captchaTokenResponse);
   }, [executeRecaptcha]);
 
-  useEffect(() => {
-    const isValid =
-      formData.firstName.trim() !== "" &&
-      formData.lastName.trim() !== "" &&
-      !formData.phone.trim().includes('#');
-    setFormValid(isValid);
-
-    handleReCaptchaVerify();
-  }, [formData, handleReCaptchaVerify]);
-
   const [res, setRes] = useState<any>(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (formData: BookingSubmitForm) => {
     setIsLoading(true);
-
     handleReCaptchaVerify();
 
     const serviceItems = bookingInfo?.items?.map(
@@ -90,7 +60,7 @@ const ConfirmationPage: React.FC = () => {
       customer: {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        phone: formData.phone.replace(/\s+/g, ''),
+        phone: formData.phone.replace(/^0/, '+61'),
       },
       note: formData.note,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
@@ -143,7 +113,7 @@ const ConfirmationPage: React.FC = () => {
           <div className="w-full h-10 bg-gray-200 rounded-md mb-3 mt-3"></div>
           <div className="w-full h-10 bg-gray-200 rounded-md mb-3"></div>
           <div className="max-w-[500px] mx-auto mt-10">
-            <form className="flex flex-col gap-y-5 justify-center">
+            <form className="flex flex-col justify-center">
               {[1, 2, 3, 4, 5].map((_, index) => (
                 <FormFieldSkeleton key={index} />
               ))}
@@ -170,54 +140,116 @@ const ConfirmationPage: React.FC = () => {
         </div>
         <div className="max-w-[500px] mx-auto mt-10">
           <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-y-5 justify-center  "
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col justify-center  "
           >
-            <input
-              type="text"
+            <Controller
               name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              placeholder="First Name"
-              className="border-2 rounded-md outline-none px-4 py-2 "
+              control={control}
+              rules={{ required: "First name is required", maxLength: { value: 20, message: "First name cannot exceed 20 characters" } }}
+              render={({ field }) => (
+                <div className="mb-4">
+                  <TextField
+                    {...field}
+                    required
+                    id="firstName"
+                    label="First Name"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.firstName}
+                    helperText={errors.firstName ? errors.firstName.message : ''}
+                    inputProps={{ maxLength: 20 }}
+                  />
+                </div>
+              )}
             />
-            <input
-              type="text"
+            <Controller
               name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              placeholder="Last Name"
-              className="border-2 rounded-md outline-none px-4 py-2 "
+              control={control}
+              rules={{ required: "Last name is required", maxLength: { value: 20, message: "Last name cannot exceed 20 characters" } }}
+              render={({ field }) => (
+                <div className="mb-4">
+                  <TextField
+                    {...field}
+                    id="lastName"
+                    required
+                    label="Last Name"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.lastName}
+                    helperText={errors.lastName ? errors.lastName.message : ''}
+                    inputProps={{ maxLength: 20 }}
+                  />
+                </div>
+              )}
             />
-            <IMaskInput
-              mask='+61 400 000 000'
-              placeholderChar='#'
-              type="tel"
+            <Controller
               name="phone"
-              value={formData.phone}
-              onAccept={(value) => handleChange({ target: { name: 'phone', value } })}
-              placeholder="Phone Number"
-              lazy={false}
-              className="border-2 rounded-md outline-none px-4 py-2"
+              control={control}
+              rules={{
+                required: "Phone number is required",
+                maxLength: { value: 10, message: "Phone number cannot exceed 10 digits" },
+                minLength: { value: 10, message: "Phone number must be at least 10 digits" },
+                pattern: { value: /^04[0-9]*$/, message: "Phone number must start with 04" }
+              }}
+              render={({ field }) => (
+                <div className="mb-4">
+                  <TextField
+                    {...field}
+                    id="phone"
+                    type="tel"
+                    required
+                    label="Mobile Number"
+                    inputMode="numeric"
+                    placeholder="04xxxxxxxx"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.phone}
+                    helperText={errors.phone ? errors.phone.message : ''}
+                    inputProps={{ maxLength: 10 }}
+                    onInput={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      target.value = target.value.replace(/\D/g, '');
+                      field.onChange(target.value);
+                    }}
+                  />
+                </div>
+              )}
             />
-            <div>
-              <textarea
-                name="note"
-                value={formData.note}
-                onChange={handleChange}
-                placeholder="Note for shop"
-                maxLength={noteInputMaxLength}
-                className="border-2 rounded-md outline-none px-4 py-2 h-16 resize-none w-full"
-              />
-              <div className="text-gray-400 text-sm mt-1">
-                {noteInputRemainingChars} characters remaining
-              </div>
-            </div>
-
+            <Controller
+              name="note"
+              control={control}
+              rules={{
+                maxLength: { value: 100, message: "Note cannot exceed 100 characters" }
+              }}
+              render={({ field }) => (
+                <div className="mb-4">
+                  <TextField
+                    {...field}
+                    id="note"
+                    placeholder="Note for shop"
+                    label="Note"
+                    variant="outlined"
+                    fullWidth
+                    multiline
+                    rows={4}
+                    error={!!errors.note}
+                    helperText={errors.note ? errors.note.message : ''}
+                    inputProps={{ maxLength: 100 }}
+                  />
+                </div>
+              )}
+            />
+            <LoadingButton
+              type="submit"
+              variant="outlined"
+              className="mt-4 px-4 py-2 w-full md:w-auto"
+              loading={isLoading}
+            >
+              Create booking
+            </LoadingButton>
             <div className="flex justify-center items-center mx-10 mt-10">
-              {/* <AlertDeleteDialog /> */}
               <AlertSuccessful
-                formValid={formValid}
                 bookingInfo={bookingInfo}
                 ok={ok}
                 id={res?.id}
