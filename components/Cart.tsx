@@ -40,10 +40,10 @@ const Cart: React.FC = () => {
         {cartItems.map((item) => (
           <div
             key={item.id}
-            className="flex justify-between items-center border-b border-gray-300 py-2"
+            className="flex justify-between items-center border-b border-gray-300 py-2 whitespace-nowrap"
           >
             <div className="flex justify-between w-full">
-              <div className="whitespace-nowrap">
+              <div>
                 {item.serviceName}
               </div>
               <div >$ {(item.servicePrice).toFixed(2)}</div>

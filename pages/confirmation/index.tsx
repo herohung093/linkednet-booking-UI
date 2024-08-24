@@ -96,6 +96,11 @@ const ConfirmationPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    handleReCaptchaVerify();
+  }, [handleReCaptchaVerify]);
+
+
   const FormFieldSkeleton = () => (
     <div className="w-full h-10 bg-gray-200 rounded-md"></div>
   );
