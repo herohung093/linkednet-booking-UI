@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "@/redux toolkit/cartSlice";
 
@@ -44,10 +43,10 @@ const Cart: React.FC = () => {
             className="flex justify-between items-center border-b border-gray-300 py-2"
           >
             <div className="flex justify-between w-full">
-              <div>
-                {item.serviceName} x {item.quantity}
+              <div className="whitespace-nowrap">
+                {item.serviceName}
               </div>
-              <div>$ {(item.servicePrice * item.quantity).toFixed(2)}</div>
+              <div >$ {(item.servicePrice).toFixed(2)}</div>
             </div>
             <button
               onClick={() =>
@@ -59,7 +58,7 @@ const Cart: React.FC = () => {
               }
               className="px-3 py-1 rounded"
             >
-              <Cross2Icon />
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"/></svg>
             </button>
           </div>
         ))}
