@@ -60,7 +60,7 @@ const ConfirmationPage: React.FC = () => {
       customer: {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        phone: formData.phone.replace(/^0/, '+61'),
+        phone: formData.phone,
       },
       note: formData.note,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
