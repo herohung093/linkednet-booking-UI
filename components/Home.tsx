@@ -26,8 +26,7 @@ const Home = () => {
             Are you absolutely sure?
           </AlertDialog.Title>
           <AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
-            This action cannot be undone. This will permanently remove your
-            booking.
+          Do you want to reset your selection.
           </AlertDialog.Description>
           <div className="flex justify-end gap-[25px]">
             <AlertDialog.Cancel asChild>
@@ -40,7 +39,7 @@ const Home = () => {
                 onClick={handleDelete}
                 className="text-black border-2 border-black rounded-lg  bg-red4 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
               >
-                Yes, delete booking
+                Yes
               </button>
             </AlertDialog.Action>
           </div>
