@@ -82,8 +82,7 @@ const TimePage: React.FC = () => {
 
   const selectedDate =
     selectedIndex !== null ? days[selectedIndex] : currentDate;
-  const selectedMonth = monthNames[selectedDate.getMonth()];
-  const selectedYear = currentDate.getFullYear();
+  const selectedDateMoment = moment(selectedDate);
 
   const staff = useSelector((state: RootState) => state.cart.selectedStaff);
   const staffList = useSelector(
@@ -213,7 +212,7 @@ const TimePage: React.FC = () => {
         <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select time</h1>
         <div className="flex justify-between mx-5 mb-5">
           <div>
-            <h2 className="text-xl font-bold">{`${selectedMonth} ${selectedYear}`}</h2>
+            <h2 className="text-xl font-bold">{`${selectedDateMoment.format('dddd, DD MMM YYYY')}`}</h2>
           </div>
         </div>
         <div className="flex items-center justify-center gap-4 mb-4">
