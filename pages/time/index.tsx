@@ -111,7 +111,7 @@ const TimePage: React.FC = () => {
       .filter(({ time }) => {
         const hour = parseInt(time.split(":")[0]);
         return selectedDate.getDate() === currentDate.getDate()
-          ? hour >= currentHour
+          ? hour >= currentHour + 1
           : true;
       });
   }, [availability, currentHour, selectedDate, currentDate]);
