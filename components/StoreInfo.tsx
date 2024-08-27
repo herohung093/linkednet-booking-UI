@@ -7,6 +7,7 @@ import {
   Rating,
   Skeleton,
 } from '@mui/material';
+import moment from "moment";
 
 const LoadingSkeleton = () => (
   <div>
@@ -23,43 +24,33 @@ const LoadingSkeleton = () => (
 
 export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
   const checkBusinessStatus = () => {
-    const currentDateTime = new Date();
-    const currentDayOfWeek = currentDateTime.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const currentTime =
-      currentDateTime.getHours() * 100 + currentDateTime.getMinutes();
+    const currentDateTime = moment();
+    const currentDayOfWeek = currentDateTime.format('dddd').toUpperCase(); // 0 (Sunday) to 6 (Saturday)
+    const currentTime = currentDateTime
 
     const currentDayBusinessHours = storeConfig?.businessHoursList.find(
-      (day: any) => day.id === currentDayOfWeek + 1
+      (day: any) => day.dayOfWeek === currentDayOfWeek
     );
     if (!currentDayBusinessHours) {
       return "Currently Closed"; // Business is closed on this day
     }
 
     const { openingTime, closingTime } = currentDayBusinessHours;
-    const openingHour = parseInt(openingTime.replace(":", ""));
-    const closingHour = parseInt(closingTime.replace(":", ""));
+    const openingHour = moment().set({hour: parseInt(openingTime.split(":")[0]), minute: parseInt(openingTime.split(":")[1])}); ;
+    const closingHour = moment().set({hour: parseInt(closingTime.split(":")[0]), minute: parseInt(closingTime.split(":")[1])}); ;
 
-    if (currentTime >= openingHour && currentTime <= closingHour) {
+    if (currentTime.isAfter(openingHour) && currentTime.isBefore(closingHour)) {
       return `Open until ${closingTime}`;
-    } else if (currentTime < openingHour) {
+    } else if (currentTime.isAfter(closingHour)) {
       return `Currently Closed, open from ${openingTime}`;
     } else {
       // Find the next opening day and time
-      let nextOpeningDay = currentDayOfWeek + 1;
-      let nextOpeningTime = openingTime;
-      while (
-        !storeConfig.businessHoursList.find(
-          (day: any) => day.id === nextOpeningDay
-        )
-      ) {
-        nextOpeningDay = (nextOpeningDay + 1) % 7;
-      }
-      const nextOpeningDayHours = storeConfig?.businessHoursList.find(
-        (day: any) => day.id === nextOpeningDay
-      );
-      nextOpeningTime = nextOpeningDayHours.openingTime;
+      let nextOpeningDay = currentDateTime.add(1, 'days').format('dddd');
+      let nextOpeningTime = storeConfig.businessHoursList.find(
+        (day: any) => day.dayOfWeek === nextOpeningDay);
+    
 
-      return `Closed, open on ${nextOpeningDayHours.dayOfWeek} at ${nextOpeningTime}`;
+      return `Closed, open on ${nextOpeningDay} at ${nextOpeningTime}`;
     }
   };
 
