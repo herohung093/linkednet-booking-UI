@@ -166,11 +166,13 @@ export default function Home() {
           </Typography>
         </Box>
 
-        <Box flex={{ xs: 0, md: 1 }} ml={{ xs: 0, md: 3 }} className="mt-20 top-20" sx={{ display: { xs: 'none', md: 'block', lg: 'block' } }}>
+        <Box flex={{ xs: 0, md: 1 }} ml={{ xs: 0, md: 3 }} className="mt-20 top-20" sx={{ display: { xs: 'none', md: 'none', lg: 'block' } }}>
           <CartSide disableContinueButton={false} />
         </Box>
       </Box>
+      <Box sx={{ display: { xs: 'block', md: 'block', lg: 'none' } }}>
       {cartHasItem && <BookingCart disableContinueButton={!cartHasItem} />}
+      </Box>
     </Box>
   );
 }

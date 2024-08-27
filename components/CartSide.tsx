@@ -48,7 +48,7 @@ export const CartSide:  React.FC<CartSideProps> = ({ disableContinueButton }) =>
     setShowDialog(false);
   };
   return (
-    <div className="relative hidden md:flex md:flex-col md:border-2 md:rounded-lg p-5 h-[600px] w-[300px] lg:w-[300px] xl:w-[350px]">
+    <div className="hidden lg:flex lg:flex-col lg:border-2 lg:rounded-lg p-5 h-[600px] w-[300px] xl:w-[350px]">
       <div className="flex-grow">
         <Cart />
       </div>
