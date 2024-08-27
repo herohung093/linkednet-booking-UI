@@ -31,14 +31,14 @@ const Home = () => {
           </AlertDialog.Description>
           <div className="flex justify-end gap-[25px]">
             <AlertDialog.Cancel asChild>
-              <button className="text-blue-900 border-2 border-blue-900 rounded-lg font-bold w-[100px] inline-flex h-[35px] items-center justify-center px-[15px] leading-none cursor-pointer ">
+              <button className="text-black border-2 border-black rounded-lg font-bold w-[100px] inline-flex h-[35px] items-center justify-center px-[15px] leading-none cursor-pointer">
                 Cancel
               </button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
               <button
                 onClick={handleDelete}
-                className="text-red-600 bg-red4 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
+                className="text-black border-2 border-black rounded-lg  bg-red4 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
               >
                 Yes, delete booking
               </button>

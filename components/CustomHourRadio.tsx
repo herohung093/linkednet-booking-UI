@@ -2,6 +2,7 @@ import { CheckIcon } from "@/icons/CheckIcon";
 import React from "react";
 import Error from "./Error";
 import Loading from "./Loading";
+import { Box, Button, Typography } from "@mui/material";
 
 
 interface CustomHourRadioProps {
@@ -22,31 +23,36 @@ const CustomHourRadio: React.FC<CustomHourRadioProps> = ({
   onSelect,
 }) => {
 
-  
+
   if (error) return <Error />;
   return (
-    <div className="mx-5">
+    <div className="">
       {!isLoading ? (
-        <label
-          className={`${
-            staffs.length == 0 && `bg-gray-400 text-white line-through`
-          } flex justify-between w-full  py-2  p-3 mb-2 cursor-pointer border-2 rounded-md ${
-            selected ? "border-primary-500 " : "border-gray-300"
-          }`}
-        >
-          <div className="flex justify-between items-center ">
-            {hour}
-            <input
+        <Box display="flex" flexDirection="column" alignItems="center" mt={1}>
+          <Box display="flex" flexWrap="wrap" justifyContent="center">
+            <Button
               disabled={staffs.length == 0}
-              type="radio"
-              checked={selected}
-              onChange={onSelect}
-              value={hour}
-              className="hidden"
-            />
-          </div>
-          {selected ? <CheckIcon /> : null}
-        </label>
+              size="medium"
+              variant={selected ? 'contained' : 'outlined'}
+              color="error"
+              onClick={() => onSelect()}
+              sx={{
+                borderRadius: '20px',
+                backgroundColor: selected ? 'black' : 'transparent',
+                color: selected ? '#fff' : 'inherit',
+                borderColor: selected ? 'black' : 'rgba(0, 0, 0, 0.12)',
+                boxShadow: selected ? '0px 0px 15px rgba(0, 0, 0, 0.15)' : '0px 0px 5px rgba(0, 0, 0, 0.1)',
+                '&:hover': {
+                  backgroundColor: selected ? 'black' : 'rgba(211, 47, 47, 0.04)',
+                  color: selected ? '#fff' : 'inherit',
+                  borderColor: 'black',
+                },
+              }}
+            >
+              {hour}
+            </Button>
+          </Box>
+        </Box>
       ) : (
         <Loading />
       )}

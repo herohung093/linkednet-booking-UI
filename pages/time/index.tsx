@@ -19,6 +19,7 @@ import { CartSide } from "@/components/CartSide";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import axios from "@/ulti/axios";
 import BookingCart from "@/components/BookingCart";
+import { Grid } from '@mui/material';
 
 type FetcherFunction = (url: string) => Promise<any>;
 
@@ -158,7 +159,7 @@ const TimePage: React.FC = () => {
         setSelectDay(formattedDate);
       }
     }
-  }, [unavailableDates, days, selectedDate, dispatch,swiper]);
+  }, [unavailableDates, days, selectedDate, dispatch, swiper]);
 
   const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
     setSelectHour(hour.time);
@@ -255,17 +256,24 @@ const TimePage: React.FC = () => {
           </div>
         )}
         {hourArray?.length == 0 && (
-          <div className="mb-5 flex-col text-primary-700 font-bold w-full h-[400px] flex justify-center items-center">
+          <div className="mb-5 flex-col text-black font-bold w-full h-[400px] flex justify-center items-center">
             <div className="text-[50px]">
               <CalendarMonthIcon fontSize="inherit" />
             </div>
             <div>Fully booked on this date</div>
           </div>
         )}
-        <div className="mb-24">
-          {hourArray?.map(
+        <Grid container spacing={2}>
+        {hourArray?.map(
             (hour: { time: string; staffs: number[] }, index: number) => (
-              <CustomHourRadio
+        <Grid
+          item
+          xs={3}  // 4 items per row on small screens
+          sm={2}  // 6 items per row on medium screens
+          lg={1.5} // 8 items per row on large screens
+          key={index}
+        >
+         <CustomHourRadio
                 staffs={hour.staffs}
                 error={error}
                 isLoading={isLoading}
@@ -274,14 +282,15 @@ const TimePage: React.FC = () => {
                 onSelect={() => handleSelectedHour(hour)}
                 selected={selectHour === hour.time}
               />
-            )
-          )}
-        </div>
+        </Grid>
+      ))}
+        </Grid>
+        
       </div>
       <div className="sticky top-20 self-start ml-auto mt-28">
-        <CartSide disableContinueButton={!bookingInfo.selectedHour}/>
+        <CartSide disableContinueButton={!bookingInfo.selectedHour} />
       </div>
-      <BookingCart disableContinueButton={!bookingInfo.selectedHour}/>
+      <BookingCart disableContinueButton={!bookingInfo.selectedHour} />
     </div>
   );
 };

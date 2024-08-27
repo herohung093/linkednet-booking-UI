@@ -4,13 +4,15 @@ declare interface NailSalonService {
   serviceDescription: string;
   servicePrice: number;
   estimatedTime: number;
-  serviceType: {
-    id: number;
+  serviceType: ServiceType
+  active: boolean;
+}
+
+declare interface ServiceType {
+  id: number;
     type: string;
     levelType: number;
     description: string;
-  };
-  active: boolean;
 }
 declare interface CartItem {
   id: number;

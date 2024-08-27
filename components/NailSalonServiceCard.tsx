@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { AddIcon } from "@/icons/AddIcon";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "@/redux toolkit/cartSlice";
-import { CheckIcon } from "@/icons/CheckIcon";
 import "@radix-ui/themes/styles.css";
 import { Spinner } from "@radix-ui/themes";
+import { Box, Button, Typography } from "@mui/material";
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 
 
@@ -51,32 +51,40 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   };
 
   return (
-    <div className="bg-transparent lg:rounded-lg shadow-md p-4  mx-auto flex items-center justify-between my-2  w-full ">
+    <div className="w-full ">
       {!service ? (
         <Spinner />
       ) : (
         <>
-          <div className="w-full">
-            <h2 className="text-lg font-semibold">{serviceName}</h2>
-            <p className="text-gray-600 ">{serviceDescription}</p>
-            <div className="flex items-center justify-start gap-3">
-              <p className="text-gray-600 ">
-                Estimated time: {estimatedTime} min
-              </p>
-              <p>-</p>
-              <p className="text-primary-500 font-bold text-xl">
-                ${servicePrice}
-              </p>
-            </div>
-          </div>
-          <div className="mr-7">
-            {!isServiceInCart ? (
-              <AddIcon onClick={handleClickAdd} />
-            ) : (
-              <CheckIcon onClick={handleClickRemove} />
-         
-            )}
-          </div>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            py={0}
+          >
+            <Box>
+              <Typography variant="body1" fontWeight="medium">
+                {service.serviceName}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Est Time: {service.estimatedTime} mins
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                ${service.servicePrice}
+              </Typography>
+            </Box>
+            <Box display="flex" justifyContent="flex-end">
+              {!isServiceInCart ? (
+                <Button variant="contained" color="inherit" className="rounded-full truncate" onClick={handleClickAdd}>
+                  Select
+                </Button>
+              ) : (
+                <Button variant="contained" color="inherit" className="rounded-full truncate" onClick={handleClickRemove}>
+                  <DeleteOutlineOutlinedIcon sx={{ color: 'black' }} />
+                </Button>
+              )}
+            </Box>
+          </Box>
         </>
       )}
     </div>

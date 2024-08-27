@@ -7,8 +7,8 @@ import moment from "moment";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CheckIcon from "@mui/icons-material/Check";
-import { pink } from "@mui/material/colors";
-import { Snackbar, Alert } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import { Snackbar, Alert, Button } from "@mui/material";
 import PendingIcon from "@mui/icons-material/Pending";
 import { RootState } from "@/redux toolkit/store";
 
@@ -51,11 +51,11 @@ const AlertSuccessful: React.FC<{
             </AlertDialog.Description>
             <AlertDialog.Description className="flex justify-between text-md font-semibold mb-3 text-gray-500">
               {`${moment(bookingInfo.selectedDate, "DD/MM/YY").format(
-                "dddd D MMMM"
+                "ddd D MMM"
               )} at ${moment(bookingInfo.selectedHour, "HH:mm").format(
                 "h.mm a"
               )}`}
-              <CalendarMonthIcon sx={{ color: pink[500] }} />
+              <CalendarMonthIcon sx={{ color: grey[900] }} />
             </AlertDialog.Description>
             <AlertDialog.Description className="text-lg  mt-5 font-bold">
               Booking ID:
@@ -63,7 +63,7 @@ const AlertSuccessful: React.FC<{
             <AlertDialog.Description className="flex justify-between text-md font-semibold mb-3 text-gray-500">
               {id}{" "}
               <ContentCopyIcon
-                sx={{ color: pink[500], cursor: "pointer" }}
+                sx={{ color: grey[900], cursor: "pointer" }}
                 onClick={handleCopyClick}
               />
               <Snackbar
@@ -84,26 +84,36 @@ const AlertSuccessful: React.FC<{
             <AlertDialog.Description className="flex justify-between text-md font-semibold mb-3 text-gray-500">
               {status}
               {status == "APPROVED" && (
-                <CheckIcon sx={{ color: pink[500] }} />
+                <CheckIcon sx={{ color: grey[900] }} />
               )}
               {status == "PENDING" && (
-                <PendingIcon sx={{ color: pink[500] }} />
+                <PendingIcon sx={{ color: grey[900] }} />
               )}
             </AlertDialog.Description>
           </>
 
-          <div className="flex justify-end gap-[25px]">
+          <div className="flex justify-center">
             <AlertDialog.Action asChild>
-              <div
+              <Button
                 onClick={() => {
                   dispatch(clearCart());
 
                   router.push("/?storeUuid=" + storeUuid);
                 }}
-                className="bg-primary-700 text-white border-2 mt-6 border-primary-700 rounded-lg font-bold w-full lg:mx-20 h-[35px] shadow-green7  items-center justify-center leading-none focus:shadow-[0_0_0_2px] flex cursor-pointer"
+                variant="contained" // Use 'contained' to have a solid background color
+                className="mt-4 px-4 py-2 w-full"
+                sx={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                  borderRadius: '20px',
+                  textTransform: 'none', // Keep the text casing as it is
+                  '&:hover': {
+                    backgroundColor: 'black', // Keep the same background color on hover
+                  },
+                }}
               >
                 Done
-              </div>
+              </Button>
             </AlertDialog.Action>
           </div>
         </AlertDialog.Content>

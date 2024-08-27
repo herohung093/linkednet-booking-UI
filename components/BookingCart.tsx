@@ -3,6 +3,7 @@ import CartDialog from "./CartDialog";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux toolkit/store";
+import { Button } from "@mui/material";
 
 interface BookingCartProps {
   disableContinueButton: boolean;
@@ -55,21 +56,23 @@ const BookingCart: React.FC<BookingCartProps> = ({ disableContinueButton }) => {
         {slug != "/confirmation" && (
           <div className="mx-4 flex justify-between items-center w-full">
             <CartDialog />
-
-            <button
-              className={`
-      px-5 py-2 border-2 h-[35px] rounded-lg font-bold text-xl shadow-green7 inline-flex items-center justify-center leading-none focus:outline-none 
-      ${
-        disableContinueButton
-          ? "opacity-50 border-slate-300 text-slate-500 "
-          : " border-primary-700 text-white bg-primary-500"
-      }
-      `}
+            <Button
               disabled={disableContinueButton}
+              variant="contained" // Use 'contained' to have a solid background color
+              className="px-4 py-2 md:w-1/3 lg:w-1/4"
               onClick={handleRoute}
+              sx={{
+                backgroundColor: 'black',
+                color: 'white',
+                borderRadius: '20px',
+                textTransform: 'none', // Keep the text casing as it is
+                '&:hover': {
+                  backgroundColor: 'black', // Keep the same background color on hover
+                },
+              }}
             >
               Continue
-            </button>
+            </Button>
             {showDialog && (
               <div className="fixed top-0 left-0 w-screen h-screen z-[9]">
                 <div className="fixed top-0 left-0 w-screen h-screen bg-slate-600 opacity-55 z-[9]"></div>

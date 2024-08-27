@@ -40,11 +40,11 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
           disabled={unavailable}
         />
         <div
-          className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer  ${
+          className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer ${
             selected && !unavailable
-              ? "bg-primary-700  "
-              : `${unavailable ? "line-through  bg-slate-500" : ""}`
-          } ${unavailable ? "line-through " : ""}`}
+              ? "bg-black"
+              : `${unavailable ? "line-through bg-slate-500" : ""}`
+          } ${unavailable ? "line-through" : ""}`}
         >
           <div className="text-lg font-semibold flex justify-center items-center">
             <p

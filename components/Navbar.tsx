@@ -20,7 +20,7 @@ const NavBar: React.FC = () => {
 
   return (
     <nav
-      className={`${slug == "/" ? "relative" : "mb-20"}  flex justify-between items-center mx-auto xl:w-[70%] `}
+    className={`${slug == "/" ? "relative" : "mb-20"} flex justify-between items-center mx-auto lg:mx-10`}
     >
       <div
         className="text-primary-700  text-lg cursor-pointer"

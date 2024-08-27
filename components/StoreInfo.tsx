@@ -1,19 +1,23 @@
 import { StarIcon } from "@radix-ui/react-icons";
 import React from "react";
 
-const Skeleton = () => (
-  <div className="animate-pulse mb-10">
-    <div className="h-8 bg-gray-300 rounded w-3/4 mx-6 mb-4"></div>
-    <div className="flex items-center gap-x-2 mx-6 mb-4">
-      <div className="h-6 bg-gray-300 rounded w-6"></div>
-      <div className="h-6 bg-gray-300 rounded w-4"></div>
-      <div className="h-6 bg-gray-300 rounded w-4"></div>
-      <div className="h-6 bg-gray-300 rounded w-4"></div>
-      <div className="h-6 bg-gray-300 rounded w-4"></div>
-      <div className="h-6 bg-gray-300 rounded w-4"></div>
-    </div>
-    <div className="h-6 bg-gray-300 rounded w-1/2 mx-6 mb-4"></div>
-    <div className="h-6 bg-gray-300 rounded w-1/2 mx-6"></div>
+import {
+  Box,
+  Typography,
+  Rating,
+  Skeleton,
+} from '@mui/material';
+
+const LoadingSkeleton = () => (
+  <div>
+    <Skeleton variant="text" width="60%" height={40} />
+      <Skeleton variant="rectangular" width="100%" height={40} />
+      <Box display="flex" alignItems="center" gap={2}>
+        <Skeleton variant="text" width={40} height={40} />
+        <Skeleton variant="text" width="30%" height={20} />
+      </Box>
+      <Skeleton variant="text" width="40%" height={20} />
+      <Skeleton variant="text" width="20%" height={20} />
   </div>
 );
 
@@ -28,7 +32,7 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
       (day: any) => day.id === currentDayOfWeek + 1
     );
     if (!currentDayBusinessHours) {
-      return "Closed"; // Business is closed on this day
+      return "Currently Closed"; // Business is closed on this day
     }
 
     const { openingTime, closingTime } = currentDayBusinessHours;
@@ -38,7 +42,7 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
     if (currentTime >= openingHour && currentTime <= closingHour) {
       return `Open until ${closingTime}`;
     } else if (currentTime < openingHour) {
-      return `Closed, open from ${openingTime}`;
+      return `Currently Closed, open from ${openingTime}`;
     } else {
       // Find the next opening day and time
       let nextOpeningDay = currentDayOfWeek + 1;
@@ -60,7 +64,7 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
   };
 
   if (!storeConfig) {
-    return <Skeleton />;
+    return <LoadingSkeleton />;
   }
 
   const stars = Array.from({ length: 5 }, (_, index) => (
@@ -68,18 +72,25 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
   ));
 
   return (
-    <div className="mb-10">
-      <h1 className="text-3xl font-bold mx-6">{storeConfig?.storeName}</h1>
-      <h2 className="flex justify-start items-center gap-x-2 mx-6 font-bold text-lg">
-        <p>5.0</p>
-        {stars}
-      </h2>
-      <h3 className="mx-6 text-gray-500 font-medium">
+    <div >
+      <Typography variant="h4" fontWeight="bold" gutterBottom>
+        {storeConfig?.storeName}
+      </Typography>
+
+      <Box display="flex" alignItems="center" gap={2}>
+        <Typography variant="h2" fontWeight="black">
+          4.5
+        </Typography>
+        <Rating value={4.5} readOnly />
+      </Box>
+
+      <Typography variant="body1" color="textSecondary" gutterBottom>
         {storeConfig?.storeAddress}
-      </h3>
-      <h3 className="mx-6 text-gray-500 font-medium">
+      </Typography>
+
+      <Typography variant="body2" color="textSecondary" gutterBottom>
         {checkBusinessStatus()}
-      </h3>
+      </Typography>
     </div>
   );
 };

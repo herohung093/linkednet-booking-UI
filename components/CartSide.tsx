@@ -3,6 +3,7 @@ import Cart from "./Cart";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux toolkit/store";
+import { Button } from "@mui/material";
 
 interface CartSideProps {
   disableContinueButton: boolean;
@@ -47,23 +48,30 @@ export const CartSide:  React.FC<CartSideProps> = ({ disableContinueButton }) =>
     setShowDialog(false);
   };
   return (
-    <div className="relative hidden lg:flex lg:flex-col lg:border-2 lg:rounded-lg  p-10 h-[600px] w-[300px] lg:w-[300px] xl:w-[350px]">
+    <div className="relative hidden md:flex md:flex-col md:border-2 md:rounded-lg p-5 h-[600px] w-[300px] lg:w-[300px] xl:w-[350px]">
       <div className="flex-grow">
         <Cart />
       </div>
       {slug !== "/confirmation" && (
-        <div className="mt-auto">
-          <button
-            className={`-mb-5 w-full px-5 py-5 border-2 h-[35px] rounded-xl font-bold text-xl shadow-green7 inline-flex items-center justify-center leading-none focus:outline-none ${
-              disableContinueButton
-                ? "opacity-50 border-slate-300 text-slate-500"
-                : "border-primary-700 text-white bg-primary-500"
-            }`}
-            disabled={disableContinueButton}
-            onClick={handleRoute}
-          >
-            Continue
-          </button>
+        <div className="flex justify-center items-center">
+          <Button
+              disabled={disableContinueButton}
+              variant="contained" // Use 'contained' to have a solid background color
+              className="mt-4 px-4 py-2 w-full"
+              onClick={handleRoute}
+              size="large"
+              sx={{
+                backgroundColor: 'black',
+                color: 'white',
+                borderRadius: '20px',
+                textTransform: 'none', // Keep the text casing as it is
+                '&:hover': {
+                  backgroundColor: 'black', // Keep the same background color on hover
+                },
+              }}
+            >
+              Continue
+            </Button>
         </div>
       )}
       {showDialog && (
@@ -72,12 +80,23 @@ export const CartSide:  React.FC<CartSideProps> = ({ disableContinueButton }) =>
           <div className="fixed top-20 left-0 w-full h-full flex items-center justify-center z-[10]">
             <div className="bg-white border border-gray-200 rounded p-6 shadow-md flex flex-col">
               <p className="mb-6 text-lg z-[99]]">{dialogMessage}</p>
-              <button
-                onClick={closeDialog}
-                className="bg-primary-700 hover:bg-primary-400 text-white font-bold py-2 px-4 rounded mt-2"
-              >
-                OK
-              </button>
+              <Button
+              variant="contained" // Use 'contained' to have a solid background color
+              className="mt-4 px-4 py-2 w-full"
+              onClick={closeDialog}
+              size="large"
+              sx={{
+                backgroundColor: 'black',
+                color: 'white',
+                borderRadius: '20px',
+                textTransform: 'none', // Keep the text casing as it is
+                '&:hover': {
+                  backgroundColor: 'black', // Keep the same background color on hover
+                },
+              }}
+            >
+              Ok
+            </Button>
             </div>
           </div>
         </div>

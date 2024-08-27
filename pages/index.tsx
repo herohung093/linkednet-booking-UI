@@ -1,12 +1,7 @@
 "use client";
 import { CartSide } from "@/components/CartSide";
 import Error from "@/components/Error";
-import { Logo } from "@/components/Logo";
-import { NailServices } from "@/components/NailServices";
-import OpeningTime from "@/components/OpeningTime";
 import { StoreInfo } from "@/components/StoreInfo";
-import { StoreMap } from "@/components/StoreMap";
-import { Horizon } from "@/icons/Horizon";
 import {
   setSelectedStoreInfo,
   setServiceData,
@@ -18,6 +13,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import BookingCart from "@/components/BookingCart";
+import {
+  Box,
+  Typography,
+  Tabs,
+  Tab,
+  Divider,
+} from '@mui/material';
+import { Facebook, Instagram } from '@mui/icons-material';
+import NailSalonServiceCard from "@/components/NailSalonServiceCard";
 
 export default function Home() {
   const [serviceDataInfo, setServiceDataInfo] = useState<
@@ -29,7 +33,9 @@ export default function Home() {
   const router = useRouter();
   const dispatch = useDispatch();
   const urlStoreUuid = router.query;
-
+  const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedServiceTypeServices, setSelectedServiceTypeServices] = useState<NailSalonService[]>([]);
   const [cartHasItem, setCartHasItem] = useState<boolean>(true);
 
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
@@ -48,6 +54,10 @@ export default function Home() {
           }
         });
         setServiceDataInfo(serviceResponse.data);
+        setServiceTypes(getUniqueServiceTypes(serviceResponse.data));
+        const filteredServices = serviceResponse.data.filter((service: { serviceType: ServiceType; }) => service.serviceType.id === getUniqueServiceTypes(serviceResponse.data)[0].id);
+        setSelectedServiceTypeServices(filteredServices);
+
 
         const storeConfigResponse = await axios.get("storeConfig/" + urlStoreUuid.storeUuid, {
           headers: {
@@ -75,58 +85,92 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeConfig]);
 
-  const sortedData = (serviceDataInfo ?? [])
-    .slice()
-    .sort((a: any, b: any) =>
-      a.serviceType.type.localeCompare(b.serviceType.type)
-    );
+  function getUniqueServiceTypes(services: NailSalonService[]): ServiceType[] {
+    const serviceTypeMap = new Map<string, ServiceType>();
 
-  const groupedData = sortedData?.reduce((acc: any, service: any) => {
-    const { serviceType, ...rest } = service;
-    const index = acc.findIndex(
-      (item: any) => item[0].serviceType.type === serviceType.type
-    );
-    if (index === -1) {
-      acc.push([{ serviceType, ...rest }]);
-    } else {
-      acc[index].push({ serviceType, ...rest });
-    }
-    return acc;
-  }, []);
+    services.forEach(service => {
+      if (!serviceTypeMap.has(String(service.serviceType.id))) {
+        serviceTypeMap.set(String(service.serviceType.id), service.serviceType);
+      }
+    });
+
+    return Array.from(serviceTypeMap.values());
+  }
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const selectedServiceType = serviceTypes[newValue];
+    setSelectedTab(newValue);
+    const servicesFilterResults = serviceDataInfo?.filter(service => service.serviceType.id === selectedServiceType.id);
+    setSelectedServiceTypeServices(servicesFilterResults ?? []);
+
+  };
 
   if (error) return <Error />;
-  return (
-    <main className="mb-20">
-      <div className="mb-8">
-        <Logo isLoading={isLoading} />
-      </div>
-      <div className="flex justify-around lg:gap-10 mx-auto">
-        <div className="mx-auto">
-          <div>
-            <StoreInfo storeConfig={storeConfig} />
-          </div>
-          <div className="mx-5 font-bold text-2xl">Services</div>
 
-          <div className="flex flex-col">
-            <div>
-              {groupedData &&
-                groupedData.map((item: any, index: number) => (
-                  <NailServices key={index} data={item} index={index} />
-                ))}
-            </div>
-            <OpeningTime
-              key={storeConfig?.id}
-              businessHours={storeConfig?.businessHoursList}
-            />
-            <Horizon />
-            <StoreMap storeConfig={storeConfig} />
-          </div>
-        </div>
-        <div className="sticky top-20 self-start mx-auto mt-20 ">
-          <CartSide disableContinueButton={!cartHasItem}/>
-        </div>
-      </div>
-       {cartHasItem && <BookingCart disableContinueButton={!cartHasItem}/>}
-    </main>
+  return (
+    <Box>
+      <Box display="flex" minHeight="100vh" bgcolor="#FFFFFF" p={1.5}>
+        <Box flex={{ xs: 10, lg: 1 }} overflow="auto">
+          <StoreInfo storeConfig={storeConfig} />
+
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
+            Services
+          </Typography>
+
+          <Tabs
+            value={selectedTab}
+            onChange={handleTabChange}
+            aria-label="service tabs"
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+          >
+            {serviceTypes.map((serviceType, index) => (
+              <Tab wrapped key={index} label={serviceType.type} />
+            ))}
+          </Tabs>
+          <Divider sx={{ my: 0, borderBottomWidth: 2 }} />
+          <Box mt={2}>
+            {selectedServiceTypeServices.map((service, index) => (
+              <Box
+                key={index}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                py={1}
+                borderBottom={index < 2 ? '1px solid #e0e0e0' : 'none'}
+              >
+                <NailSalonServiceCard service={service} />
+              </Box>
+            ))}
+          </Box>
+
+          <Divider sx={{ my: 3 }} />
+
+          <Box display="flex" justifyContent="space-between" alignItems="center" py={2} px={5}>
+            <Typography variant="body2" color="textSecondary">
+              Privacy Policy
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Terms of Service
+            </Typography>
+          </Box>
+
+          <Box display="flex" justifyContent="center" gap={2} mb={3}>
+            <Facebook />
+            <Instagram />
+          </Box>
+
+          <Typography variant="body2" color="textSecondary" align="center">
+            © 2023 Service Booking App. All rights reserved.
+          </Typography>
+        </Box>
+
+        <Box flex={{ xs: 0, md: 1 }} ml={{ xs: 0, md: 3 }} className="mt-20 top-20" sx={{ display: { xs: 'none', md: 'block', lg: 'block' } }}>
+          <CartSide disableContinueButton={false} />
+        </Box>
+      </Box>
+      {cartHasItem && <BookingCart disableContinueButton={!cartHasItem} />}
+    </Box>
   );
 }
