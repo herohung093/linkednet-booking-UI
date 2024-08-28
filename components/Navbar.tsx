@@ -10,7 +10,6 @@ import { styled } from '@mui/system';
 const NavBar: React.FC = () => {
   const router = useRouter();
   const slug = router.route;
-  console.log(slug);
   const dispatch = useDispatch();
   const storeInfo = useSelector((state: any) => state.storeInfo.storeInfo);
   const [store, setStore] = useState<string | null>(null);
@@ -47,17 +46,18 @@ const NavBar: React.FC = () => {
   return (
     <>
       {/* NavBar */}
-      <AppBar position="fixed" sx={{ height: '64px', backgroundColor: 'white' }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', px: { lg: 6 } }}>
-          {slug !== "/" && (
+      <AppBar position="fixed" sx={{ minHeight: 'auto', backgroundColor: 'white' }}>
+        {slug !== "/" && (<div>
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', px: { lg: 6 } }}>
             <div onClick={goBack} className="text-primary-700  text-lg cursor-pointer">
               <Back />
             </div>
-          )}
-          <div>
-            <Home />
-          </div>
-        </Toolbar>
+            <div>
+              <Home />
+            </div>
+          </Toolbar>
+        </div>
+        )}
         <Box>
           <BlackLinearProgress variant="determinate" value={getProgressValue(slug)} />
         </Box>
