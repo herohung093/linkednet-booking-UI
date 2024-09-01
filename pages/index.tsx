@@ -5,7 +5,7 @@ import { StoreInfo } from "@/components/StoreInfo";
 import {
   setSelectedStoreInfo,
   setServiceData,
-  setStoreUuid
+  setStoreUuid,
 } from "@/redux toolkit/storeInfo";
 
 import axios from "@/ulti/axios";
@@ -13,14 +13,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import BookingCart from "@/components/BookingCart";
-import {
-  Box,
-  Typography,
-  Tabs,
-  Tab,
-  Divider,
-} from '@mui/material';
-import { Facebook, Instagram } from '@mui/icons-material';
+import { Box, Typography, Tabs, Tab, Divider } from "@mui/material";
+import { Facebook, Instagram } from "@mui/icons-material";
 import NailSalonServiceCard from "@/components/NailSalonServiceCard";
 
 export default function Home() {
@@ -35,7 +29,8 @@ export default function Home() {
   const urlStoreUuid = router.query;
   const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
   const [selectedTab, setSelectedTab] = useState(0);
-  const [selectedServiceTypeServices, setSelectedServiceTypeServices] = useState<NailSalonService[]>([]);
+  const [selectedServiceTypeServices, setSelectedServiceTypeServices] =
+    useState<NailSalonService[]>([]);
   const [cartHasItem, setCartHasItem] = useState<boolean>(true);
 
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
@@ -44,26 +39,32 @@ export default function Home() {
     setCartHasItem(cartItems !== 0);
   }, [cartItems]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const serviceResponse = await axios.get("service/", {
           headers: {
-            'X-StoreID': urlStoreUuid.storeUuid,
-          }
+            "X-StoreID": urlStoreUuid.storeUuid,
+          },
         });
         setServiceDataInfo(serviceResponse.data);
         setServiceTypes(getUniqueServiceTypes(serviceResponse.data));
-        const filteredServices = serviceResponse.data.filter((service: { serviceType: ServiceType; }) => service.serviceType.id === getUniqueServiceTypes(serviceResponse.data)[0].id);
+        const filteredServices = serviceResponse.data.filter(
+          (service: { serviceType: ServiceType }) =>
+            service.serviceType.active &&
+            service.serviceType.id ===
+              getUniqueServiceTypes(serviceResponse.data)[0].id
+        );
         setSelectedServiceTypeServices(filteredServices);
 
-
-        const storeConfigResponse = await axios.get("storeConfig/" + urlStoreUuid.storeUuid, {
-          headers: {
-            'X-StoreID': urlStoreUuid.storeUuid,
+        const storeConfigResponse = await axios.get(
+          "storeConfig/" + urlStoreUuid.storeUuid,
+          {
+            headers: {
+              "X-StoreID": urlStoreUuid.storeUuid,
+            },
           }
-        });
+        );
         setStoreConfig(storeConfigResponse.data);
 
         setIsLoading(false);
@@ -88,9 +89,11 @@ export default function Home() {
   function getUniqueServiceTypes(services: NailSalonService[]): ServiceType[] {
     const serviceTypeMap = new Map<string, ServiceType>();
 
-    services.forEach(service => {
-      if (!serviceTypeMap.has(String(service.serviceType.id))) {
-        serviceTypeMap.set(String(service.serviceType.id), service.serviceType);
+    services.forEach((service) => {
+      if (service.active && service.serviceType.active) {
+        if (!serviceTypeMap.has(String(service.serviceType.id))) {
+          serviceTypeMap.set(String(service.serviceType.id), service.serviceType);
+        }
       }
     });
 
@@ -100,9 +103,10 @@ export default function Home() {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     const selectedServiceType = serviceTypes[newValue];
     setSelectedTab(newValue);
-    const servicesFilterResults = serviceDataInfo?.filter(service => service.serviceType.id === selectedServiceType.id);
+    const servicesFilterResults = serviceDataInfo?.filter(
+      (service) => service.serviceType.id === selectedServiceType.id
+    );
     setSelectedServiceTypeServices(servicesFilterResults ?? []);
-
   };
 
   if (error) return <Error />;
@@ -138,7 +142,7 @@ export default function Home() {
                 justifyContent="space-between"
                 alignItems="center"
                 py={1}
-                borderBottom={index < 2 ? '1px solid #e0e0e0' : 'none'}
+                borderBottom={index < 2 ? "1px solid #e0e0e0" : "none"}
               >
                 <NailSalonServiceCard service={service} />
               </Box>
@@ -147,7 +151,13 @@ export default function Home() {
 
           <Divider sx={{ my: 3 }} />
 
-          <Box display="flex" justifyContent="space-between" alignItems="center" py={2} px={5}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            py={2}
+            px={5}
+          >
             <Typography variant="body2" color="textSecondary">
               Privacy Policy
             </Typography>
@@ -166,12 +176,17 @@ export default function Home() {
           </Typography>
         </Box>
 
-        <Box flex={{ xs: 0, md: 1 }} ml={{ xs: 0, md: 3 }} className="mt-20 top-20" sx={{ display: { xs: 'none', md: 'none', lg: 'block' } }}>
+        <Box
+          flex={{ xs: 0, md: 1 }}
+          ml={{ xs: 0, md: 3 }}
+          className="mt-20 top-20"
+          sx={{ display: { xs: "none", md: "none", lg: "block" } }}
+        >
           <CartSide disableContinueButton={false} />
         </Box>
       </Box>
-      <Box sx={{ display: { xs: 'block', md: 'block', lg: 'none' } }}>
-      {cartHasItem && <BookingCart disableContinueButton={!cartHasItem} />}
+      <Box sx={{ display: { xs: "block", md: "block", lg: "none" } }}>
+        {cartHasItem && <BookingCart disableContinueButton={!cartHasItem} />}
       </Box>
     </Box>
   );

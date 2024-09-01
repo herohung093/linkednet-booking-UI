@@ -13,6 +13,7 @@ declare interface ServiceType {
     type: string;
     levelType: number;
     description: string;
+    active: boolean
 }
 declare interface CartItem {
   id: number;
