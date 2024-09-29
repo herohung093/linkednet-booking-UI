@@ -98,6 +98,16 @@ const TimePage: React.FC = () => {
     fetcher
   );
 
+  const convertTimeToMoment = (time: string, selectedDate: Date): moment.Moment => {
+    const date = moment(selectedDate);
+  
+    const [hours, minutes] = time.split(':').map(Number);
+  
+    date.set({ hour: hours, minute: minutes });
+  
+    return date;
+  };
+
   const currentHour = currentDate.getHours();
 
   const hourArray: { time: string; staffs: number[] }[] = useMemo(() => {
@@ -108,9 +118,10 @@ const TimePage: React.FC = () => {
         staffs: staffs as number[],
       }))
       .filter(({ time }) => {
-        const hour = parseInt(time.split(":")[0]);
+        const selectedDateWithTime = convertTimeToMoment(time, selectedDate);
+        const currentTimePlus1Hour = moment().add(1, 'hour');
         return selectedDate.getDate() === currentDate.getDate()
-          ? hour >= currentHour + 1
+          ? selectedDateWithTime.isSameOrAfter(currentTimePlus1Hour)
           : true;
       });
   }, [availability, currentHour, selectedDate, currentDate]);
@@ -185,6 +196,7 @@ const TimePage: React.FC = () => {
 
     dispatch(setSelectedStaff(selectedStaffMember));
   };
+  
   const CustomRadioDateSkeleton = () => (
     <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
   );
