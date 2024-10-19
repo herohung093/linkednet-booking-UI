@@ -176,7 +176,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Facebook fontSize="large" />
+                <Facebook sx={{ color: '#1877F2', fontSize: 30 }} />
               </a>
             )}
             {storeConfig?.instagramLink && (
@@ -185,7 +185,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Instagram fontSize="large"/>
+                <Instagram  sx={{ color: '#E1306C', fontSize: 30 }}/>
               </a>
             )}
           </Box>
