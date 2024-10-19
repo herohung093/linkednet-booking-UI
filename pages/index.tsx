@@ -92,7 +92,10 @@ export default function Home() {
     services.forEach((service) => {
       if (service.active && service.serviceType.active) {
         if (!serviceTypeMap.has(String(service.serviceType.id))) {
-          serviceTypeMap.set(String(service.serviceType.id), service.serviceType);
+          serviceTypeMap.set(
+            String(service.serviceType.id),
+            service.serviceType
+          );
         }
       }
     });
@@ -167,8 +170,24 @@ export default function Home() {
           </Box>
 
           <Box display="flex" justifyContent="center" gap={2} mb={3}>
-            <Facebook />
-            <Instagram />
+            {storeConfig?.facebookLink && (
+              <a
+                href={storeConfig.facebookLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Facebook fontSize="large" />
+              </a>
+            )}
+            {storeConfig?.instagramLink && (
+              <a
+                href={storeConfig!.instagramLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Instagram fontSize="large"/>
+              </a>
+            )}
           </Box>
 
           <Typography variant="body2" color="textSecondary" align="center">

@@ -77,6 +77,8 @@ declare interface StoreInfo {
   storeAddress: string;
   storePhoneNumber: string;
   storeEmail: string;
+  instagramLink: string;
+  facebookLink: string;
   businessHoursList: BusinessHours[];
 }
 
@@ -85,4 +87,5 @@ declare interface BusinessHours {
   dayOfWeek: string;
   openingTime: string;
   closingTime: string;
+  dayOff: boolean;
 }
