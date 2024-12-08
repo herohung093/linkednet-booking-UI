@@ -1,5 +1,6 @@
 import axios from "axios";
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+
 export default axios.create({
-  // baseURL: "http://localhost:8080",
-  baseURL: "https://big-umbrella-c5c3450b8837.herokuapp.com/",
+  baseURL,
 });
