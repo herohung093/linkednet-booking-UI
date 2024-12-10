@@ -79,9 +79,9 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
         {storeConfig?.storeAddress}
       </Typography>
 
-      <Typography variant="body2" color="textSecondary" gutterBottom>
+      {/* <Typography variant="body2" color="textSecondary" gutterBottom>
         {checkBusinessStatus()}
-      </Typography>
+      </Typography> */}
     </div>
   );
 };

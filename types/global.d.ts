@@ -67,6 +67,7 @@ declare interface StoreConfig {
   storeName: string;
   storePhoneNumber: string;
   zoneId: string;
+  enableInDayBooking: boolean;
 }
 
 declare interface StoreInfo {
@@ -80,6 +81,7 @@ declare interface StoreInfo {
   instagramLink: string;
   facebookLink: string;
   businessHoursList: BusinessHours[];
+  enableInDayBooking: boolean;
 }
 
 declare interface BusinessHours {
