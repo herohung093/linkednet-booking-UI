@@ -132,24 +132,28 @@ export default function Home() {
             scrollButtons="auto"
             allowScrollButtonsMobile
           >
-            {serviceTypes.map((serviceType, index) => (
-              <Tab wrapped key={index} label={serviceType.type} />
-            ))}
+            {serviceTypes
+              .sort((a, b) => a.displayOrder - b.displayOrder)
+              .map((serviceType, index) => (
+                <Tab wrapped key={index} label={serviceType.type} />
+              ))}
           </Tabs>
           <Divider sx={{ my: 0, borderBottomWidth: 2 }} />
           <Box mt={2}>
-            {selectedServiceTypeServices.map((service, index) => (
-              <Box
-                key={index}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                py={1}
-                borderBottom={index < 2 ? "1px solid #e0e0e0" : "none"}
-              >
-                <NailSalonServiceCard service={service} />
-              </Box>
-            ))}
+            {selectedServiceTypeServices
+              .sort((a, b) => a.displayOrder - b.displayOrder)
+              .map((service, index) => (
+                <Box
+                  key={index}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  py={1}
+                  borderBottom={index < 2 ? "1px solid #e0e0e0" : "none"}
+                >
+                  <NailSalonServiceCard service={service} />
+                </Box>
+              ))}
           </Box>
 
           <Divider sx={{ my: 3 }} />
@@ -176,7 +180,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Facebook sx={{ color: '#1877F2', fontSize: 30 }} />
+                <Facebook sx={{ color: "#1877F2", fontSize: 30 }} />
               </a>
             )}
             {storeConfig?.instagramLink && (
@@ -185,7 +189,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Instagram  sx={{ color: '#E1306C', fontSize: 30 }}/>
+                <Instagram sx={{ color: "#E1306C", fontSize: 30 }} />
               </a>
             )}
           </Box>
