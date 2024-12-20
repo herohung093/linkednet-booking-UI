@@ -42,7 +42,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const serviceResponse = await axios.get("service/", {
+        const serviceResponse = await axios.get("service/active", {
           headers: {
             "X-StoreID": urlStoreUuid.storeUuid,
           },
