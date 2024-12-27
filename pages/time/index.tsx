@@ -19,7 +19,7 @@ import { CartSide } from "@/components/CartSide";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import axios from "@/ulti/axios";
 import BookingCart from "@/components/BookingCart";
-import { Grid } from '@mui/material';
+import { Grid } from "@mui/material";
 
 type FetcherFunction = (url: string) => Promise<any>;
 
@@ -56,11 +56,13 @@ const TimePage: React.FC = () => {
   const urlStoreUuid = router.query;
 
   const fetcher: FetcherFunction = (url) =>
-    axios.get(url, {
-      headers: {
-        'X-StoreID': urlStoreUuid.storeUuid,
-      }
-    }).then(res => res.data);
+    axios
+      .get(url, {
+        headers: {
+          "X-StoreID": urlStoreUuid.storeUuid,
+        },
+      })
+      .then((res) => res.data);
 
   useEffect(() => {
     if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
@@ -73,7 +75,8 @@ const TimePage: React.FC = () => {
   const [selectDay, setSelectDay] = useState<string | null>(
     moment(currentDate).format("DD/MM/YYYY")
   );
-  const [showDenyInDayBookingMessage, setShowDenyInDayBookingMessage] = useState<boolean>(false);
+  const [showDenyInDayBookingMessage, setShowDenyInDayBookingMessage] =
+    useState<boolean>(false);
   const [selectHour, setSelectHour] = useState<string | null>(null);
 
   const days = [...Array(31)].map((_, index) => {
@@ -100,13 +103,16 @@ const TimePage: React.FC = () => {
     fetcher
   );
 
-  const convertTimeToMoment = (time: string, selectedDate: Date): moment.Moment => {
+  const convertTimeToMoment = (
+    time: string,
+    selectedDate: Date
+  ): moment.Moment => {
     const date = moment(selectedDate);
-  
-    const [hours, minutes] = time.split(':').map(Number);
-  
+
+    const [hours, minutes] = time.split(":").map(Number);
+
     date.set({ hour: hours, minute: minutes });
-  
+
     return date;
   };
 
@@ -121,7 +127,7 @@ const TimePage: React.FC = () => {
       }))
       .filter(({ time }) => {
         const selectedDateWithTime = convertTimeToMoment(time, selectedDate);
-        const currentTimePlus1Hour = moment().add(1, 'hour');
+        const currentTimePlus1Hour = moment().add(1, "hour");
         return selectedDate.getDate() === currentDate.getDate()
           ? selectedDateWithTime.isSameOrAfter(currentTimePlus1Hour)
           : true;
@@ -130,11 +136,11 @@ const TimePage: React.FC = () => {
 
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
-    const today = moment().startOf('day');
-    const selectedDate = moment(date).startOf('day');
-    setShowDenyInDayBookingMessage(selectedDate.isSame(today) && !storeInfo?.storeInfo?.enableInDayBooking);
-
-
+    const today = moment().startOf("day");
+    const selectedDate = moment(date).startOf("day");
+    setShowDenyInDayBookingMessage(
+      selectedDate.isSame(today) && !storeInfo?.storeInfo?.enableInDayBooking
+    );
 
     setSelectHour(null);
     dispatch(setSelectedHour(null));
@@ -204,7 +210,7 @@ const TimePage: React.FC = () => {
 
     dispatch(setSelectedStaff(selectedStaffMember));
   };
-  
+
   const CustomRadioDateSkeleton = () => (
     <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
   );
@@ -300,29 +306,31 @@ const TimePage: React.FC = () => {
             <div>Fully booked on this date</div>
           </div>
         )}
-        <Grid container spacing={2}>
-          {hourArray?.map(
-            (hour: { time: string; staffs: number[] }, index: number) => (
-              <Grid
-                item
-                xs={3} // 4 items per row on small screens
-                sm={2} // 6 items per row on medium screens
-                lg={1.5} // 8 items per row on large screens
-                key={index}
-              >
-                <CustomHourRadio
-                  staffs={hour.staffs}
-                  error={error}
-                  isLoading={isLoading}
-                  hour={hour.time}
+        {!showDenyInDayBookingMessage && (
+          <Grid container spacing={2}>
+            {hourArray?.map(
+              (hour: { time: string; staffs: number[] }, index: number) => (
+                <Grid
+                  item
+                  xs={3} // 4 items per row on small screens
+                  sm={2} // 6 items per row on medium screens
+                  lg={1.5} // 8 items per row on large screens
                   key={index}
-                  onSelect={() => handleSelectedHour(hour)}
-                  selected={selectHour === hour.time}
-                />
-              </Grid>
-            )
-          )}
-        </Grid>
+                >
+                  <CustomHourRadio
+                    staffs={hour.staffs}
+                    error={error}
+                    isLoading={isLoading}
+                    hour={hour.time}
+                    key={index}
+                    onSelect={() => handleSelectedHour(hour)}
+                    selected={selectHour === hour.time}
+                  />
+                </Grid>
+              )
+            )}
+          </Grid>
+        )}
       </div>
       <div className="sticky top-20 self-start ml-auto mt-28">
         <CartSide disableContinueButton={!bookingInfo.selectedHour} />
