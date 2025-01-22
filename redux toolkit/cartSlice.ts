@@ -91,15 +91,15 @@ const cartSlice = createSlice({
     },
     setStaffIdForGuestServices(state, action: PayloadAction<{ staffIds: number[], allStaff: Staff[] }>) {
       const { staffIds, allStaff } = action.payload;
-      for (let i = 0; i < staffIds.length; i++) {
+      for (let i = 0; i < state.guests.length; i++) {
         const guest = state.guests[i];
         if (guest?.guestServices) {
           for (let j = 0; j < guest.guestServices.length; j++) {
             const guestService = guest.guestServices[j];
-        const staff = allStaff.find(staff => staff.id === staffIds[i]);
-        if (staff) {
-          guestService.staff = staff;
-        }
+            const staff = allStaff.find(staff => staff.id === staffIds[i]);
+            if (staff) {
+              guestService.staff = staff;
+            }
           }
         }
       }
