@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import axios from "@/ulti/axios";
 import { getSelectedStaffId, setSelectedStaffForFirstGuest } from "@/redux toolkit/cartSlice";
 
-const staffPage: React.FC = () => {
+const StaffPage: React.FC = () => {
   const router = useRouter();
   const preSelectedStaff =  useSelector(getSelectedStaffId);
   const dispatch = useDispatch();
@@ -127,5 +127,5 @@ const staffPage: React.FC = () => {
   );
 };
 
-export default staffPage;
+export default StaffPage;
 
