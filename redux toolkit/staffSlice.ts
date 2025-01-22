@@ -1,13 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface StaffSlice {
-  selectedStaffList: Staff[] | null;
-  selectedStaffByHour: Staff | null;
-}
-
 const initialState: StaffSlice = {
   selectedStaffList: null,
   selectedStaffByHour: null,
+  allStaff: null,
 };
 
 const staffSlice = createSlice({
@@ -22,10 +18,17 @@ const staffSlice = createSlice({
         state.selectedStaffByHour = action.payload;
       }
     },
+    setAllStaff(state, action: PayloadAction<Staff[] | null>) {
+      state.allStaff = action.payload;
+    },
   },
 });
 
-export const { setSelectedStaffList, setSelectedStaffByHour } =
+export const { setSelectedStaffList, setSelectedStaffByHour, setAllStaff } =
   staffSlice.actions;
+
+  export const getStaffById = (state: { staff: StaffSlice }, id: number): Staff | null => {
+    return state.staff.selectedStaffList?.find(staff => staff.id === id) || null;
+  };
 
 export default staffSlice.reducer;

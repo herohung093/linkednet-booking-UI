@@ -1,12 +1,11 @@
-import { CheckIcon } from "@/icons/CheckIcon";
 import React from "react";
 import Error from "./Error";
 import Loading from "./Loading";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 
 interface CustomHourRadioProps {
-  staffs: number[];
+  staff: number[];
   error: unknown;
   isLoading: boolean;
   hour: string;
@@ -15,7 +14,7 @@ interface CustomHourRadioProps {
 }
 
 const CustomHourRadio: React.FC<CustomHourRadioProps> = ({
-  staffs,
+  staff,
   error,
   isLoading,
   hour,
@@ -31,7 +30,7 @@ const CustomHourRadio: React.FC<CustomHourRadioProps> = ({
         <Box display="flex" flexDirection="column" alignItems="center" mt={1}>
           <Box display="flex" flexWrap="wrap" justifyContent="center">
             <Button
-              disabled={staffs.length == 0}
+              disabled={staff.length == 0}
               size="medium"
               variant={selected ? 'contained' : 'outlined'}
               color="error"

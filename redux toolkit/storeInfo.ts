@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface StoreInfoSlice {
   storeInfo: StoreInfo | null;
-  serviceData: NailSalonService[] | null;
+  serviceData: ServiceItem[] | null;
   storeUuid: string | null;
 }
 
@@ -19,7 +19,7 @@ const storeInfoSlice = createSlice({
     setSelectedStoreInfo(state, action: PayloadAction<StoreInfo | null>) {
       state.storeInfo = action.payload;
     },
-    setServiceData(state, action: PayloadAction<NailSalonService[] | null>) {
+    setServiceData(state, action: PayloadAction<ServiceItem[] | null>) {
       state.serviceData = action.payload;
     },
     setStoreUuid(state, action: PayloadAction<string | null>) {

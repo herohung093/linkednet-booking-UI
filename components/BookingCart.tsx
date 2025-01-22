@@ -12,35 +12,58 @@ interface BookingCartProps {
 const BookingCart: React.FC<BookingCartProps> = ({ disableContinueButton }) => {
   const router = useRouter();
   const slug = router.route;
-  const storeUuid = useSelector((state: RootState) => state.storeInfo.storeUuid);
+  const storeInfo = useSelector((state: RootState) => state.storeInfo);
   const cart = useSelector((state: any) => state.cart);
   const selectedHour = useSelector((state: any) => state.cart.selectedHour);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
 
+  const currentGuestName = (cart as CartState).currentGuestName;
+  const maxGuestsForGroupBooking =
+    storeInfo.storeInfo?.maxGuestsForGroupBooking ?? 1;
+  const currentGuestHasSelectedItem = (cart as CartState).guests.some(
+    (guest) =>
+      (guest.guestServices?.length ?? 0) > 0 && guest.name === currentGuestName
+  );
+  const allGuestsHaveSelectedServices = (cart as CartState).guests.every(
+    (guest) => guest.guestServices && guest.guestServices.length > 0
+  );
+
   const handleRoute = () => {
     switch (slug) {
       case "/":
-        if (cart.items.length > 0) {
-          router.push("/staffs/?storeUuid=" + storeUuid);
-        } else {
+        if (
+          cart.guests.length > 0 &&
+          currentGuestHasSelectedItem &&
+          cart.guests.length < maxGuestsForGroupBooking &&
+          cart.isGroupBooking
+        ) {
+          router.push("/add-guests/?storeUuid=" + storeInfo.storeUuid);
+        } else if (cart.guests.length > 0 && allGuestsHaveSelectedServices) {
+          router.push("/staff/?storeUuid=" + storeInfo.storeUuid);
+        } else if (cart.guests.length > 0 && !currentGuestHasSelectedItem) {
           setDialogMessage("Please select a service");
           setShowDialog(true);
         }
         break;
-      case "/staffs":
-        router.push("/time/?storeUuid=" + storeUuid);
+      case "/staff":
+        router.push("/time/?storeUuid=" + storeInfo.storeUuid);
         break;
       case "/time":
         if (selectedHour) {
-          router.push("/confirmation/?storeUuid=" + storeUuid);
+          router.push("/confirmation/?storeUuid=" + storeInfo.storeUuid);
         } else {
           setDialogMessage("Please select a time");
           setShowDialog(true);
         }
         break;
+      case "/add-guests":
+        if (cart.guests.length > 0 && allGuestsHaveSelectedServices) {
+          router.push("/staff/?storeUuid=" + storeInfo.storeUuid);
+        }
+        break;
       default:
-        router.push("/?storeUuid=" + storeUuid);
+        router.push("/?storeUuid=" + storeInfo.storeUuid);
     }
   };
 
@@ -62,13 +85,10 @@ const BookingCart: React.FC<BookingCartProps> = ({ disableContinueButton }) => {
               className="px-4 py-2 md:w-1/3 lg:w-1/4"
               onClick={handleRoute}
               sx={{
-                backgroundColor: 'black',
-                color: 'white',
-                borderRadius: '20px',
-                textTransform: 'none', // Keep the text casing as it is
-                '&:hover': {
-                  backgroundColor: 'black', // Keep the same background color on hover
-                },
+                backgroundColor: disableContinueButton ? "gray" : "black",
+                color: "white",
+                borderRadius: "20px",
+                cursor: disableContinueButton ? "not-allowed" : "pointer",
               }}
             >
               Continue

@@ -6,20 +6,19 @@ import CustomRadioDate from "@/components/CustomDateRadio";
 import {
   setSelectedDate,
   setSelectedHour,
-  setSelectedStaff,
+  setStaffIdForGuestServices,
+  setSelectedStaffForFirstGuest,
+  getSelectedStaffId,
 } from "@/redux toolkit/cartSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
 import CustomHourRadio from "@/components/CustomHourRadio";
-import { setSelectedStaffByHour } from "@/redux toolkit/staffSlice";
-import { useRouter } from "next/router";
+import{ useRouter } from "next/router";
 import Select from "react-select";
 import { RootState } from "@/redux toolkit/store";
 import moment from "moment";
-import { CartSide } from "@/components/CartSide";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import axios from "@/ulti/axios";
-import BookingCart from "@/components/BookingCart";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 type FetcherFunction = (url: string) => Promise<any>;
 
@@ -65,7 +64,7 @@ const TimePage: React.FC = () => {
       .then((res) => res.data);
 
   useEffect(() => {
-    if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
+    if (bookingInfo?.guests.length === 0 && urlStoreUuid.storeUuid) {
       router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
   }, [bookingInfo, router]);
@@ -89,17 +88,19 @@ const TimePage: React.FC = () => {
     selectedIndex !== null ? days[selectedIndex] : currentDate;
   const selectedDateMoment = moment(selectedDate);
 
-  const staff = useSelector((state: RootState) => state.cart.selectedStaff);
   const staffList = useSelector(
     (state: RootState) => state.staff.selectedStaffList
   );
+  const allStaff = useSelector((state: RootState) => state.staff.allStaff);
+  const staffId = useSelector(getSelectedStaffId);
+  const staff = staffList?.find((staff) => staff.id == staffId);
 
   const {
     data: availability,
     error,
     isLoading,
   } = useSWR(
-    `/staff/allStaffAvailability?staffId=${staff?.id}&date=${selectDay}`,
+    `/staff/allStaffAvailability?staffId=${staffId}&date=${selectDay}`,
     fetcher
   );
 
@@ -118,12 +119,12 @@ const TimePage: React.FC = () => {
 
   const currentHour = currentDate.getHours();
 
-  const hourArray: { time: string; staffs: number[] }[] = useMemo(() => {
+  const hourArray: { time: string; staff: number[] }[] = useMemo(() => {
     if (!availability) return [];
     return Object.entries(availability)
-      .map(([time, staffs]) => ({
+      .map(([time, staff]) => ({
         time,
-        staffs: staffs as number[],
+        staff: staff as number[],
       }))
       .filter(({ time }) => {
         const selectedDateWithTime = convertTimeToMoment(time, selectedDate);
@@ -185,15 +186,23 @@ const TimePage: React.FC = () => {
     }
   }, [unavailableDates, days, selectedDate, dispatch, swiper]);
 
-  const handleSelectedHour = (hour: { time: string; staffs: number[] }) => {
+  const handleSelectedHour = (hour: { time: string; staff: number[] }) => {
     setSelectHour(hour.time);
     dispatch(setSelectedHour(hour.time));
-    const randomIndex = Math.floor(Math.random() * hour.staffs?.length);
-    const randomStaffId = hour.staffs[randomIndex];
-    const selectedRandomStaff =
-      staffList?.find((staff) => staff.id == randomStaffId) || null;
+    if (!bookingInfo.isGroupBooking) {
+      const randomIndex = Math.floor(Math.random() * hour.staff?.length);
+      const randomStaffId = hour.staff[randomIndex];
+      // const selectedRandomStaff =
+      //   staffList?.find((staff) => staff.id == randomStaffId) || null;
 
-    dispatch(setSelectedStaffByHour(selectedRandomStaff));
+      if (staffList) {
+        dispatch(setStaffIdForGuestServices({staffIds: [randomStaffId], allStaff: staffList}));
+      }
+    } else {
+      if (allStaff) {
+        dispatch(setStaffIdForGuestServices({staffIds: hour.staff, allStaff: allStaff}));
+      }
+    }
   };
 
   const [selectStaff, setSelectStaff] = useState<any>({
@@ -208,7 +217,9 @@ const TimePage: React.FC = () => {
     const selectedStaffMember =
       staffList?.find((staff) => staff.id === selectedOption.value) || null;
 
-    dispatch(setSelectedStaff(selectedStaffMember));
+    if (selectedStaffMember) {
+      dispatch(setSelectedStaffForFirstGuest(selectedStaffMember));
+    }
   };
 
   const CustomRadioDateSkeleton = () => (
@@ -219,8 +230,13 @@ const TimePage: React.FC = () => {
     <div className="w-90 h-12 bg-gray-200 rounded-lg mb-3 mx-4"></div>
   );
 
+  const filteredHoursForGroupBooking = hourArray?.filter((hour) => {
+    if (!bookingInfo.isGroupBooking) return true;
+    return hour.staff.length >= bookingInfo.guests.length;
+  });
+
   return (
-    <div className="mt-10 md:w-[80%] mx-auto lg:grid lg:grid-cols-2 ">
+    <div className="mt-10 md:w-[80%] mx-auto lg:grid lg:grid-cols-1 ">
       <div>
         <div className="w-[90%] mx-auto ">
           <h1 className="text-lg font-bold mb-3">Select Staff</h1>
@@ -308,34 +324,41 @@ const TimePage: React.FC = () => {
         )}
         {!showDenyInDayBookingMessage && (
           <Grid container spacing={2}>
-            {hourArray?.map(
-              (hour: { time: string; staffs: number[] }, index: number) => (
-                <Grid
-                  item
-                  xs={3} // 4 items per row on small screens
-                  sm={2} // 6 items per row on medium screens
-                  lg={1.5} // 8 items per row on large screens
-                  key={index}
-                >
-                  <CustomHourRadio
-                    staffs={hour.staffs}
-                    error={error}
-                    isLoading={isLoading}
-                    hour={hour.time}
-                    key={index}
-                    onSelect={() => handleSelectedHour(hour)}
-                    selected={selectHour === hour.time}
-                  />
-                </Grid>
+            {filteredHoursForGroupBooking.length === 0 ? (
+              <div className="mb-5 flex-col text-black font-bold w-full h-[400px] flex justify-center items-center">
+                <div className="text-[50px]">
+                  <CalendarMonthIcon fontSize="inherit" />
+                </div>
+                <div className="px-4 text-center">
+                  Please call us to make bookings for the date{" "}
+                  <a
+                    href={`tel:${storeInfo?.storeInfo?.storePhoneNumber}`}
+                    className="text-blue-500 underline"
+                  >
+                    {storeInfo?.storeInfo?.storePhoneNumber}
+                  </a>
+                </div>
+              </div>
+            ) : (
+              filteredHoursForGroupBooking.map(
+                (hour: { time: string; staff: number[] }, index: number) => (
+                  <Grid item xs={3} sm={2} lg={1.5} key={index}>
+                    <CustomHourRadio
+                      staff={hour.staff}
+                      error={error}
+                      isLoading={isLoading}
+                      hour={hour.time}
+                      key={index}
+                      onSelect={() => handleSelectedHour(hour)}
+                      selected={selectHour === hour.time}
+                    />
+                  </Grid>
+                )
               )
             )}
           </Grid>
         )}
       </div>
-      <div className="sticky top-20 self-start ml-auto mt-28">
-        <CartSide disableContinueButton={!bookingInfo.selectedHour} />
-      </div>
-      <BookingCart disableContinueButton={!bookingInfo.selectedHour} />
     </div>
   );
 };

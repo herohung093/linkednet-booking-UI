@@ -1,15 +1,20 @@
 "use client";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "@/redux toolkit/cartSlice";
 import "@radix-ui/themes/styles.css";
 import { Spinner } from "@radix-ui/themes";
 import { Box, Button, Typography } from "@mui/material";
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import {
+  addServiceItemToGuest,
+  removeServiceItemFromGuest,
+} from "@/redux toolkit/cartSlice";
 
+interface ServiceItemCardProps {
+  service: ServiceItem;
+}
 
-
-const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
+const ServiceItemCard = ({ service }: ServiceItemCardProps) => {
   const {
     id,
     serviceType,
@@ -20,32 +25,28 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   } = service;
 
   const dispatch = useDispatch();
-  const cartItems = useSelector((state: any) => state.cart.items);
+  const guests = useSelector((state: any) => state.cart.guests);
+  const currentGuestName = useSelector((state: any) => state.cart.currentGuestName);
 
-  const isServiceInCart: boolean | null = cartItems?.some(
-    (item: any) => item.id === id
+  const guest = guests.find((guest: any) => guest.name === currentGuestName);
+  const isServiceInCart: boolean = guest?.guestServices.some(
+    (guestService: any) => guestService.serviceItem.id === id
   );
 
   const handleClickAdd = () => {
     dispatch(
-      addToCart({
-        id: id,
-        serviceType: serviceType,
-        serviceName: serviceName,
-        serviceDescription: serviceDescription,
-        estimatedTime: estimatedTime,
-        servicePrice: servicePrice,
-        quantity: 1,
+      addServiceItemToGuest({
+        guestName: currentGuestName,
+        serviceItem: service,
       })
     );
   };
 
   const handleClickRemove = () => {
     dispatch(
-      removeFromCart({
-        id: id,
-        estimatedTime: estimatedTime,
-        servicePrice: servicePrice,
+      removeServiceItemFromGuest({
+        guestName: currentGuestName,
+        serviceItemId: id,
       })
     );
   };
@@ -75,12 +76,22 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
             </Box>
             <Box display="flex" justifyContent="flex-end">
               {!isServiceInCart ? (
-                <Button variant="contained" color="inherit" className="rounded-full truncate" onClick={handleClickAdd}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  className="rounded-full truncate"
+                  onClick={handleClickAdd}
+                >
                   Select
                 </Button>
               ) : (
-                <Button variant="contained" color="inherit" className="rounded-full truncate" onClick={handleClickRemove}>
-                  <DeleteOutlineOutlinedIcon sx={{ color: 'black' }} />
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  className="rounded-full truncate"
+                  onClick={handleClickRemove}
+                >
+                  <DeleteOutlineOutlinedIcon sx={{ color: "black" }} />
                 </Button>
               )}
             </Box>
@@ -91,4 +102,4 @@ const NailSalonServiceCard = ({ service }: { service: NailSalonService }) => {
   );
 };
 
-export default NailSalonServiceCard;
+export default ServiceItemCard;

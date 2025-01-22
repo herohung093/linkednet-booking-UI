@@ -1,5 +1,4 @@
 "use client";
-import { CartSide } from "@/components/CartSide";
 import Error from "@/components/Error";
 import { StoreInfo } from "@/components/StoreInfo";
 import {
@@ -12,14 +11,15 @@ import axios from "@/ulti/axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import BookingCart from "@/components/BookingCart";
-import { Box, Typography, Tabs, Tab, Divider } from "@mui/material";
+import { Box, Typography, Divider, Dialog, DialogContent } from "@mui/material";
 import { Facebook, Instagram } from "@mui/icons-material";
-import NailSalonServiceCard from "@/components/NailSalonServiceCard";
+import ServiceSelection from "@/components/ServiceSelection";
+import BookingTypeSelection from "@/components/BookingTypeSelection";
+import { addGuest, setCurrentGuestName, setIsGroupBooking } from "@/redux toolkit/cartSlice";
 
 export default function Home() {
   const [serviceDataInfo, setServiceDataInfo] = useState<
-    NailSalonService[] | null
+    ServiceItem[] | null
   >(null);
   const [storeConfig, setStoreConfig] = useState<StoreInfo | null>(null);
   const [error, setError] = useState<unknown | null>(null);
@@ -27,17 +27,9 @@ export default function Home() {
   const router = useRouter();
   const dispatch = useDispatch();
   const urlStoreUuid = router.query;
-  const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([]);
-  const [selectedTab, setSelectedTab] = useState(0);
-  const [selectedServiceTypeServices, setSelectedServiceTypeServices] =
-    useState<NailSalonService[]>([]);
-  const [cartHasItem, setCartHasItem] = useState<boolean>(true);
-
+  
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
-  const cartItems = bookingInfo.items.length;
-  useEffect(() => {
-    setCartHasItem(cartItems !== 0);
-  }, [cartItems]);
+  const [openDialog, setOpenDialog] = useState(bookingInfo.isGroupBooking === null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,14 +40,6 @@ export default function Home() {
           },
         });
         setServiceDataInfo(serviceResponse.data);
-        setServiceTypes(getUniqueServiceTypes(serviceResponse.data));
-        const filteredServices = serviceResponse.data.filter(
-          (service: { serviceType: ServiceType }) =>
-            service.serviceType.active &&
-            service.serviceType.id ===
-              getUniqueServiceTypes(serviceResponse.data)[0].id
-        );
-        setSelectedServiceTypeServices(filteredServices);
 
         const storeConfigResponse = await axios.get(
           "storeConfig/" + urlStoreUuid.storeUuid,
@@ -66,6 +50,25 @@ export default function Home() {
           }
         );
         setStoreConfig(storeConfigResponse.data);
+
+        // If maxGuestsForGroupBooking is 1, add a guest named "Me" and set isGroupBooking to false
+        // No need to display the booking type selection dialog
+        if (storeConfigResponse.data.maxGuestsForGroupBooking == 1) {
+          if (!bookingInfo.guests.some(guest => guest.name === "Me")) {
+            dispatch(
+              addGuest({
+                id: null,
+                name: "Me",
+                guestServices: [],
+                totalPrice: 0,
+                totalEstimatedTime: 0,
+              })
+            );
+            dispatch(setIsGroupBooking(false));
+            dispatch(setCurrentGuestName("Me"));
+          }
+              setOpenDialog(false);
+        }
 
         setIsLoading(false);
       } catch (error: unknown) {
@@ -86,75 +89,46 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeConfig]);
 
-  function getUniqueServiceTypes(services: NailSalonService[]): ServiceType[] {
-    const serviceTypeMap = new Map<string, ServiceType>();
+  const handleCloseModal = (event: object, reason: string) => {
+    if (reason !== "backdropClick") {
+      setOpenDialog(false);
+    }
+  };
 
-    services.forEach((service) => {
-      if (service.active && service.serviceType.active) {
-        if (!serviceTypeMap.has(String(service.serviceType.id))) {
-          serviceTypeMap.set(
-            String(service.serviceType.id),
-            service.serviceType
-          );
-        }
-      }
-    });
-
-    return Array.from(serviceTypeMap.values());
-  }
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    const selectedServiceType = serviceTypes[newValue];
-    setSelectedTab(newValue);
-    const servicesFilterResults = serviceDataInfo?.filter(
-      (service) => service.serviceType.id === selectedServiceType.id
-    );
-    setSelectedServiceTypeServices(servicesFilterResults ?? []);
+  const handleBookingTypeSelectionClose = () => {
+    setOpenDialog(false);
   };
 
   if (error) return <Error />;
 
   return (
     <Box>
+      <Dialog 
+        open={openDialog} 
+        onClose={handleCloseModal} 
+        disableEscapeKeyDown
+      >
+        <DialogContent>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            height="50vh"
+            bgcolor="background.paper"
+            p={4}
+          >
+            <BookingTypeSelection onClose={handleBookingTypeSelectionClose} />
+          </Box>
+        </DialogContent>
+      </Dialog>
       <Box display="flex" minHeight="100vh" bgcolor="#FFFFFF" p={1.5}>
         <Box flex={{ xs: 10, lg: 1 }} overflow="auto">
           <StoreInfo storeConfig={storeConfig} />
 
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            Services
-          </Typography>
-
-          <Tabs
-            value={selectedTab}
-            onChange={handleTabChange}
-            aria-label="service tabs"
-            variant="scrollable"
-            scrollButtons="auto"
-            allowScrollButtonsMobile
-          >
-            {serviceTypes
-              .sort((a, b) => a.displayOrder - b.displayOrder)
-              .map((serviceType, index) => (
-                <Tab wrapped key={index} label={serviceType.type} />
-              ))}
-          </Tabs>
-          <Divider sx={{ my: 0, borderBottomWidth: 2 }} />
-          <Box mt={2}>
-            {selectedServiceTypeServices
-              .sort((a, b) => a.displayOrder - b.displayOrder)
-              .map((service, index) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  py={1}
-                  borderBottom={index < 2 ? "1px solid #e0e0e0" : "none"}
-                >
-                  <NailSalonServiceCard service={service} />
-                </Box>
-              ))}
-          </Box>
+          <ServiceSelection
+            serviceDataInfo={serviceDataInfo}
+          />
 
           <Divider sx={{ my: 3 }} />
 
@@ -198,18 +172,6 @@ export default function Home() {
             © 2023 Service Booking App. All rights reserved.
           </Typography>
         </Box>
-
-        <Box
-          flex={{ xs: 0, md: 1 }}
-          ml={{ xs: 0, md: 3 }}
-          className="mt-20 top-20"
-          sx={{ display: { xs: "none", md: "none", lg: "block" } }}
-        >
-          <CartSide disableContinueButton={false} />
-        </Box>
-      </Box>
-      <Box sx={{ display: { xs: "block", md: "block", lg: "none" } }}>
-        {cartHasItem && <BookingCart disableContinueButton={!cartHasItem} />}
       </Box>
     </Box>
   );

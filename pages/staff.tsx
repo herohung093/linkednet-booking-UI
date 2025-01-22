@@ -2,21 +2,15 @@
 import CustomStaffRadio from "@/components/CustomStaffRadio";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedStaff } from "@/redux toolkit/cartSlice";
 import Error from "@/components/Error";
-
-import { CartSide } from "@/components/CartSide";
-import { setSelectedStaffList } from "@/redux toolkit/staffSlice";
+import { setSelectedStaffList, setAllStaff } from "@/redux toolkit/staffSlice";
 import { useRouter } from "next/router";
 import axios from "@/ulti/axios";
-import { RootState } from "@/redux toolkit/store";
-import BookingCart from "@/components/BookingCart";
+import { getSelectedStaffId, setSelectedStaffForFirstGuest } from "@/redux toolkit/cartSlice";
 
-
-
-const StaffsPage: React.FC = () => {
+const staffPage: React.FC = () => {
   const router = useRouter();
-  const preSelectedStaff = useSelector((state: RootState) => state.cart.selectedStaff?.id);
+  const preSelectedStaff =  useSelector(getSelectedStaffId);
   const dispatch = useDispatch();
   const [selectStaff, setSelectStaff] = useState<number | null>(null);
   const urlStoreUuid = router.query;
@@ -51,7 +45,7 @@ const StaffsPage: React.FC = () => {
   const bookingInfo = useSelector((state: any) => state.cart);
   useEffect(() => {
 
-    if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
+    if (bookingInfo?.guests.length === 0 && urlStoreUuid.storeUuid) {
       router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
   }, [bookingInfo, router, urlStoreUuid.storeUuid]);
@@ -73,20 +67,27 @@ const StaffsPage: React.FC = () => {
     []
   );
 
-  const newStaffsArray = useMemo(() => {
-    return data && data.length != 0 ? [anyStaff, ...data] : [];
+  const newstaffArray = useMemo(() => {
+    if (data && data.length !== 0) {
+      dispatch(setAllStaff([anyStaff, ...data]))
+      if (bookingInfo.isGroupBooking && bookingInfo.guests.length > 1) {
+        return [anyStaff];
+      }
+      return [anyStaff, ...data];;
+    }
+    return [];
   }, [data]);
 
   useEffect(() => {
-    dispatch(setSelectedStaffList(newStaffsArray));
+    dispatch(setSelectedStaffList(newstaffArray));
 
     // preselect staff when navigate back to the page
-    setSelectStaff(preSelectedStaff ?? null)
+    setSelectStaff(preSelectedStaff)
   });
 
   const handleSelectStaff = (staff: Staff) => {
     setSelectStaff(staff.id);
-    dispatch(setSelectedStaff(staff));
+    dispatch(setSelectedStaffForFirstGuest(staff));
   };
 
   if (error) return <Error />;
@@ -101,19 +102,16 @@ const StaffsPage: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="sticky top-20 self-start mt-20">
-          <CartSide disableContinueButton={!selectStaff}/>
-        </div>
       </div>
     );
   }
 
   return (
-    <div className="lg:flex gap-20 md:gap-0 md:justify-around lg:mx-auto ">
+    <div className="lg:flex gap-20 md:gap-0 md:justify-around lg:mx-auto mx-5 ">
       <div>
-        <h1 className="mt-10 mb-5 text-3xl mx-5 font-bold">Select professional</h1>
+        <h1 className="mt-10 mb-5 text-3xl font-bold">Select professional</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-1 gap-y-4 ">
-          {newStaffsArray?.map((staff: Staff) => (
+          {newstaffArray?.map((staff: Staff) => (
             <CustomStaffRadio
               error={error}
               isLoading={isLoading}
@@ -125,12 +123,9 @@ const StaffsPage: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className="sticky top-20 self-start mt-20">
-        <CartSide disableContinueButton={selectStaff == null || selectStaff == undefined}/>
-      </div>
-      <BookingCart disableContinueButton={!selectStaff == null || selectStaff == undefined}/>
     </div>
   );
 };
 
-export default StaffsPage;
+export default staffPage;
+

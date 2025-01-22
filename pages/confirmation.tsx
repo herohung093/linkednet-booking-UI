@@ -8,6 +8,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { CircularProgress, TextField } from "@mui/material";
 import LoadingButton from '@mui/lab/LoadingButton';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface BookingSubmitForm {
   firstName: string;
@@ -23,12 +24,12 @@ const ConfirmationPage: React.FC = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const router = useRouter();
   const urlStoreUuid = router.query;
-  const staff = useSelector((state: any) => state.staff.selectedStaffByHour);
   const [captchaToken, setCaptchaToken] = useState('');
   const { control, register, formState: { errors }, handleSubmit } = useForm<BookingSubmitForm>()
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
-    if (bookingInfo?.items.length === 0 && urlStoreUuid.storeUuid) {
+    if (bookingInfo?.guests.length === 0 && urlStoreUuid.storeUuid) {
       router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
   }, [bookingInfo, router]);
@@ -51,7 +52,7 @@ const ConfirmationPage: React.FC = () => {
     handleReCaptchaVerify();
 
     const serviceItems = bookingInfo?.items?.map(
-      (service: NailSalonService) => ({
+      (service: ServiceItem) => ({
         id: service.id,
       })
     );
@@ -64,10 +65,7 @@ const ConfirmationPage: React.FC = () => {
       },
       note: formData.note,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
-      staff: {
-        id: staff.id,
-      },
-      serviceItems: serviceItems,
+      guests: bookingInfo.guests
     };
 
     try {
@@ -134,7 +132,7 @@ const ConfirmationPage: React.FC = () => {
     <div className="w-[90%] sm:w-[65%] mx-auto mt-9">
       <div>
         <h1 className="text-2xl font-semibold mb-5">Booking confirmation</h1>
-        <Cart />
+        {isMobile && <Cart />}
         <div className="max-w-[500px] mx-auto mt-10">
           <form
             onSubmit={handleSubmit(onSubmit)}

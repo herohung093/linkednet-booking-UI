@@ -1,4 +1,4 @@
-declare interface NailSalonService {
+declare interface ServiceItem {
   id: number;
   serviceName: string;
   serviceDescription: string;
@@ -9,13 +9,26 @@ declare interface NailSalonService {
   active: boolean;
 }
 
+declare interface Guest {
+  id: number | null;
+  name: string;
+  guestServices: GuestService[] | null;
+  totalPrice: number;
+  totalEstimatedTime: number;
+}
+
+declare interface GuestService {
+  serviceItem: ServiceItem;
+  staff: Staff | null;
+}
+
 declare interface ServiceType {
   id: number;
-    type: string;
-    levelType: number;
-    description: string;
-    displayOrder: number
-    active: boolean
+  type: string;
+  levelType: number;
+  description: string;
+  displayOrder: number;
+  active: boolean;
 }
 declare interface CartItem {
   id: number;
@@ -26,11 +39,11 @@ declare interface CartItem {
   serviceType: {
     id: number;
   };
-  quantity: 1;
+  guests: Guest[];
 }
 
 declare interface Category {
-  services: NailSalonService[];
+  services: ServiceItem[];
 }
 
 declare interface Staff {
@@ -47,14 +60,15 @@ declare interface Staff {
 }
 
 declare interface CartState {
-  items: CartItem[];
   total: number;
   totalEstimatedTime: number;
   selectedDate: string | null;
   selectedHour: string | null;
   timeZone: string | null;
-  selectedStaff: null | Staff;
   StoreConfig: StoreConfig | null;
+  guests: Guest[];
+  isGroupBooking: boolean | null;
+  currentGuestName: string;
 }
 declare interface StoreConfig {
   businessHoursList: {
@@ -70,6 +84,7 @@ declare interface StoreConfig {
   storePhoneNumber: string;
   zoneId: string;
   enableInDayBooking: boolean;
+  maxGuestsForGroupBooking: number;
 }
 
 declare interface StoreInfo {
@@ -84,6 +99,7 @@ declare interface StoreInfo {
   facebookLink: string;
   businessHoursList: BusinessHours[];
   enableInDayBooking: boolean;
+  maxGuestsForGroupBooking: number;
 }
 
 declare interface BusinessHours {
@@ -92,4 +108,10 @@ declare interface BusinessHours {
   openingTime: string;
   closingTime: string;
   dayOff: boolean;
+}
+
+declare interface StaffSlice {
+  selectedStaffList: Staff[] | null;
+  selectedStaffByHour: Staff | null;
+  allStaff: Staff[] | null;
 }
