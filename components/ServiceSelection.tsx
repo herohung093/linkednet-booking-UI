@@ -48,7 +48,12 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({
       }
     });
 
-    return Array.from(serviceTypeMap.values());
+    const serviceTypes = Array.from(serviceTypeMap.values());
+
+    // Sort the serviceTypes based on the displayOrder property
+    serviceTypes.sort((a, b) => a.displayOrder - b.displayOrder);
+
+    return serviceTypes;
   }
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -84,11 +89,9 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({
         scrollButtons="auto"
         allowScrollButtonsMobile
       >
-        {serviceTypes
-          .sort((a, b) => a.displayOrder - b.displayOrder)
-          .map((serviceType, index) => (
-            <Tab wrapped key={index} label={serviceType.type} />
-          ))}
+        {serviceTypes.map((serviceType, index) => (
+          <Tab wrapped key={index} label={serviceType.type} />
+        ))}
       </Tabs>
       <Divider sx={{ my: 0, borderBottomWidth: 2 }} />
       <Box mt={2}>
