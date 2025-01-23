@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface StoreInfoSlice {
-  storeInfo: StoreInfo | null;
-  serviceData: ServiceItem[] | null;
-  storeUuid: string | null;
-}
+
 
 const initialState: StoreInfoSlice = {
   storeInfo: null,

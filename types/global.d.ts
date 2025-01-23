@@ -115,3 +115,9 @@ declare interface StaffSlice {
   selectedStaffByHour: Staff | null;
   allStaff: Staff[] | null;
 }
+
+interface StoreInfoSlice {
+  storeInfo: StoreInfo | null;
+  serviceData: ServiceItem[] | null;
+  storeUuid: string | null;
+}

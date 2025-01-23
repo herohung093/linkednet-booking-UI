@@ -15,46 +15,58 @@ import { Box, Typography, Divider, Dialog, DialogContent } from "@mui/material";
 import { Facebook, Instagram } from "@mui/icons-material";
 import ServiceSelection from "@/components/ServiceSelection";
 import BookingTypeSelection from "@/components/BookingTypeSelection";
-import { addGuest, setCurrentGuestName, setIsGroupBooking } from "@/redux toolkit/cartSlice";
+import {
+  addGuest,
+  setCurrentGuestName,
+  setIsGroupBooking,
+} from "@/redux toolkit/cartSlice";
 
 export default function Home() {
-  const [serviceDataInfo, setServiceDataInfo] = useState<
-    ServiceItem[] | null
-  >(null);
-  const [storeConfig, setStoreConfig] = useState<StoreInfo | null>(null);
   const [error, setError] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
   const urlStoreUuid = router.query;
-  
+
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
-  const [openDialog, setOpenDialog] = useState(bookingInfo.isGroupBooking === null);
+  const [openDialog, setOpenDialog] = useState(
+    bookingInfo.isGroupBooking === null
+  );
+  const serviceDataInfo = useSelector(
+    (state: { storeInfo: StoreInfoSlice }) => state.storeInfo.serviceData
+  );
+  const storeConfig = useSelector(
+    (state: { storeInfo: StoreInfoSlice }) => state.storeInfo.storeInfo
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const serviceResponse = await axios.get("service/active", {
-          headers: {
-            "X-StoreID": urlStoreUuid.storeUuid,
-          },
-        });
-        setServiceDataInfo(serviceResponse.data);
-
-        const storeConfigResponse = await axios.get(
-          "storeConfig/" + urlStoreUuid.storeUuid,
-          {
+        if (!serviceDataInfo || serviceDataInfo.length === 0) {
+          const serviceResponse = await axios.get("service/active", {
             headers: {
               "X-StoreID": urlStoreUuid.storeUuid,
             },
-          }
-        );
-        setStoreConfig(storeConfigResponse.data);
+          });
+          dispatch(setServiceData(serviceResponse.data));
+        }
+
+        if (!storeConfig) {
+          const storeConfigResponse = await axios.get(
+            "storeConfig/" + urlStoreUuid.storeUuid,
+            {
+              headers: {
+                "X-StoreID": urlStoreUuid.storeUuid,
+              },
+            }
+          );
+          dispatch(setSelectedStoreInfo(storeConfigResponse.data));
+        }
 
         // If maxGuestsForGroupBooking is 1, add a guest named "Me" and set isGroupBooking to false
         // No need to display the booking type selection dialog
-        if (storeConfigResponse.data.maxGuestsForGroupBooking == 1) {
-          if (!bookingInfo.guests.some(guest => guest.name === "Me")) {
+        if (storeConfig?.maxGuestsForGroupBooking == 1) {
+          if (!bookingInfo.guests.some((guest) => guest.name === "Me")) {
             dispatch(
               addGuest({
                 id: null,
@@ -67,7 +79,7 @@ export default function Home() {
             dispatch(setIsGroupBooking(false));
             dispatch(setCurrentGuestName("Me"));
           }
-              setOpenDialog(false);
+          setOpenDialog(false);
         }
 
         setIsLoading(false);
@@ -81,13 +93,7 @@ export default function Home() {
       dispatch(setStoreUuid(urlStoreUuid.storeUuid as string));
       fetchData();
     }
-  }, [urlStoreUuid]);
-
-  useEffect(() => {
-    dispatch(setSelectedStoreInfo(storeConfig));
-    dispatch(setServiceData(serviceDataInfo));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storeConfig]);
+  }, [urlStoreUuid, storeConfig, serviceDataInfo]);
 
   const handleCloseModal = (event: object, reason: string) => {
     if (reason !== "backdropClick") {
@@ -103,11 +109,7 @@ export default function Home() {
 
   return (
     <Box>
-      <Dialog 
-        open={openDialog} 
-        onClose={handleCloseModal} 
-        disableEscapeKeyDown
-      >
+      <Dialog open={openDialog} onClose={handleCloseModal} disableEscapeKeyDown>
         <DialogContent>
           <Box
             display="flex"
@@ -126,9 +128,7 @@ export default function Home() {
         <Box flex={{ xs: 10, lg: 1 }} overflow="auto">
           <StoreInfo storeConfig={storeConfig} />
 
-          <ServiceSelection
-            serviceDataInfo={serviceDataInfo}
-          />
+          <ServiceSelection serviceDataInfo={serviceDataInfo} />
 
           <Divider sx={{ my: 3 }} />
 
