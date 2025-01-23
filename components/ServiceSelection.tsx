@@ -66,7 +66,7 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({
   };
 
   return (
-    <Box>
+    <Box maxWidth={600} p={1}>
       <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ mt: 2 }}>
         Select services
       </Typography>
@@ -90,7 +90,15 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({
         allowScrollButtonsMobile
       >
         {serviceTypes.map((serviceType, index) => (
-          <Tab wrapped key={index} label={serviceType.type} />
+          <Tab
+            wrapped
+            key={index}
+            label={
+              <Typography sx={{ fontWeight: 500, fontSize: "1rem" }}>
+                {serviceType.type}
+              </Typography>
+            }
+          />
         ))}
       </Tabs>
       <Divider sx={{ my: 0, borderBottomWidth: 2 }} />

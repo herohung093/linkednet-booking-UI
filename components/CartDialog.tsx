@@ -4,11 +4,19 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import Cart from "./Cart";
 import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
 
 const CartDialog = () => {
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
-  const totalServices = bookingInfo.guests.reduce((sum, guest) => sum + (guest.guestServices ? guest.guestServices.length : 0), 0);
-  const totalPrice = bookingInfo.guests.reduce((sum, guest) => sum + guest.totalPrice, 0);
+  const totalServices = bookingInfo.guests.reduce(
+    (sum, guest) =>
+      sum + (guest.guestServices ? guest.guestServices.length : 0),
+    0
+  );
+  const totalPrice = bookingInfo.guests.reduce(
+    (sum, guest) => sum + guest.totalPrice,
+    0
+  );
 
   return (
     <Dialog.Root>
@@ -27,11 +35,20 @@ const CartDialog = () => {
             Cart
           </Dialog.Title>
           <Cart />
-          <div className="mt-[25px] flex justify-between">
+          <div className="mt-[25px] flex justify-center">
             <Dialog.Close asChild>
-              <button className="text-primary-700 border-2 border-primary-700 rounded-lg font-bold w-[100px] shadow-green7 inline-flex h-[35px] items-center justify-center px-[15px] leading-none focus:shadow-[0_0_0_2px] ">
-                Confirm
-              </button>
+              <Button
+                style={{
+                  backgroundColor: "black",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "20px",
+                  border: "none",
+                  minWidth: "15rem",
+                }}
+              >
+                Ok
+              </Button>
             </Dialog.Close>
           </div>
           <Dialog.Close asChild>

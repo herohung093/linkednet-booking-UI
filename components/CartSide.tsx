@@ -3,7 +3,7 @@ import Cart from "./Cart";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux toolkit/store";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Paper } from "@mui/material";
 
 interface CartSideProps {
   disableContinueButton: boolean;
@@ -72,13 +72,21 @@ export const CartSide: React.FC<CartSideProps> = ({
     setShowDialog(false);
   };
   return (
-    <Box className="hidden lg:flex lg:flex-col lg:border-2 lg:rounded-lg p-5 h-[600px] w-[300px] xl:w-[350px]">
-      <div className="flex-grow">
+    <Box p={4}>
+      <Paper
+        elevation={3}
+        sx={{
+          maxWidth: 350,
+          minWidth: 300,
+          borderRadius: 10,
+          
+        }}
+      >
         <Cart
           onContinue={handleRoute}
           disableContinueButton={disableContinueButton}
         />
-      </div>
+      </Paper>
       {showDialog && (
         <div className="fixed top-0 left-0 w-screen h-screen z-[9]">
           <div className="fixed top-0 left-0 w-screen h-screen bg-slate-600 opacity-55 z-[9]"></div>

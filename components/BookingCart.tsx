@@ -80,13 +80,13 @@ const BookingCart: React.FC<BookingCartProps> = ({ disableContinueButton }) => {
             <CartDialog />
             <Button
               disabled={disableContinueButton}
-              variant="contained" // Use 'contained' to have a solid background color
-              className="px-4 py-2 md:w-1/3 lg:w-1/4"
+              variant="contained"
               onClick={handleRoute}
-              sx={{
+              style={{
                 backgroundColor: disableContinueButton ? "gray" : "black",
                 color: "white",
                 borderRadius: "20px",
+                minWidth: "10rem",
                 cursor: disableContinueButton ? "not-allowed" : "pointer",
               }}
             >

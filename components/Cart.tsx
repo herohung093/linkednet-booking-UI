@@ -43,92 +43,97 @@ const Cart: React.FC<CartProps> = ({ onContinue, disableContinueButton }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
-      <Box flexGrow={1}>
-        <Box maxWidth="600px" margin="0 auto" p={1}>
-          {guests.map((guest) => (
-            <Box key={guest.name + guest.id} mb={4}>
-              {/* Guest Header */}
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Typography variant="h6">
-                  {guest.name || "Guest"} - {guest.totalEstimatedTime} mins
-                </Typography>
-              </Box>
-
-              <List>
-                {/* Guest Services */}
-                {guest.guestServices?.map((guestService) => (
-                  <React.Fragment key={guest.name + guestService.serviceItem.id}>
-                    <ListItem>
-                      <ListItemText
-                        primary={
-                          <Box
-                            display="flex"
-                            justifyContent="space-between"
-                            width="100%"
-                          >
-                            <Typography variant="body2">
-                              {guestService.serviceItem.serviceName}
-                            </Typography>
-                            <Typography variant="caption">
-                              ${guestService.serviceItem.servicePrice.toFixed(2)}
-                            </Typography>
-                          </Box>
-                        }
-                      />
-                    </ListItem>
-
-                    {guestService.staff && (
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        ml={7} // Align with text offset
-                      >
-                        Staff: { guestService.staff.nickname}
-                      </Typography>
-                    )}
-                  </React.Fragment>
-                ))}
-              </List>
-              <Divider sx={{ my: 1 }} />
+    <Box
+      display="flex"
+      flexDirection="column"
+      height="100%"
+      sx={{
+        height: { xs: 500, md: 700 }, // 500 on mobile, 700 on bigger screens
+      }}
+    >
+      <Box flexGrow={1} p={4} overflow="auto">
+        {guests.map((guest) => (
+          <Box key={guest.name + guest.id} mb={2}>
+            {/* Guest Header */}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography variant="h6">
+                {guest.name || "Guest"} - {guest.totalEstimatedTime} mins
+              </Typography>
             </Box>
-          ))}
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mt={2}
-          >
-            <Typography variant="h6" color="text.primary">
-              Total
-            </Typography>
-            <Typography variant="h6" color="text.primary">
-              A ${totalPrice.toFixed(2)}
+
+            <List>
+              {/* Guest Services */}
+              {guest.guestServices?.map((guestService) => (
+                <React.Fragment key={guest.name + guestService.serviceItem.id}>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          width="100%"
+                        >
+                          <Typography variant="body2">
+                            {guestService.serviceItem.serviceName}
+                          </Typography>
+                          <Typography variant="caption">
+                            ${guestService.serviceItem.servicePrice.toFixed(2)}
+                          </Typography>
+                        </Box>
+                      }
+                    />
+                  </ListItem>
+
+                  {guestService.staff && (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      ml={7} // Align with text offset
+                    >
+                      Staff: {guestService.staff.nickname}
+                    </Typography>
+                  )}
+                </React.Fragment>
+              ))}
+            </List>
+            <Divider sx={{ my: 1 }} />
+          </Box>
+        ))}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={2}
+        >
+          <Typography variant="h6" color="text.primary">
+            Total
+          </Typography>
+          <Typography variant="h6" color="text.primary">
+            A ${totalPrice.toFixed(2)}
+          </Typography>
+        </Box>
+        {/* Booking Details */}
+        <Box mt={1}>
+          <Box display="flex" justifyContent="space-between" mb={1}>
+            <Typography color="text.secondary">Date:</Typography>
+            <Typography color="text.secondary">
+              {formatDate() || " Not Selected"}
             </Typography>
           </Box>
-          {/* Booking Details */}
-          <Box mt={4}>
-            <Box display="flex" justifyContent="space-between" mb={1}>
-              <Typography color="text.secondary">Date:</Typography>
-              <Typography color="text.secondary">
-                {formatDate() || " Not Selected"}
-              </Typography>
-            </Box>
-            <Box display="flex" justifyContent="space-between">
-              <Typography color="text.secondary">Time:</Typography>
-              <Typography color="text.secondary">
-                {selectedHour || "Not Selected"}
-              </Typography>
-            </Box>
+          <Box display="flex" justifyContent="space-between">
+            <Typography color="text.secondary">Time:</Typography>
+            <Typography color="text.secondary">
+              {selectedHour || "Not Selected"}
+            </Typography>
           </Box>
         </Box>
       </Box>
       {onContinue && (
-        <Box p={2} display={'flex'} justifyContent={'center'}>
+        <Box p={2} display="flex" justifyContent="center">
           <Button
             disabled={disableContinueButton}
             onClick={onContinue}
