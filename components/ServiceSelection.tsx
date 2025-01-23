@@ -101,7 +101,7 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({
           />
         ))}
       </Tabs>
-      <Divider sx={{ my: 0, borderBottomWidth: 2 }} />
+      <Divider sx={{ borderBottomWidth: 2 }} />
       <Box mt={2}>
         {selectedServiceTypeServices
           .sort((a, b) => a.displayOrder - b.displayOrder)
@@ -112,7 +112,7 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({
               justifyContent="space-between"
               alignItems="center"
               py={1}
-              borderBottom={index < 2 ? "1px solid #e0e0e0" : "none"}
+              borderBottom="1px solid #e0e0e0" 
             >
               <ServiceItemCard service={service} />
             </Box>
