@@ -37,7 +37,6 @@ export const CartSide: React.FC<CartSideProps> = ({
         if (
           cart.guests.length > 0 &&
           currentGuestHasSelectedItem &&
-          cart.guests.length < maxGuestsForGroupBooking &&
           cart.isGroupBooking
         ) {
           router.push("/add-guests/?storeUuid=" + storeInfo.storeUuid);
