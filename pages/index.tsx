@@ -20,6 +20,7 @@ import {
   setCurrentGuestName,
   setIsGroupBooking,
 } from "@/redux toolkit/cartSlice";
+import Link from "next/link";
 
 export default function Home() {
   const [error, setError] = useState<unknown | null>(null);
@@ -139,12 +140,16 @@ export default function Home() {
             py={2}
             px={5}
           >
-            <Typography variant="body2" color="textSecondary">
-              Privacy Policy
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Terms of Service
-            </Typography>
+            <Link href="/privacy">
+              <Typography variant="body2" color="textSecondary">
+                Privacy Policy
+              </Typography>
+            </Link>
+            <Link href="/terms-of-service">
+              <Typography variant="body2" color="textSecondary">
+                Terms of Service
+              </Typography>
+            </Link>
           </Box>
 
           <Box display="flex" justifyContent="center" gap={2} mb={3}>
