@@ -1,16 +1,22 @@
-import React from 'react';
+import React from "react";
 
 function Privacy() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold mb-8">Privacy Policy</h1>
-      
+
       <div className="prose prose-indigo max-w-none">
-        <p className="text-lg mb-6">Last updated: {new Date().toLocaleDateString()}</p>
-        
+        <p className="text-lg mb-6">
+          Last updated: {new Date().toLocaleDateString()}
+        </p>
+
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">1. Information We Collect</h2>
-          <p className="mb-4">We collect information that you provide directly to us, including:</p>
+          <h2 className="text-2xl font-semibold mb-4">
+            1. Information We Collect
+          </h2>
+          <p className="mb-4">
+            We collect information that you provide directly to us, including:
+          </p>
           <ul className="list-disc pl-6 mb-4">
             <li>Name and contact information</li>
             <li>Business details</li>
@@ -21,7 +27,9 @@ function Privacy() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">2. How We Use Your Information</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            2. How We Use Your Information
+          </h2>
           <p className="mb-4">We use the information we collect to:</p>
           <ul className="list-disc pl-6 mb-4">
             <li>Provide and maintain our services</li>
@@ -33,8 +41,13 @@ function Privacy() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">3. Information Sharing</h2>
-          <p className="mb-4">We do not sell your personal information. We may share your information with:</p>
+          <h2 className="text-2xl font-semibold mb-4">
+            3. Information Sharing
+          </h2>
+          <p className="mb-4">
+            We do not sell your personal information. We may share your
+            information with:
+          </p>
           <ul className="list-disc pl-6 mb-4">
             <li>Service providers</li>
             <li>Business partners</li>
@@ -45,8 +58,9 @@ function Privacy() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">4. Data Security</h2>
           <p className="mb-4">
-            We implement appropriate technical and organizational measures to protect your personal information.
-            However, no method of transmission over the Internet is 100% secure.
+            We implement appropriate technical and organizational measures to
+            protect your personal information. However, no method of
+            transmission over the Internet is 100% secure.
           </p>
         </section>
 
@@ -65,7 +79,8 @@ function Privacy() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">6. Contact Us</h2>
           <p className="mb-4">
-            If you have any questions about this Privacy Policy, please contact us at:
+            If you have any questions about this Privacy Policy, please contact
+            us at:
             <br />
             Email: hung.vm2574@gmail.com
             <br />

@@ -1,0 +1,98 @@
+[debug] [2025-01-24T23:29:42.289Z] ----------------------------------------------------------------------
+[debug] [2025-01-24T23:29:42.291Z] Command:       /Users/dragondental/.nvm/versions/node/v18.20.3/bin/node /Users/dragondental/.nvm/versions/node/v18.20.3/bin/firebase deploy
+[debug] [2025-01-24T23:29:42.292Z] CLI Version:   13.16.0
+[debug] [2025-01-24T23:29:42.292Z] Platform:      darwin
+[debug] [2025-01-24T23:29:42.292Z] Node Version:  v18.20.3
+[debug] [2025-01-24T23:29:42.293Z] Time:          Sat Jan 25 2025 07:29:42 GMT+0800 (Australian Western Standard Time)
+[debug] [2025-01-24T23:29:42.293Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-01-24T23:29:42.295Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-01-24T23:29:42.412Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-24T23:29:42.412Z] > authorizing via signed-in user (big.umbrella.australia@gmail.com)
+[debug] [2025-01-24T23:29:42.412Z] [iam] checking project big-umbrella-booking for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-01-24T23:29:42.413Z] > refreshing access token with scopes: []
+[debug] [2025-01-24T23:29:42.414Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-01-24T23:29:42.414Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-24T23:29:42.867Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-01-24T23:29:42.867Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-24T23:29:42.892Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/big-umbrella-booking:testIamPermissions [none]
+[debug] [2025-01-24T23:29:42.892Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/big-umbrella-booking:testIamPermissions x-goog-quota-user=projects/big-umbrella-booking
+[debug] [2025-01-24T23:29:42.892Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/big-umbrella-booking:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-01-24T23:29:42.924Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-01-24T23:29:42.924Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-01-24T23:29:44.350Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/big-umbrella-booking:testIamPermissions 200
+[debug] [2025-01-24T23:29:44.350Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/big-umbrella-booking:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-01-24T23:29:44.352Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/big-umbrella-booking [none]
+[debug] [2025-01-24T23:29:45.321Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/big-umbrella-booking 200
+[debug] [2025-01-24T23:29:45.322Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/big-umbrella-booking {"projectId":"big-umbrella-booking","projectNumber":"918203965291","displayName":"big umbrella booking","name":"projects/big-umbrella-booking","resources":{"hostingSite":"big-umbrella-booking"},"state":"ACTIVE","etag":"1_c9567eac-5c2f-40ab-a5e9-ac8572125667"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-01-24T23:29:51.598Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/big-umbrella-booking/sites/big-umbrella-booking [none]
+[debug] [2025-01-24T23:29:53.185Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/big-umbrella-booking/sites/big-umbrella-booking 200
+[debug] [2025-01-24T23:29:53.185Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/big-umbrella-booking/sites/big-umbrella-booking {"name":"projects/big-umbrella-booking/sites/big-umbrella-booking","defaultUrl":"https://big-umbrella-booking.web.app","appId":"1:918203965291:web:66e418205fcad3650ef62e","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.3
+
+[info]   - Environments: .env
+
+
+[info]    Linting and checking validity of types ...
+
+[info] 
+Failed to compile.
+
+[info] 
+./pages/confirmation.tsx
+35:6  Warning: React Hook useEffect has a missing dependency: 'urlStoreUuid.storeUuid'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./pages/index.tsx
+97:6  Warning: React Hook useEffect has missing dependencies: 'bookingInfo.guests' and 'dispatch'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./pages/staff.tsx
+79:6  Warning: React Hook useMemo has missing dependencies: 'anyStaff', 'bookingInfo.guests.length', 'bookingInfo.isGroupBooking', and 'dispatch'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+81:3  Warning: React Hook useEffect contains a call to 'setSelectStaff'. Without a list of dependencies, this can lead to an infinite chain of updates. To fix this, pass [dispatch, newstaffArray, preSelectedStaff] as a second argument to the useEffect Hook.  react-hooks/exhaustive-deps
+
+./pages/terms-of-service.tsx
+14:45  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+23:74  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+47:76  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+60:47  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./pages/time.tsx
+70:6  Warning: React Hook useEffect has a missing dependency: 'urlStoreUuid.storeUuid'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+136:6  Warning: React Hook useMemo has an unnecessary dependency: 'currentHour'. Either exclude it or remove the dependency array.  react-hooks/exhaustive-deps
+161:6  Warning: React Hook useMemo has a missing dependency: 'storeInfo'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./components/Logo.tsx
+18:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/StoreMap.tsx
+37:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+
+[debug] [2025-01-24T23:29:56.856Z] Error: ENOENT: no such file or directory, open '/Users/dragondental/Desktop/Projects/nail-salon-booking-app/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-01-24T23:35:12.752Z] ----------------------------------------------------------------------
+[debug] [2025-01-24T23:35:12.754Z] Command:       /Users/dragondental/.nvm/versions/node/v18.20.3/bin/node /Users/dragondental/.nvm/versions/node/v18.20.3/bin/firebase deploy
+[debug] [2025-01-24T23:35:12.754Z] CLI Version:   13.16.0
+[debug] [2025-01-24T23:35:12.754Z] Platform:      darwin
+[debug] [2025-01-24T23:35:12.754Z] Node Version:  v18.20.3
+[debug] [2025-01-24T23:35:12.755Z] Time:          Sat Jan 25 2025 07:35:12 GMT+0800 (Australian Western Standard Time)
+[debug] [2025-01-24T23:35:12.755Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-01-24T23:35:12.822Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-24T23:35:12.822Z] > authorizing via signed-in user (big.umbrella.australia@gmail.com)
+[debug] [2025-01-24T23:35:12.823Z] [iam] checking project big-umbrella-booking for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-01-24T23:35:12.824Z] > refreshing access token with scopes: []
+[debug] [2025-01-24T23:35:12.826Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-01-24T23:35:12.826Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
