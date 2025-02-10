@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getStaffById } from "./staffSlice"; 
-import { all } from "axios";
 
 const initialState: CartState = {
   total: 0,
@@ -18,16 +17,11 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    
     clearCart(state) {
-      state.total = 0;
-      state.totalEstimatedTime = 0;
-      state.selectedDate = null;
-      state.selectedHour = null;
-      state.timeZone = null;
-      state.guests = [];
-      state.isGroupBooking = null;
-      state.currentGuestName = "Me";
+      // Reset to initial state while preserving the reference
+      Object.keys(state).forEach(key => {
+        (state as any)[key] = initialState[key as keyof CartState];
+      });
     },
     setSelectedDate(state, action: PayloadAction<string | null>) {
       state.selectedDate = action.payload;
@@ -54,7 +48,7 @@ const cartSlice = createSlice({
     },
     addServiceItemToGuest(
       state,
-      action: PayloadAction<{ guestName: "", serviceItem: ServiceItem }>
+      action: PayloadAction<{ guestName: string, serviceItem: ServiceItem }>
     ) {
       const { guestName, serviceItem } = action.payload;
       const guest = state.guests.find((guest) => guest.name === guestName);
@@ -66,7 +60,7 @@ const cartSlice = createSlice({
     },
     removeServiceItemFromGuest(
       state,
-      action: PayloadAction<{ guestName: "", serviceItemId: number }>
+      action: PayloadAction<{ guestName: string, serviceItemId: number }>
     ) {
       const { guestName, serviceItemId } = action.payload;
       const guest = state.guests.find((guest) => guest.name === guestName);
@@ -105,7 +99,6 @@ const cartSlice = createSlice({
       }
     },
     setSelectedStaffForFirstGuest(state, action: PayloadAction<Staff>) {
-      // only availabe for single booking
       const guest = state.guests[0];
       if (!guest) return;
       if (guest.guestServices) {
@@ -139,7 +132,7 @@ export const getGuests = (state: { cart: CartState }) => state.cart.guests;
 // this function only works for single booking. For group booking, it will return 0 (Any staff)
 export const getSelectedStaffId = (state: { cart: CartState }): number | null => {
   if (state.cart.isGroupBooking && state.cart.guests.length > 1) {
-    return 0; // 'Any' staff
+    return 0;
   }
   if (state.cart.guests.length === 0) {
     return null;
@@ -156,7 +149,7 @@ export const getSelectedStaffId = (state: { cart: CartState }): number | null =>
 // this function only works for single booking. For group booking, it will return 0 (Any staff)
 export const getSelectedStaff = (state: { cart: CartState, staff: StaffSlice }): Staff | null => {
   if (state.cart.isGroupBooking && state.cart.guests.length > 1) {
-    return null; // 'Any' staff
+    return null;
   }
   if (state.cart.guests.length === 0) {
     return null;

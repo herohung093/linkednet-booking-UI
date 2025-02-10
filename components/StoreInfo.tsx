@@ -1,131 +1,133 @@
-import { StarIcon } from "@radix-ui/react-icons";
-import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
-import LocalPhoneRoundedIcon from "@mui/icons-material/LocalPhoneRounded";
 import React, { useEffect, useState } from "react";
-
-import { Box, Typography, Rating, Skeleton } from "@mui/material";
+import { MapPin, Phone, Clock, Star, Sparkles } from "lucide-react";
 import moment from "moment";
 
 const LoadingSkeleton = () => (
-  <div>
-    <Skeleton variant="text" width="60%" height={40} />
-    <Skeleton variant="rectangular" width="100%" height={40} />
-    <Box display="flex" alignItems="center" gap={2}>
-      <Skeleton variant="text" width={40} height={40} />
-      <Skeleton variant="text" width="30%" height={20} />
-    </Box>
-    <Skeleton variant="text" width="40%" height={20} />
-    <Skeleton variant="text" width="20%" height={20} />
+  <div className="animate-pulse p-4">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+      <div className="flex-1">
+        <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
+    </div>
+    <div className="space-y-3">
+      <div className="h-4 bg-gray-200 rounded w-full"></div>
+      <div className="h-4 bg-gray-200 rounded w-4/5"></div>
+    </div>
   </div>
 );
 
 export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
-  const storeAddress = storeConfig?.storeAddress;
   const [directionUrl, setDirectionUrl] = useState<string>("");
+  const [businessStatus, setBusinessStatus] = useState<string>("");
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (navigator.geolocation && storeConfig?.storeAddress) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         const url = `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodeURIComponent(
-          storeAddress
+          storeConfig.storeAddress
         )}`;
         setDirectionUrl(url);
       });
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  }, [storeAddress]);
-
-  const checkBusinessStatus = () => {
-    const currentDateTime = moment();
-    const currentDayOfWeek = currentDateTime.format("dddd").toUpperCase(); // 0 (Sunday) to 6 (Saturday)
-    const currentTime = currentDateTime;
-
-    const currentDayBusinessHours = storeConfig?.businessHoursList.find(
-      (day: any) => day.dayOfWeek === currentDayOfWeek
-    );
-    if (!currentDayBusinessHours) {
-      return "Currently Closed"; // Business is closed on this day
     }
 
-    const { openingTime, closingTime } = currentDayBusinessHours;
-    const openingHour = moment().set({
-      hour: parseInt(openingTime.split(":")[0]),
-      minute: parseInt(openingTime.split(":")[1]),
-    });
-    const closingHour = moment().set({
-      hour: parseInt(closingTime.split(":")[0]),
-      minute: parseInt(closingTime.split(":")[1]),
-    });
-
-    if (currentTime.isAfter(openingHour) && currentTime.isBefore(closingHour)) {
-      return `Open until ${closingTime}`;
-    } else if (currentTime.isAfter(closingHour)) {
-      return `Currently Closed, open from ${openingTime}`;
-    } else {
-      // Find the next opening day and time
-      let nextOpeningDay = currentDateTime.add(1, "days").format("dddd");
-      let nextOpeningTime = storeConfig.businessHoursList.find(
-        (day: any) => day.dayOfWeek === nextOpeningDay
+    if (storeConfig?.businessHoursList) {
+      const currentDateTime = moment();
+      const currentDayOfWeek = currentDateTime.format("dddd").toUpperCase();
+      const currentDayBusinessHours = storeConfig.businessHoursList.find(
+        (day: any) => day.dayOfWeek === currentDayOfWeek
       );
 
-      return `Closed, open on ${nextOpeningDay} at ${nextOpeningTime}`;
+      if (!currentDayBusinessHours) {
+        setBusinessStatus("Currently Closed");
+        return;
+      }
+
+      const { openingTime, closingTime } = currentDayBusinessHours;
+      const openingHour = moment().set({
+        hour: parseInt(openingTime.split(":")[0]),
+        minute: parseInt(openingTime.split(":")[1]),
+      });
+      const closingHour = moment().set({
+        hour: parseInt(closingTime.split(":")[0]),
+        minute: parseInt(closingTime.split(":")[1]),
+      });
+
+      if (currentDateTime.isBetween(openingHour, closingHour)) {
+        setBusinessStatus(`Open until ${moment(closingHour).format("h:mm A")}`);
+      } else {
+        setBusinessStatus(`Opens ${moment(openingHour).format("h:mm A")} tomorrow`);
+      }
     }
-  };
+  }, [storeConfig]);
 
-  if (!storeConfig) {
-    return <LoadingSkeleton />;
-  }
-
-  const stars = Array.from({ length: 5 }, (_, index) => (
-    <StarIcon key={index} />
-  ));
+  if (!storeConfig) return <LoadingSkeleton />;
 
   return (
-    <div>
-      <Typography variant="h4" fontWeight="bold" gutterBottom>
-        {storeConfig?.storeName}
-      </Typography>
+    <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+      {/* Main Info Section */}
+      <div className="p-4">
+        <div className="flex items-center gap-3 mb-3">
+          {/* Store Icon */}
+          <div className="p-2 bg-black rounded-lg shrink-0">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          
+          {/* Store Name */}
+          <div className="min-w-0">
+            <h1 className="text-lg font-semibold text-gray-900 truncate">
+              {storeConfig.storeName}
+            </h1>
+            <p className="text-xs text-gray-500">
+              Professional Beauty Services
+            </p>
+          </div>
+        </div>
 
-      <Box display="flex" alignItems="center" gap={2}>
-        <Typography variant="h2" fontWeight="black">
-          4.5
-        </Typography>
-        <Rating value={4.5} readOnly />
-      </Box>
+        {/* Status Badges */}
+        <div className="flex flex-wrap gap-2">
+          <div className="inline-flex items-center bg-yellow-50 px-2 py-1 rounded-full">
+            <Star className="w-3 h-3 text-yellow-500 mr-1 fill-yellow-500" />
+            <span className="text-xs font-medium text-yellow-700">4.5</span>
+          </div>
+          <div className={`
+            inline-flex items-center px-2 py-1 rounded-full gap-1
+            ${businessStatus.includes("Open") 
+              ? "bg-green-50 text-green-700" 
+              : "bg-red-50 text-red-700"}
+          `}>
+            <Clock className="w-3 h-3" />
+            <span className="text-xs font-medium">{businessStatus}</span>
+          </div>
+        </div>
+      </div>
 
-      <Typography variant="body1" color="textSecondary" gutterBottom>
-        <a
-          href={directionUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <LocationOnRoundedIcon
-            style={{ verticalAlign: "middle", marginRight: "8px" }}
-          />
-          {storeConfig?.storeAddress}
-        </a>
-      </Typography>
+      {/* Contact Links */}
+      <div className="border-t border-gray-100">
+        <div className="grid grid-cols-2 divide-x divide-gray-100">
+          {/* Address */}
+          <a
+            href={directionUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <MapPin className="w-4 h-4 text-gray-400" />
+            <span className="text-xs truncate">Get Directions</span>
+          </a>
 
-      <Typography variant="body1" color="textSecondary" gutterBottom>
-        <a
-          href={`tel:${storeConfig?.storePhoneNumber}`}
-          className="text-blue-500"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <LocalPhoneRoundedIcon
-            style={{ verticalAlign: "middle", marginRight: "8px" }}
-          />
-          {storeConfig?.storePhoneNumber}
-        </a>
-      </Typography>
-
-      {/* <Typography variant="body2" color="textSecondary" gutterBottom>
-        {checkBusinessStatus()}
-      </Typography> */}
+          {/* Phone */}
+          <a
+            href={`tel:${storeConfig.storePhoneNumber}`}
+            className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <Phone className="w-4 h-4 text-gray-400" />
+            <span className="text-xs">{storeConfig.storePhoneNumber}</span>
+          </a>
+        </div>
+      </div>
     </div>
   );
 };

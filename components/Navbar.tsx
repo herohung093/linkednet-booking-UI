@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import Home from "./Home";
-import { Back } from "@/icons/Back";
-import { AppBar, Toolbar, Box, LinearProgress } from "@mui/material";
+import { ChevronLeft } from "lucide-react";
+import { AppBar, Toolbar, Box, LinearProgress, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 
 const NavBar: React.FC = () => {
@@ -11,10 +11,7 @@ const NavBar: React.FC = () => {
   const slug = router.route;
   const storeInfo = useSelector((state: any) => state.storeInfo.storeInfo);
   const bookingInfo = useSelector((state: any) => state.cart);
-  const [store, setStore] = useState<string | null>(null);
-  useEffect(() => {
-    setStore(storeInfo?.storeName);
-  }, [storeInfo]);
+
   const goBack = () => {
     router.back();
   };
@@ -51,9 +48,26 @@ const NavBar: React.FC = () => {
     }
   };
 
+  const getStepTitle = (slug: string): string => {
+    switch (slug) {
+      case "/":
+        return "Select Services";
+      case "/add-guests":
+        return "Add Guests";
+      case "/staff":
+        return "Choose Staff";
+      case "/time":
+        return "Select Time";
+      case "/confirmation":
+        return "Confirmation";
+      default:
+        return "";
+    }
+  };
+
   const BlackLinearProgress = styled(LinearProgress)({
-    backgroundColor: "#d3d3d3",
-    height: "8px",
+    backgroundColor: "#f3f4f6",
+    height: "4px",
     "& .MuiLinearProgress-bar": {
       backgroundColor: "black",
     },
@@ -61,40 +75,71 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      {/* NavBar */}
-      <AppBar
-        position="fixed"
-        sx={{ minHeight: "auto", backgroundColor: "white" }}
+      <AppBar 
+        position="fixed" 
+        elevation={0}
+        sx={{ 
+          backgroundColor: "white",
+          borderBottom: "1px solid",
+          borderColor: "grey.100"
+        }}
       >
-        {slug !== "/" && (
-          <div>
-            <Toolbar
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                px: { lg: 6 },
-              }}
-            >
-              <div
-                onClick={goBack}
-                className="text-primary-700  text-lg cursor-pointer"
-              >
-                <Back />
-              </div>
+        <Toolbar sx={{ minHeight: { xs: '56px', sm: '64px' } }}>
+          <Box 
+            sx={{ 
+              width: '100%',
+              maxWidth: 'lg',
+              mx: 'auto',
+              px: { xs: 2, sm: 3 },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
+            {/* Left section with back button and title */}
+            <Box display="flex" alignItems="center" gap={2}>
+              {slug !== "/" && (
+                <button
+                  onClick={goBack}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5 text-gray-600" />
+                </button>
+              )}
               <div>
-                <Home />
+                <Typography 
+                  variant="body2" 
+                  color="text.secondary"
+                  sx={{ mb: 0.5 }}
+                >
+                  {storeInfo?.storeName || "Booking"}
+                </Typography>
+                <Typography 
+                  variant="subtitle1" 
+                  color="text.primary"
+                  fontWeight="medium"
+                >
+                  {getStepTitle(slug)}
+                </Typography>
               </div>
-            </Toolbar>
-          </div>
-        )}
-        <Box>
-          <BlackLinearProgress
-            variant="determinate"
-            value={getProgressValue(slug)}
-          />
-        </Box>
+            </Box>
+
+            {/* Right section with home button */}
+            <Box>
+              <Home />
+            </Box>
+          </Box>
+        </Toolbar>
+
+        {/* Progress bar */}
+        <BlackLinearProgress 
+          variant="determinate" 
+          value={getProgressValue(slug)} 
+        />
       </AppBar>
-      <Box sx={{ height: "64px" }} />
+
+      {/* Spacer to prevent content from going under the navbar */}
+      <Box sx={{ height: { xs: '56px', sm: '64px' } }} />
     </>
   );
 };

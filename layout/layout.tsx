@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { getSelectedStaffId } from "@/redux toolkit/cartSlice";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
   const selectedStaff = useSelector(getSelectedStaffId);
   const router = useRouter();
@@ -41,6 +40,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     displayContinueButton();
   }, [router.route, bookingInfo]);
 
+  // Don't show cart components on confirmation page
+  const showCart = slug !== "/confirmation";
+
   return (
     <div className="lg:w-[80%] mx-auto mb-20">
       <NavBar />
@@ -48,17 +50,21 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Box flex={{ xs: 1, md: 2 }} >
           <main>{children}</main>
         </Box>
-        <Box
-          flex={{ xs: 0, md: 1 }} 
-          ml={{ xs: 0, md: 3 }}
-          className="mt-20 top-20"
-          sx={{ display: { xs: "none", md: "block", lg: "block" } }}
-        >
-          <CartSide disableContinueButton={disableCartSideContinueButton} />
-        </Box>
-        <Box sx={{ display: { xs: "block", md: "none", lg: "none" } }}>
-        {<BookingCart disableContinueButton={disableBookingCartContinueButton} />}
-      </Box>
+        {showCart && (
+          <>
+            <Box
+              flex={{ xs: 0, md: 1 }} 
+              ml={{ xs: 0, md: 3 }}
+              className="mt-20 top-20"
+              sx={{ display: { xs: "none", md: "block", lg: "block" } }}
+            >
+              <CartSide disableContinueButton={disableCartSideContinueButton} />
+            </Box>
+            <Box sx={{ display: { xs: "block", md: "none", lg: "none" } }}>
+              <BookingCart disableContinueButton={disableBookingCartContinueButton} />
+            </Box>
+          </>
+        )}
       </Box>
     </div>
   );

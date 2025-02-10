@@ -18,15 +18,6 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
   onSelect,
   unavailable,
 }) => {
-  const currentDate = new Date();
-  const currentDateString = currentDate.getDate().toLocaleString("en-GB");
-
-  React.useEffect(() => {
-    if (date == currentDateString) {
-      onSelect();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <div className="flex flex-col items-center">
       <label>
@@ -40,22 +31,27 @@ const CustomRadio: React.FC<CustomRadioProps> = ({
           disabled={unavailable}
         />
         <div
-          className={`rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer ${
-            selected && !unavailable
-              ? "bg-black"
-              : `${unavailable ? "line-through bg-slate-500" : ""}`
-          } ${unavailable ? "line-through" : ""}`}
+          className={`
+            rounded-full shadow-md w-[65px] h-[65px] border flex flex-row justify-center items-center cursor-pointer
+            transition-all duration-200
+            ${selected && !unavailable
+              ? "bg-black border-black"
+              : unavailable
+                ? "bg-gray-100 border-gray-200 cursor-not-allowed line-through"
+                : "bg-white border-gray-200 hover:border-black"
+            }
+          `}
         >
           <div className="text-lg font-semibold flex justify-center items-center">
-            <p
-              className={`text-2xl ${!selected ? "text-black" : "text-white"} `}
-            >
+            <p className={`text-2xl ${selected && !unavailable ? "text-white" : "text-gray-900"}`}>
               {date}
             </p>
           </div>
         </div>
       </label>
-      <h3 className="font-bold">{label}</h3>
+      <h3 className={`mt-2 font-medium ${selected ? "text-black" : "text-gray-600"}`}>
+        {label}
+      </h3>
     </div>
   );
 };

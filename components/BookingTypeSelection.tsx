@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import React from "react";
 import { useDispatch } from "react-redux";
 import {
   addGuest,
@@ -8,8 +7,7 @@ import {
 } from "@/redux toolkit/cartSlice";
 import { getGuests } from "@/redux toolkit/cartSlice";
 import { useSelector } from "react-redux";
-import PersonIcon from "@mui/icons-material/Person";
-import GroupsIcon from "@mui/icons-material/Groups";
+import { User, Users } from "lucide-react";
 
 interface BookingTypeSelectionProps {
   onClose: () => void;
@@ -18,13 +16,10 @@ interface BookingTypeSelectionProps {
 const BookingTypeSelection: React.FC<BookingTypeSelectionProps> = ({
   onClose,
 }) => {
-  const [bookingType, setBookingType] = useState<string | null>(null);
-
   const dispatch = useDispatch();
   const guests = useSelector(getGuests);
 
   const handleClick = (type: string) => {
-    setBookingType(type);
     const guestName = guests.length === 0 ? "Me" : `Guest ${guests.length + 1}`;
     dispatch(
       addGuest({
@@ -41,37 +36,47 @@ const BookingTypeSelection: React.FC<BookingTypeSelectionProps> = ({
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      height="100vh"
-    >
-      <Typography variant="h4" gutterBottom>
-        Who is this booking for?
-      </Typography>
-      <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-        <Button
-          variant={bookingType === "self" ? "contained" : "outlined"}
-          color="primary"
-          onClick={() => handleClick("self")}
-          style={{ marginBottom: "20px", width: "200px" }}
-        >
-          <PersonIcon style={{ marginRight: "8px" }} />
-          For Myself
-        </Button>
-        <Button
-          variant={bookingType === "selfAndOthers" ? "contained" : "outlined"}
-          color="primary"
-          onClick={() => handleClick("selfAndOthers")}
-          style={{ marginBottom: "20px", width: "200px" }}
-        >
-          <GroupsIcon style={{ marginRight: "8px" }} />
-          For Myself and Others
-        </Button>
-      </Box>
-    </Box>
+    <div className="w-full max-w-md">
+      <div className="px-4 py-6">
+        <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
+          Who is this booking for?
+        </h2>
+        
+        <div className="space-y-4">
+          {/* For Myself Button */}
+          <button
+            onClick={() => handleClick("self")}
+            className="w-full group relative flex items-center px-6 py-4 bg-white border-2 border-gray-200 rounded-xl hover:border-black hover:shadow-lg transition-all duration-200"
+          >
+            <div className="flex items-center justify-center w-10 h-10 bg-black rounded-lg shrink-0">
+              <User className="w-5 h-5 text-white" />
+            </div>
+            <div className="ml-4 text-left">
+              <h3 className="text-lg font-semibold text-gray-900">For Myself</h3>
+              <p className="text-sm text-gray-500">Book a single appointment</p>
+            </div>
+          </button>
+
+          {/* For Myself and Others Button */}
+          <button
+            onClick={() => handleClick("selfAndOthers")}
+            className="w-full group relative flex items-center px-6 py-4 bg-white border-2 border-gray-200 rounded-xl hover:border-black hover:shadow-lg transition-all duration-200"
+          >
+            <div className="flex items-center justify-center w-10 h-10 bg-black rounded-lg shrink-0">
+              <Users className="w-5 h-5 text-white" />
+            </div>
+            <div className="ml-4 text-left">
+              <h3 className="text-lg font-semibold text-gray-900">Group Booking</h3>
+              <p className="text-sm text-gray-500">Book for multiple people</p>
+            </div>
+          </button>
+        </div>
+
+        <p className="mt-6 text-sm text-gray-500 text-center">
+          Choose an option to proceed with your booking
+        </p>
+      </div>
+    </div>
   );
 };
 

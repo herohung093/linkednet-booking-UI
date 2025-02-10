@@ -1,16 +1,14 @@
-"use client";
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import Cart from "./Cart";
 import { useSelector } from "react-redux";
-import { Button } from "@mui/material";
+import { ShoppingBag } from "lucide-react";
 
 const CartDialog = () => {
   const bookingInfo = useSelector((state: { cart: CartState }) => state.cart);
   const totalServices = bookingInfo.guests.reduce(
-    (sum, guest) =>
-      sum + (guest.guestServices ? guest.guestServices.length : 0),
+    (sum, guest) => sum + (guest.guestServices ? guest.guestServices.length : 0),
     0
   );
   const totalPrice = bookingInfo.guests.reduce(
@@ -20,43 +18,55 @@ const CartDialog = () => {
 
   return (
     <Dialog.Root>
-      <Dialog.Trigger>
-        <div className="xs:mx-4">
-          <div className="text-xl">from ${totalPrice}</div>
-          <div className="xs:text-lg text-slate-600">
-            {totalServices} service(s) in cart
+      <Dialog.Trigger asChild>
+        <button className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+          <div>
+            <div className="text-lg font-medium">${totalPrice.toFixed(2)}</div>
+            <div className="text-sm text-gray-600">
+              {totalServices} service{totalServices !== 1 ? 's' : ''} in cart
+            </div>
           </div>
-        </div>
+          <div className="p-2 bg-black rounded-lg">
+            <ShoppingBag className="w-5 h-5 text-white" />
+          </div>
+        </button>
       </Dialog.Trigger>
+
       <Dialog.Portal>
-        <Dialog.Overlay className=" bg-slate-700 bg-opacity-70 data-[state=open]:animate-overlayShow fixed inset-0 z-[9]" />
-        <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none z-[10]">
-          <Dialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
-            Cart
-          </Dialog.Title>
-          <Cart />
-          <div className="mt-[25px] flex justify-center">
+        <Dialog.Overlay 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50
+            data-[state=open]:animate-fadeIn"
+        />
+        
+        <Dialog.Content
+          className="fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px]
+            translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white p-6
+            shadow-xl focus:outline-none z-50 data-[state=open]:animate-contentShow"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <Dialog.Title className="text-xl font-semibold">
+              Your Cart
+            </Dialog.Title>
             <Dialog.Close asChild>
-              <Button
-                style={{
-                  backgroundColor: "black",
-                  color: "white",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "20px",
-                  border: "none",
-                  minWidth: "15rem",
-                }}
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="Close"
               >
-                Ok
-              </Button>
+                <Cross2Icon className="w-4 h-4" />
+              </button>
             </Dialog.Close>
           </div>
+
+          <div className="overflow-auto max-h-[calc(85vh-120px)]">
+            <Cart />
+          </div>
+
           <Dialog.Close asChild>
             <button
-              className="text-violet11 hover:bg-violet4 focus:shadow-violet7 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
-              aria-label="Close"
+              className="w-full mt-6 px-6 py-3 bg-black text-white rounded-xl
+                font-medium hover:bg-gray-900 transition-colors"
             >
-              <Cross2Icon />
+              Close
             </button>
           </Dialog.Close>
         </Dialog.Content>
