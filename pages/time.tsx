@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import moment from "moment";
 import Select from "react-select";
-import { Calendar, Clock, AlertCircle, Users, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, Clock, AlertCircle, Users, User, ChevronLeft, ChevronRight, Sun, Moon } from "lucide-react";
 import axios from "@/ulti/axios";
 
 // Components
@@ -466,42 +466,106 @@ const TimePage: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              {filteredHoursForGroupBooking.map((hour, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSelectedHour(hour)}
-                  disabled={hour.staff.length === 0}
-                  className={`
-                    relative px-4 py-3 rounded-xl text-center transition-all
-                    ${selectHour === hour.time
-                      ? 'bg-black text-white shadow-lg'
-                      : hour.staff.length === 0
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-50 line-through'
-                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                    }
-                  `}
-                >
-                  <span className="text-sm font-medium">
-                    {moment(hour.time, "HH:mm").format("h:mm A")}
-                  </span>
-                  
-                  {/* Staff availability indicator */}
-                  <div className="absolute -top-2 -right-2">
-                    {hour.staff.length > 0 && (
-                      bookingInfo.isGroupBooking ? (
-                        <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
-                          <Users className="w-3 h-3 text-green-600" />
+            <div className="space-y-6">
+              {/* Morning Section */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
+                  <Sun className="w-4 h-4" />
+                  Morning
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                  {filteredHoursForGroupBooking
+                    .filter(hour => {
+                      const hourNum = parseInt(hour.time.split(':')[0]);
+                      return hourNum < 12;
+                    })
+                    .map((hour, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSelectedHour(hour)}
+                        disabled={hour.staff.length === 0}
+                        className={`
+                          relative px-4 py-3 rounded-xl text-center transition-all
+                          ${selectHour === hour.time
+                            ? 'bg-black text-white shadow-lg'
+                            : hour.staff.length === 0
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-50 line-through'
+                              : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                          }
+                        `}
+                      >
+                        <span className="text-sm font-medium">
+                          {moment(hour.time, "HH:mm").format("h:mm A")}
+                        </span>
+                        
+                        {/* Staff availability indicator */}
+                        <div className="absolute -top-2 -right-2">
+                          {hour.staff.length > 0 && (
+                            bookingInfo.isGroupBooking ? (
+                              <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
+                                <Users className="w-3 h-3 text-green-600" />
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full">
+                                <User className="w-3 h-3 text-blue-600" />
+                              </div>
+                            )
+                          )}
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full">
-                          <User className="w-3 h-3 text-blue-600" />
+                      </button>
+                    ))}
+                </div>
+              </div>
+
+              {/* Afternoon Section */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
+                  <Moon className="w-4 h-4" />
+                  Afternoon
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                  {filteredHoursForGroupBooking
+                    .filter(hour => {
+                      const hourNum = parseInt(hour.time.split(':')[0]);
+                      return hourNum >= 12;
+                    })
+                    .map((hour, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSelectedHour(hour)}
+                        disabled={hour.staff.length === 0}
+                        className={`
+                          relative px-4 py-3 rounded-xl text-center transition-all
+                          ${selectHour === hour.time
+                            ? 'bg-black text-white shadow-lg'
+                            : hour.staff.length === 0
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-50 line-through'
+                              : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                          }
+                        `}
+                      >
+                        <span className="text-sm font-medium">
+                          {moment(hour.time, "HH:mm").format("h:mm A")}
+                        </span>
+                        
+                        {/* Staff availability indicator */}
+                        <div className="absolute -top-2 -right-2">
+                          {hour.staff.length > 0 && (
+                            bookingInfo.isGroupBooking ? (
+                              <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
+                                <Users className="w-3 h-3 text-green-600" />
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full">
+                                <User className="w-3 h-3 text-blue-600" />
+                              </div>
+                            )
+                          )}
                         </div>
-                      )
-                    )}
-                  </div>
-                </button>
-              ))}
+                      </button>
+                    ))}
+                </div>
+              </div>
             </div>
           )}
         </div>
