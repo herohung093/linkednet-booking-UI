@@ -51,6 +51,15 @@ const TimePage: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   
+    // Date calculations
+    const currentDate = new Date();
+    const days = [...Array(31)].map((_, index) => {
+      const date = new Date();
+      date.setDate(date.getDate() + index);
+      return date;
+    });
+
+    
   // Update selectedIndex initialization to use stored date
   const [selectedIndex, setSelectedIndex] = useState<number | null>(() => {
     if (bookingInfo.selectedDate) {
@@ -80,14 +89,6 @@ const TimePage: React.FC = () => {
     label: staffList?.find(staff => staff.id === staffId)
       ? `${staffList.find(staff => staff.id === staffId)?.firstName} ${staffList.find(staff => staff.id === staffId)?.lastName}`
       : "Any Professional"
-  });
-
-  // Date calculations
-  const currentDate = new Date();
-  const days = [...Array(31)].map((_, index) => {
-    const date = new Date();
-    date.setDate(date.getDate() + index);
-    return date;
   });
 
   // Calculate unavailable dates
