@@ -102,7 +102,7 @@ const StaffPage: React.FC = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Select Professional</h1>
         <p className="text-sm text-gray-500 mt-1">
-          Choose your preferred stylist or select 'Any Professional' for flexible scheduling
+          Choose your preferred stylist or select &apos;Any Professional&apos; for flexible scheduling
         </p>
       </div>
 

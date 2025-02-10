@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -108,7 +107,13 @@ export default function Home() {
       dispatch(setStoreUuid(urlStoreUuid.storeUuid as string));
       fetchData();
     }
-  }, [urlStoreUuid, storeConfig, serviceDataInfo]);
+  }, [
+    urlStoreUuid,
+    storeConfig,
+    serviceDataInfo,
+    dispatch,
+    bookingInfo.guests
+  ]);
 
   // Handlers
   const handleCloseModal = (event: object, reason: string) => {
