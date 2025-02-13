@@ -295,6 +295,7 @@ const ConfirmationPage: React.FC = () => {
                       <TextField
                         {...field}
                         fullWidth
+                        type="tel"
                         label="Mobile Number"
                         placeholder="04xxxxxxxx"
                         error={!!errors.phone}
