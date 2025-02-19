@@ -9,16 +9,18 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       {/* <Theme> */}
-        <Layout>
+      <Layout>
+        <GoogleAnalytics gaId="G-9YEEVK03WR" />
         <GoogleReCaptchaProvider reCaptchaKey="6LeYggQqAAAAAPJ9aKFdqTOKj_Yr77myhhCS2sg-">
           <Component {...pageProps} />
-          </GoogleReCaptchaProvider>
-        </Layout>
+        </GoogleReCaptchaProvider>
+      </Layout>
       {/* </Theme> */}
     </Provider>
   );
