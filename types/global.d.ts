@@ -121,3 +121,11 @@ interface StoreInfoSlice {
   serviceData: ServiceItem[] | null;
   storeUuid: string | null;
 }
+
+declare interface StoreClosedDate {
+  id: number;
+  reason: string;
+  closedStartDate: string;
+  closedEndDate: string;
+  storeConfig: Store;
+}

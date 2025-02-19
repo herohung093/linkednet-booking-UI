@@ -115,6 +115,26 @@ const TimePage: React.FC = () => {
       })
       .then((res) => res.data);
 
+  const { data: storeClosedDates } = useSWR("/storeConfig/closedDate/future", fetcher);
+
+  const closedDateRanges = useMemo(() => {
+    if (!storeClosedDates) return [];
+    return storeClosedDates.map((cd: StoreClosedDate) => ({
+      start: moment(cd.closedStartDate, "DD/MM/YYYY"),
+      end: moment(cd.closedEndDate, "DD/MM/YYYY"),
+    }));
+  }, [storeClosedDates]);
+
+  interface ClosedDateRange {
+    start: moment.Moment;
+    end: moment.Moment;
+  }
+
+  const isClosedDate = (date: Date): boolean =>
+    closedDateRanges.some((range: ClosedDateRange): boolean =>
+      moment(date).isBetween(range.start, range.end, "day", "[]")
+    );
+
   const {
     data: availability,
     error,
@@ -140,7 +160,7 @@ const TimePage: React.FC = () => {
       if (todayIndex !== -1) {
         const isUnavailable = unavailableDates.some(
           (unavailableDate) => unavailableDate.getTime() === days[todayIndex].getTime()
-        );
+        ) || isClosedDate(days[todayIndex]);
         
         if (!isUnavailable) {
           handleSelectedDate(todayIndex, days[todayIndex]);
@@ -149,7 +169,7 @@ const TimePage: React.FC = () => {
           const nextAvailableIndex = days.findIndex((date, index) => {
             return index > todayIndex && !unavailableDates.some(
               (unavailableDate) => unavailableDate.getTime() === date.getTime()
-            );
+            ) && !isClosedDate(date);
           });
           
           if (nextAvailableIndex !== -1) {
@@ -400,7 +420,7 @@ const TimePage: React.FC = () => {
               {days.map((date, index) => {
                 const isUnavailable = unavailableDates.some(
                   (unavailableDate) => unavailableDate.getTime() === date.getTime()
-                );
+                ) || isClosedDate(date);
                 return (
                   <CustomRadioDate
                     key={index}
