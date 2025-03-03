@@ -332,12 +332,28 @@ const TimePage: React.FC = () => {
       });
   }, [availability, selectedDate, currentDate]);
 
-  const filteredHoursForGroupBooking = useMemo(() => 
-    hourArray?.filter((hour) => {
-      if (!bookingInfo.isGroupBooking) return true;
-      return hour.staff.length >= bookingInfo.guests.length;
-    }),
-    [hourArray, bookingInfo.isGroupBooking, bookingInfo.guests.length]
+  const dayName = selectedDateMoment.format("dddd");
+  const storeBusinessHoursForSelectedDay = storeInfo?.storeInfo?.businessHoursList?.find(
+    (b) => b.dayOfWeek.toLowerCase() === dayName.toLowerCase()
+  );
+  const closingTimeMoment = storeBusinessHoursForSelectedDay
+    ? moment(storeBusinessHoursForSelectedDay.closingTime, "HH:mm")
+    : null;
+
+  const filteredHoursForGroupBooking = useMemo(() =>
+    hourArray
+      .filter(hour => {
+        if (!bookingInfo.isGroupBooking) return true;
+        return hour.staff.length >= bookingInfo.guests.length;
+      })
+      .filter(hour => {
+        if (!closingTimeMoment) return true;
+        const hourMoment = moment(hour.time, "HH:mm");
+        return !bookingInfo.guests.some(g =>
+          hourMoment.clone().add(g.totalEstimatedTime, "minutes").isAfter(closingTimeMoment)
+        );
+      }),
+    [hourArray, bookingInfo.isGroupBooking, bookingInfo.guests, closingTimeMoment]
   );
 
   if (!staffList) {
