@@ -1,3 +1,15 @@
+/**
+ * Time Selection Page
+ * 
+ * This component handles the booking time selection process, allowing users to:
+ * - Select a date from a scrollable calendar
+ * - Choose an available staff member
+ * - Select from available time slots based on staff availability
+ * - Handle group bookings with appropriate staff availability checks
+ * 
+ * The component integrates with Redux for global state management and
+ * uses SWR for efficient data fetching and caching.
+ */
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -24,7 +36,10 @@ import { RootState } from "@/redux toolkit/store";
 // Types
 type FetcherFunction = (url: string) => Promise<any>;
 
+// This component displays a page for selecting schedules and staff.
+// It uses Redux for global state management and SWR for data fetching.
 const TimePage: React.FC = () => {
+  // Maps day numbers (0-6) to abbreviated day names
   const dayLabels: { [key: number]: string } = {
     0: "Sun",
     1: "Mon",
@@ -35,7 +50,8 @@ const TimePage: React.FC = () => {
     6: "Sat",
   };
 
-  // Redux state
+  // Redux state and router initializations handle store and booking data.
+  // It also sets default selected date and time when available.
   const dispatch = useDispatch();
   const bookingInfo = useSelector((state: RootState) => state.cart);
   const storeInfo = useSelector((state: RootState) => state.storeInfo);
@@ -48,19 +64,20 @@ const TimePage: React.FC = () => {
   const urlStoreUuid = router.query;
 
   // State
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);  // Tracks horizontal scroll position of date selector
+  const scrollRef = React.useRef<HTMLDivElement>(null);     // Reference to scrollable date container
   
-    // Date calculations
-    const currentDate = new Date();
-    const days = [...Array(31)].map((_, index) => {
-      const date = new Date();
-      date.setDate(date.getDate() + index);
-      return date;
-    });
+  // Date calculations - Generate an array of dates for the next 31 days
+  const currentDate = new Date();
+  const days = [...Array(31)].map((_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() + index);
+    return date;
+  });
 
     
-  // Update selectedIndex initialization to use stored date
+  // Initialize selectedIndex based on previously stored date from Redux state
+  // This maintains selection when navigating back to this page
   const [selectedIndex, setSelectedIndex] = useState<number | null>(() => {
     if (bookingInfo.selectedDate) {
       const storedDate = moment(bookingInfo.selectedDate, "DD/MM/YYYY").toDate();
@@ -75,15 +92,20 @@ const TimePage: React.FC = () => {
     return 0;
   });
 
-  // Update selectDay initialization to use stored date
+  // Initialize selectDay using stored date from Redux or default to current date
   const [selectDay, setSelectDay] = useState<string | null>(
     bookingInfo.selectedDate || moment(new Date()).format("DD/MM/YYYY")
   );
   
+  // Controls visibility of same-day booking restriction message
   const [showDenyInDayBookingMessage, setShowDenyInDayBookingMessage] = useState<boolean>(false);
+  
+  // Initialize time selection from Redux or null if not previously selected
   const [selectHour, setSelectHour] = useState<string | null>(
     bookingInfo.selectedHour || null
   );
+  
+  // Initialize staff selection dropdown value based on Redux state
   const [selectStaff, setSelectStaff] = useState<any>({
     value: staffId,
     label: staffList?.find(staff => staff.id === staffId)
@@ -91,7 +113,8 @@ const TimePage: React.FC = () => {
       : "Any Professional"
   });
 
-  // Calculate unavailable dates
+  // Calculate unavailable dates based on staff working days
+  // This memoized value prevents unnecessary recalculations
   const unavailableDates = useMemo(() => {
     if (!storeInfo || !staffList) return [];
     const staff = staffList.find(s => s.id === staffId);
@@ -105,7 +128,7 @@ const TimePage: React.FC = () => {
     });
   }, [staffId, staffList, days, storeInfo]);
 
-  // Data fetching
+  // SWR data fetcher function for API calls
   const fetcher: FetcherFunction = (url) =>
     axios
       .get(url, {
@@ -115,8 +138,10 @@ const TimePage: React.FC = () => {
       })
       .then((res) => res.data);
 
+  // Fetch store closed dates (holidays, special closures) from API
   const { data: storeClosedDates } = useSWR("/storeConfig/closedDate/future", fetcher);
 
+  // Convert closed dates to a format easier to work with (moment ranges)
   const closedDateRanges = useMemo(() => {
     if (!storeClosedDates) return [];
     return storeClosedDates.map((cd: StoreClosedDate) => ({
@@ -130,11 +155,13 @@ const TimePage: React.FC = () => {
     end: moment.Moment;
   }
 
+  // Helper function to check if a date falls within closed date ranges
   const isClosedDate = (date: Date): boolean =>
     closedDateRanges.some((range: ClosedDateRange): boolean =>
       moment(date).isBetween(range.start, range.end, "day", "[]")
     );
 
+  // Fetch staff availability for the selected date
   const {
     data: availability,
     error,
@@ -147,7 +174,8 @@ const TimePage: React.FC = () => {
   const selectedDate = selectedIndex !== null ? days[selectedIndex] : currentDate;
   const selectedDateMoment = moment(selectedDate);
 
-  // Effect to handle initial date selection
+  // Effect to handle initial date selection and find first available date
+  // if current selection is unavailable
   useEffect(() => {
     if (selectedIndex === null) {
       const today = new Date();
@@ -180,13 +208,14 @@ const TimePage: React.FC = () => {
     }
   }, [days, unavailableDates]);
 
-  // Initial setup effect to respect stored date
+  // Handle same-day booking restrictions and staff working days
   useEffect(() => {
     const today = moment().startOf("day");
     const selectedMoment = selectDay 
       ? moment(selectDay, "DD/MM/YYYY").startOf("day") 
       : today;
     
+    // Show warning if same-day booking is disabled in store settings
     setShowDenyInDayBookingMessage(
       selectedMoment.isSame(today) && !storeInfo?.storeInfo?.enableInDayBooking
     );
@@ -198,7 +227,8 @@ const TimePage: React.FC = () => {
       setSelectDay(formattedDate);
     }
 
-    // Check if current date is unavailable
+    // Check if current date is unavailable for selected staff
+    // and find next available date if needed
     if (staffList) {
       const staff = staffList.find(s => s.id === staffId);
       if (staff?.workingDays) {
@@ -226,7 +256,7 @@ const TimePage: React.FC = () => {
     }
   }, [staffList, staffId, storeInfo?.storeInfo?.enableInDayBooking, selectDay]);
 
-  // Scroll handlers
+  // Scroll handlers for date navigation
   const handleScroll = (direction: 'left' | 'right') => {
     const container = scrollRef.current;
     if (!container) return;
@@ -243,7 +273,8 @@ const TimePage: React.FC = () => {
     setScrollPosition(newPosition);
   };
 
-  // Handlers
+  // Handler for date selection in the calendar
+  // Updates local state and Redux store
   const handleSelectedDate = (index: number, date: Date) => {
     setSelectedIndex(index);
     const today = moment().startOf("day");
@@ -252,6 +283,7 @@ const TimePage: React.FC = () => {
       selectedDate.isSame(today) && !storeInfo?.storeInfo?.enableInDayBooking
     );
 
+    // Reset time selection when date changes
     setSelectHour(null);
     dispatch(setSelectedHour(null));
     const formattedDate = moment(date).format("DD/MM/YYYY");
@@ -259,7 +291,9 @@ const TimePage: React.FC = () => {
     setSelectDay(formattedDate);
   };
 
-  // Update handleSelectedHour to handle preselected staff
+  // Handler for time slot selection
+  // Updates both local state and Redux store
+  // Also handles staff assignment logic based on group booking status
   const handleSelectedHour = (hour: { time: string; staff: number[] }) => {
     setSelectHour(hour.time);
     dispatch(setSelectedHour(hour.time));
@@ -267,6 +301,7 @@ const TimePage: React.FC = () => {
     // Only update staff if the hour is different from the preselected one
     if (hour.time !== bookingInfo.selectedHour) {
       if (!bookingInfo.isGroupBooking) {
+        // For single bookings, randomly assign one available staff member
         const randomIndex = Math.floor(Math.random() * hour.staff?.length);
         const randomStaffId = hour.staff[randomIndex];
 
@@ -274,6 +309,7 @@ const TimePage: React.FC = () => {
           dispatch(setStaffIdForGuestServices({staffIds: [randomStaffId], allStaff: staffList}));
         }
       } else {
+        // For group bookings, make all available staff members options
         if (allStaff) {
           dispatch(setStaffIdForGuestServices({staffIds: hour.staff, allStaff: allStaff}));
         }
@@ -281,8 +317,10 @@ const TimePage: React.FC = () => {
     }
   };
 
+  // Handler for staff selection dropdown
   const handleStaffChange = (selectedOption: any) => {
     setSelectStaff(selectedOption);
+    // Reset time selection when staff changes
     setSelectHour(null);
     dispatch(setSelectedHour(null));
     const selectedStaffMember =
@@ -293,14 +331,14 @@ const TimePage: React.FC = () => {
     }
   };
 
-  // Effects
+  // Redirect to home page if no guests in booking info
   useEffect(() => {
     if (bookingInfo?.guests.length === 0 && urlStoreUuid.storeUuid) {
       router.push("/?storeUuid=" + urlStoreUuid.storeUuid);
     }
   }, [bookingInfo, router, urlStoreUuid.storeUuid]);
 
-  // Add effect to handle preselected hour
+  // Handle preselected hour when availability data loads
   useEffect(() => {
     if (availability && bookingInfo.selectedHour) {
       const preselectedHourData = Object.entries(availability)
@@ -313,7 +351,8 @@ const TimePage: React.FC = () => {
     }
   }, [availability]);
 
-  // Memoized values
+  // Process availability data into a more usable format
+  // Filter out past hours if booking for today
   const hourArray = useMemo(() => {
     if (!availability) return [];
     return Object.entries(availability)
@@ -332,6 +371,7 @@ const TimePage: React.FC = () => {
       });
   }, [availability, selectedDate, currentDate]);
 
+  // Get day name and store business hours for selected day
   const dayName = selectedDateMoment.format("dddd");
   const storeBusinessHoursForSelectedDay = storeInfo?.storeInfo?.businessHoursList?.find(
     (b) => b.dayOfWeek.toLowerCase() === dayName.toLowerCase()
@@ -340,13 +380,16 @@ const TimePage: React.FC = () => {
     ? moment(storeBusinessHoursForSelectedDay.closingTime, "HH:mm")
     : null;
 
+  // Filter time slots based on group booking requirements and store closing time
   const filteredHoursForGroupBooking = useMemo(() =>
     hourArray
       .filter(hour => {
+        // For group bookings, ensure enough staff are available
         if (!bookingInfo.isGroupBooking) return true;
         return hour.staff.length >= bookingInfo.guests.length;
       })
       .filter(hour => {
+        // Ensure service will finish before store closes
         if (!closingTimeMoment) return true;
         const hourMoment = moment(hour.time, "HH:mm");
         return !bookingInfo.guests.some(g =>
@@ -356,6 +399,7 @@ const TimePage: React.FC = () => {
     [hourArray, bookingInfo.isGroupBooking, bookingInfo.guests, closingTimeMoment]
   );
 
+  // Show loading state if staff data isn't available yet
   if (!staffList) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -463,7 +507,7 @@ const TimePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Same Day Booking Message - Now displayed before time slots */}
+      {/* Same Day Booking Message - Displayed when store doesn't allow same-day bookings */}
       {showDenyInDayBookingMessage && (
         <div className="mb-8 text-center p-8 bg-yellow-50 rounded-xl border border-yellow-100">
           <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
@@ -486,6 +530,7 @@ const TimePage: React.FC = () => {
       {!showDenyInDayBookingMessage && (
         <div className="mb-8">
           {isLoading ? (
+            // Loading skeleton for time slots
             <div className="grid grid-cols-4 gap-4">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
                 <div
@@ -495,6 +540,7 @@ const TimePage: React.FC = () => {
               ))}
             </div>
           ) : hourArray?.length === 0 ? (
+            // No availability message
             <div className="text-center p-8 bg-gray-50 rounded-xl">
               <Clock className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-lg font-medium text-gray-900">
@@ -502,8 +548,9 @@ const TimePage: React.FC = () => {
               </p>
             </div>
           ) : (
+            // Time slots organized by morning and afternoon
             <div className="space-y-6">
-              {/* Morning Section */}
+              {/* Morning Section - Times before noon */}
               <div>
                 <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
                   <Sun className="w-4 h-4" />
@@ -534,7 +581,7 @@ const TimePage: React.FC = () => {
                           {moment(hour.time, "HH:mm").format("h:mm A")}
                         </span>
                         
-                        {/* Staff availability indicator */}
+                        {/* Staff availability indicator - Shows different icons for group vs individual */}
                         <div className="absolute -top-2 -right-2">
                           {hour.staff.length > 0 && (
                             bookingInfo.isGroupBooking ? (
@@ -553,7 +600,7 @@ const TimePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Afternoon Section */}
+              {/* Afternoon Section - Times noon and after */}
               <div>
                 <h3 className="text-sm font-medium text-gray-500 mb-3 flex items-center gap-2">
                   <Moon className="w-4 h-4" />
@@ -584,7 +631,7 @@ const TimePage: React.FC = () => {
                           {moment(hour.time, "HH:mm").format("h:mm A")}
                         </span>
                         
-                        {/* Staff availability indicator */}
+                        {/* Staff availability indicator with different UI for group vs individual bookings */}
                         <div className="absolute -top-2 -right-2">
                           {hour.staff.length > 0 && (
                             bookingInfo.isGroupBooking ? (
