@@ -88,7 +88,8 @@ const ConfirmationPage: React.FC = () => {
       },
       note: formData.note,
       bookingTime: `${bookingInfo.selectedDate} ${bookingInfo.selectedHour}`,
-      guests: bookingInfo.guests
+      guests: bookingInfo.guests,
+      reservationOrigin: `CLIENT`
     };
 
     try {
