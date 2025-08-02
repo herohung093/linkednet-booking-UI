@@ -13,18 +13,6 @@ export const StoreMap: React.FC<any> = ({ storeConfig }) => {
   const storeAddress = storeConfig?.storeAddress;
   const [directionUrl, setDirectionUrl] = useState<string>("");
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        const url = `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodeURIComponent(storeAddress)}`;
-        setDirectionUrl(url);
-      });
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  }, [storeAddress]);
-
   const router = useRouter();
   const getDirection = () => {
     router.push(directionUrl);

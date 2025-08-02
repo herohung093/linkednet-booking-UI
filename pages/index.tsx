@@ -17,6 +17,7 @@ import Error from "@/components/Error";
 import { StoreInfo } from "@/components/StoreInfo";
 import ServiceSelection from "@/components/ServiceSelection";
 import BookingTypeSelection from "@/components/BookingTypeSelection";
+import ResultsGallery from "@/components/ResultsGallery"; // Add this import
 
 // Redux actions
 import {
@@ -154,7 +155,10 @@ export default function Home() {
         <Box flex={{ xs: 10, lg: 1 }} overflow="auto">
           {/* Store Info Section */}
           <StoreInfo storeConfig={storeConfig} />
-
+          
+          {/* Results Gallery - showcase of shop's work */}
+          <ResultsGallery storeUuid={urlStoreUuid.storeUuid as string} />
+          
           {/* Service Selection Section */}
           <ServiceSelection serviceDataInfo={serviceDataInfo} />
 

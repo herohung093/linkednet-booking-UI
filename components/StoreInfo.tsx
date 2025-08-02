@@ -19,20 +19,9 @@ const LoadingSkeleton = () => (
 );
 
 export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
-  const [directionUrl, setDirectionUrl] = useState<string>("");
   const [businessStatus, setBusinessStatus] = useState<string>("");
 
   useEffect(() => {
-    if (navigator.geolocation && storeConfig?.storeAddress) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        const url = `https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${encodeURIComponent(
-          storeConfig.storeAddress
-        )}`;
-        setDirectionUrl(url);
-      });
-    }
-
     if (storeConfig?.businessHoursList) {
       const currentDateTime = moment();
       const currentDayOfWeek = currentDateTime.format("dddd").toUpperCase();
@@ -107,17 +96,6 @@ export const StoreInfo: React.FC<any> = ({ storeConfig }) => {
       {/* Contact Links */}
       <div className="border-t border-gray-100">
         <div className="grid grid-cols-2 divide-x divide-gray-100">
-          {/* Address */}
-          <a
-            href={directionUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            <MapPin className="w-4 h-4 text-gray-400" />
-            <span className="text-xs truncate">Get Directions</span>
-          </a>
-
           {/* Phone */}
           <a
             href={`tel:${storeConfig.storePhoneNumber}`}
