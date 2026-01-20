@@ -183,6 +183,7 @@ const ConfirmationPage: React.FC = () => {
                 <IconButton 
                   onClick={() => setIsCartExpanded(!isCartExpanded)}
                   size="small"
+                  aria-label="Toggle booking summary"
                 >
                   {isCartExpanded ? (
                     <ChevronUp className="w-5 h-5" />
@@ -256,6 +257,10 @@ const ConfirmationPage: React.FC = () => {
                           label="First Name"
                           error={!!errors.firstName}
                           helperText={errors.firstName?.message}
+                          inputProps={{
+                            name: 'firstName',
+                            autoComplete: 'given-name',
+                          }}
                           InputProps={{
                             startAdornment: <User className="w-4 h-4 text-gray-400 mr-2" />,
                           }}
@@ -276,6 +281,10 @@ const ConfirmationPage: React.FC = () => {
                           label="Last Name"
                           error={!!errors.lastName}
                           helperText={errors.lastName?.message}
+                          inputProps={{
+                            name: 'lastName',
+                            autoComplete: 'family-name',
+                          }}
                         />
                       )}
                     />
@@ -301,6 +310,10 @@ const ConfirmationPage: React.FC = () => {
                         placeholder="04xxxxxxxx"
                         error={!!errors.phone}
                         helperText={errors.phone?.message}
+                        inputProps={{
+                          name: 'phone',
+                          autoComplete: 'tel',
+                        }}
                         InputProps={{
                           startAdornment: <Phone className="w-4 h-4 text-gray-400 mr-2" />,
                         }}
@@ -334,6 +347,9 @@ const ConfirmationPage: React.FC = () => {
                         placeholder="Any special requests or notes for your booking..."
                         error={!!errors.note}
                         helperText={errors.note?.message}
+                        inputProps={{
+                          name: 'note',
+                        }}
                         InputProps={{
                           startAdornment: <FileText className="w-4 h-4 text-gray-400 mr-2" />,
                         }}
