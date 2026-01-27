@@ -180,10 +180,11 @@ const ConfirmationPage: React.FC = () => {
                 <Typography variant="h6" fontWeight="medium">
                   Booking Summary
                 </Typography>
-                <IconButton 
+                <IconButton
                   onClick={() => setIsCartExpanded(!isCartExpanded)}
                   size="small"
                   aria-label="Toggle booking summary"
+                  aria-expanded={isCartExpanded}
                 >
                   {isCartExpanded ? (
                     <ChevronUp className="w-5 h-5" />

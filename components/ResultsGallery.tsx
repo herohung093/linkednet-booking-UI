@@ -172,7 +172,11 @@ const ResultsGallery: React.FC<ResultsGalleryProps> = ({ storeUuid }) => {
         >
           Our Works
         </Typography>
-        <IconButton size="small">
+        <IconButton
+          size="small"
+          aria-label={isExpanded ? "Collapse gallery" : "Expand gallery"}
+          aria-expanded={isExpanded}
+        >
           {isExpanded ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
       </Box>
@@ -213,40 +217,42 @@ const ResultsGallery: React.FC<ResultsGalleryProps> = ({ storeUuid }) => {
           )}
 
           {/* Navigation buttons */}
-          <IconButton 
+          <IconButton
             onClick={(e) => {
               e.stopPropagation();
               handlePrevious();
             }}
-            sx={{ 
-              position: "absolute", 
-              left: 16, 
+            sx={{
+              position: "absolute",
+              left: 16,
               backgroundColor: "rgba(255,255,255,0.7)",
-              "&:hover": { 
+              "&:hover": {
                 backgroundColor: "rgba(255,255,255,0.9)",
                 transform: "scale(1.1)",
               },
               transition: "all 0.2s ease-in-out",
             }}
+            aria-label="Previous image"
           >
             <ArrowBackIos />
           </IconButton>
-          
-          <IconButton 
+
+          <IconButton
             onClick={(e) => {
               e.stopPropagation();
               handleNext();
             }}
-            sx={{ 
-              position: "absolute", 
-              right: 16, 
+            sx={{
+              position: "absolute",
+              right: 16,
               backgroundColor: "rgba(255,255,255,0.7)",
-              "&:hover": { 
+              "&:hover": {
                 backgroundColor: "rgba(255,255,255,0.9)",
                 transform: "scale(1.1)",
               },
               transition: "all 0.2s ease-in-out",
             }}
+            aria-label="Next image"
           >
             <ArrowForwardIos />
           </IconButton>

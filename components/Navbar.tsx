@@ -100,8 +100,10 @@ const NavBar: React.FC = () => {
             <Box display="flex" alignItems="center" gap={2}>
               {slug !== "/" && (
                 <button
+                  type="button"
                   onClick={goBack}
                   className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                  aria-label="Go back"
                 >
                   <ChevronLeft className="w-5 h-5 text-gray-600" />
                 </button>

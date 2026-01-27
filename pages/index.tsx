@@ -193,6 +193,7 @@ export default function Home() {
                   href={storeConfig.facebookLink}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Visit our Facebook page"
                 >
                   <Facebook sx={{ color: "#1877F2", fontSize: 30 }} />
                 </a>
@@ -202,6 +203,7 @@ export default function Home() {
                   href={storeConfig.instagramLink}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Visit our Instagram page"
                 >
                   <Instagram sx={{ color: "#E1306C", fontSize: 30 }} />
                 </a>

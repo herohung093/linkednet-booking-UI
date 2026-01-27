@@ -464,9 +464,10 @@ const TimePage: React.FC = () => {
         {/* Date Slider with Navigation Buttons */}
         <div className="relative flex items-center justify-center h-[90px]">
           <button
+            type="button"
             onClick={() => handleScroll('left')}
             className="absolute left-0 z-10 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 -translate-x-4 top-[33%]"
-            aria-label="Scroll left"
+            aria-label="Scroll to previous dates"
           >
             <ChevronLeft className="w-5 h-5 text-gray-600" />
           </button>
@@ -498,9 +499,10 @@ const TimePage: React.FC = () => {
           </div>
 
           <button
+            type="button"
             onClick={() => handleScroll('right')}
             className="absolute right-0 z-10 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 translate-x-4 top-[33%]"
-            aria-label="Scroll right"
+            aria-label="Scroll to next dates"
           >
             <ChevronRight className="w-5 h-5 text-gray-600" />
           </button>

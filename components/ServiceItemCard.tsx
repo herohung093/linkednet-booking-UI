@@ -93,6 +93,7 @@ const ServiceItemCard = ({ service }: ServiceItemCardProps) => {
             className="flex items-center justify-center bg-black text-white rounded-full hover:bg-gray-800 transition-colors
               md:px-4 md:py-2 md:gap-2
               px-3 py-1.5"
+            aria-label={`Add ${serviceName} to cart`}
           >
             <Plus className="w-4 h-4 md:mr-1" />
             <span className="font-medium hidden md:inline">Add</span>
@@ -103,6 +104,7 @@ const ServiceItemCard = ({ service }: ServiceItemCardProps) => {
             className="flex items-center justify-center bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors
               md:px-4 md:py-2 md:gap-2
               px-3 py-1.5"
+            aria-label={`Remove ${serviceName} from cart`}
           >
             <Trash2 className="w-4 h-4 md:mr-1" />
             <span className="font-medium hidden md:inline">Remove</span>
@@ -118,6 +120,8 @@ const ServiceItemCard = ({ service }: ServiceItemCardProps) => {
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="flex items-center gap-1 text-gray-500 hover:text-gray-700 mt-1 transition-colors"
+              aria-expanded={isExpanded}
+              aria-label={isExpanded ? 'Show less description' : 'Show more description'}
             >
               <span className="text-sm">
                 {isExpanded ? 'Show less' : 'Show more'}
